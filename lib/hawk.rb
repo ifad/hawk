@@ -5,6 +5,8 @@ require 'hawk/version'
 #
 module Hawk
 
+  autoload :Error, 'hawk/error'
+  autoload :HTTP,  'hawk/http'
   autoload :Model, 'hawk/model'
 
 end
