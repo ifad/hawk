@@ -13,6 +13,13 @@ module Hawk
       def initialize(attributes = {})
         super
       end
+
+      def inspect
+        attributes = schema.inject('') {|s, (k,v)|
+          s << " #{k}=#{read_attribute(k).inspect}"
+        }
+        "#<#{self.class.name}#{attributes}>"
+      end
     end
 
   end

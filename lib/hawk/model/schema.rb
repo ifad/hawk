@@ -26,13 +26,6 @@ module Hawk
       end
       private :write_attribute # For now
 
-      def inspect
-        attributes = schema.inject('') {|s, (k,v)|
-          s << " #{k}=#{read_attribute(k).inspect}"
-        }
-        "#<#{self.class.name}#{attributes}>"
-      end
-
       private
         def cast!(attributes)
           schema(attributes).each do |key, caster|
