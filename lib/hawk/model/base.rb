@@ -8,7 +8,7 @@ module Hawk
     #
     class Base
       include Schema
-      include Persistence
+      include Connection
 
       def initialize(attributes = {})
         super
