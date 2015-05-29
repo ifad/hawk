@@ -9,12 +9,14 @@ module Hawk
   #
   class HTTP
     DEFAULTS = {
-      timeout:        2,
-      connecttimeout: 2
+      timeout:         2,
+      connect_timeout: 1,
+      # username:      nil,
+      # password:      nil,
     }
 
     def initialize(base, options = {})
-      @defaults = DEFAULTS.merge(options)
+      @defaults = DEFAULTS.merge(options).freeze
 
       @base = URI.parse(base).tap do |url|
         unless %w( http https ).include? url.scheme
@@ -27,11 +29,7 @@ module Hawk
       end
     end
 
-    attr_reader :base
-
-    def config
-      @_config ||= OpenStruct.new(@defaults).freeze
-    end
+    attr_reader :base, :defaults
 
     def inspect
       "#<#{self.class.name} to #{base}>"
@@ -46,41 +44,80 @@ module Hawk
     end
 
     protected
+      def parse(body)
+        MultiJson.load(body)
+      end
+
       def request(path, options)
         url = base.merge(path.sub(/^\//, ''))
 
-        request = Typhoeus::Request.new(url, @defaults.merge(options))
+        options = typhoeus_defaults.merge(options_for_typhoeus(options))
+        request = Typhoeus::Request.new(url, options)
         request.on_complete(&method(:response_handler))
 
-        request.run.response_body
+        request.run.body
       end
 
     private
       def response_handler(response)
         return if response.success?
 
-        url  = response.request.url
-        meth = response.request.options.fetch(:method).to_s.upcase
-        req  = [meth, url].join(' ')
+        req  = response.request
+        url  = req.url
+        meth = req.options.fetch(:method).to_s.upcase
+        it   = [meth, url].join(' ')
 
         if response.timed_out?
-          raise Error::Timeout, "#{req}: timed out after #{config.timeout} seconds"
+          what, secs = if response.connect_time.zero? # Connect failed
+            [ :connect, req.options[:connecttimeout] ]
+          else
+            [ :request, req.options[:timeout] ]
+          end
+
+          raise Error::Timeout, "#{it}: #{what} timed out after #{secs} seconds"
         end
 
         case response.response_code
         when 0
-          raise Error::Empty, "#{req}: Empty response from server (#{response.status_message})"
+          raise Error::Empty, "#{it}: Empty response from server (#{response.status_message})"
         when 404
-          raise Error::NotFound, "#{req} was not found"
+          raise Error::NotFound, "#{it} was not found"
         when 500
-          raise Error::InternalServerError, "#{req}: Server error (#{response.body[0..120]})"
+          raise Error::InternalServerError, "#{it}: Server error (#{response.body[0 .. 120]})"
         else
-          raise Error, "#{req} failed with error #{response.code} (#{response.status_message})"
+          raise Error, "#{it} failed with error #{response.code} (#{response.status_message})"
         end
       end
 
-      def parse(body)
-        MultiJson.load(body)
+      def typhoeus_defaults
+        @_typhoeus_defaults ||= options_for_typhoeus(defaults)
+      end
+
+      def options_for_typhoeus(hawk_options)
+        hawk_options.inject({}) do |ret, (opt, val)|
+          case opt
+          when :request_timeout, :timeout
+            ret[:timeout] = val.to_i
+
+          when :connect_timeout
+            ret[:connecttimeout] = val.to_i
+
+          when :username        then
+            unless hawk_options.key?(:password)
+              raise Error::Configuration,
+                "The 'username' option requires a corresponding 'password' option"
+            end
+
+            ret[:userpwd] = [val, hawk_options.fetch(:password)].join(':')
+          else
+            # Pass it along directly. Not pretty, not a consistent interface,
+            # but it eases development for now. For sure it deserves a FIXME.
+            #
+            ret[opt] = val
+          end
+
+          ret
+        end
       end
     end
 
