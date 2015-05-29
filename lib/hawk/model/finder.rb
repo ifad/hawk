@@ -6,13 +6,16 @@ module Hawk
         base.extend ClassMethods
       end
 
-      def find(id)
-
-      end
-
       module ClassMethods
-        def model_url
-          @_model_url ||= self.connection.base + model_path
+        def find(id)
+          repr = connection.get([model_path, id].join('/'))
+          repr = repr.fetch(model_key) if repr.key?(model_key)
+
+          new repr
+        end
+
+        def model_key
+          @_model_key ||= self.name.underscore
         end
 
         def model_path(path = nil)
