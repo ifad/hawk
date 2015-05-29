@@ -11,9 +11,24 @@ module Hawk
         # super not required, this is the last in the chain.
       end
 
+      def attributes
+        schema.each_key.inject({}) do |ret, key|
+          ret.update(key => read_attribute(key))
+        end
+      end
+
+      def read_attribute(name)
+        instance_variable_get(['@', name].join)
+      end
+
+      def write_attribute(name, value)
+        instance_variable_set(['@', name].join, value)
+      end
+      private :write_attribute # For now
+
       def inspect
         attributes = schema.inject('') {|s, (k,v)|
-          s << " #{k}=#{instance_variable_get("@#{k}").inspect}"
+          s << " #{k}=#{read_attribute(k).inspect}"
         }
         "#<#{self.class.name}#{attributes}>"
       end
@@ -22,7 +37,8 @@ module Hawk
         def cast!(attributes)
           schema(attributes).each do |key, caster|
             next unless value = attributes.fetch(key, nil)
-            instance_variable_set "@#{key}", caster ? caster.call(value) : value
+            value = caster.call(value) if caster
+            write_attribute key, value
           end
         end
 
