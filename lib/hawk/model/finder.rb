@@ -24,19 +24,8 @@ module Hawk
           @_model_path ||= default_model_path
         end
 
-        if [:demodulize, :camelize, :pluralize].all? {|m| ''.respond_to?(m)}
-          def default_model_path
-            self.name.demodulize.camelize.pluralize.freeze
-          end
-
-        else
-          def default_model_path
-            self.name
-              .split('::').last                                             # .demodulize
-              .gsub(/(\w)([A-Z])/) { [$1, '_', $2.downcase].join }.downcase # .camelize
-              .sub(/y$/, 'ies').sub(/[^s]$/, '\0s')                         # .pluralize
-                                                                            #  (poor man's)
-          end
+        def default_model_path
+          self.name.demodulize.underscore.pluralize.freeze
         end
       end
     end

@@ -10,3 +10,5 @@ module Hawk
   autoload :Model, 'hawk/model'
 
 end
+
+require 'hawk/polyfills' # DIH
