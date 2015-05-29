@@ -7,8 +7,9 @@ module Hawk
     # the property names themselves.
     #
     class Base
-      include Schema
+      include Schema # First
       include Connection
+      include Finder
 
       def initialize(attributes = {})
         super
