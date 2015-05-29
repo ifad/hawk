@@ -1,6 +1,8 @@
-require 'typhoeus'
-
 module Hawk
+
+  require 'uri'
+  require 'typhoeus'
+  require 'multi_json'
 
   ##
   # Represent an HTTP connector, to be linked to a {Model}.
@@ -12,8 +14,27 @@ module Hawk
     }
 
     def initialize(base, options = {})
-      @base    = base
-      @options = DEFAULTS.merge(options)
+      @defaults = DEFAULTS.merge(options)
+
+      @base = URI.parse(base).tap do |url|
+        unless %w( http https ).include? url.scheme
+          raise Error::Configuration,
+            "URL '#{url}' is not valid: only http and https schemes are supported"
+        end
+
+        url.path += '/' unless url.path =~ /\/$/
+        url.freeze
+      end
+    end
+
+    attr_reader :base
+
+    def config
+      @_config ||= OpenStruct.new(@defaults).freeze
+    end
+
+    def inspect
+      "#<#{self.class.name} to #{base}>"
     end
 
     def get(path, params = {})
@@ -26,29 +47,36 @@ module Hawk
 
     protected
       def request(path, options)
-        url = URI + path
+        url = base.merge(path.sub(/^\//, ''))
 
-        request = Typhoeus::Request.new(url, options)
-        request.on_complete do |response|
-          if response.success?
-            #No-op
-          elsif response.timed_out?
-            raise Error::Timeout, "Request timed out after #{config.timeout} seconds"
-          else
-            case response.response_code
-            when 0
-              raise Error::Empty, "Empty response from server: #{response.return_message}"
-            when 404
-              response.options[:response_body] = response.options[:body] = ""
-            when 500
-              raise Error::InternalServerError, "Internal server error: #{url}"
-            else
-              raise Error, "HTTP Request failed: #{response.code} - #{response.return_message}"
-            end
-          end
-        end
+        request = Typhoeus::Request.new(url, @defaults.merge(options))
+        request.on_complete(&method(:response_handler))
 
         request.run.response_body
+      end
+
+    private
+      def response_handler(response)
+        return if response.success?
+
+        url  = response.request.url
+        meth = response.request.options.fetch(:method).to_s.upcase
+        req  = [meth, url].join(' ')
+
+        if response.timed_out?
+          raise Error::Timeout, "#{req}: timed out after #{config.timeout} seconds"
+        end
+
+        case response.response_code
+        when 0
+          raise Error::Empty, "#{req}: Empty response from server (#{response.status_message})"
+        when 404
+          raise Error::NotFound, "#{req} was not found"
+        when 500
+          raise Error::InternalServerError, "#{req}: Server error (#{response.body[0..120]})"
+        else
+          raise Error, "#{req} failed with error #{response.code} (#{response.status_message})"
+        end
       end
 
       def parse(body)
