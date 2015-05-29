@@ -1,5 +1,10 @@
-require "hawk/version"
+require 'hawk/version'
 
+##
+# Hawk entry point.
+#
 module Hawk
-  # Your code goes here...
+
+  autoload :Model, 'hawk/model'
+
 end
