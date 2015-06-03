@@ -34,7 +34,9 @@ module Hawk
 
         def inherited(subclass)
           super
-          subclass.url = self.url
+
+          subclass.url          = self.url
+          subclass.http_options = self.http_options
         end
       end
     end
