@@ -27,5 +27,11 @@ module Hawk
       end
     end
 
+    polyfill String, :singularize do
+      def singularize
+        self.gsub(/s$/, '') # NAIVE
+      end
+    end
+
   end
 end

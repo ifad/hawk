@@ -19,18 +19,19 @@ module Hawk
           Proxy.new(self, params)
         end
 
-        # Returns a +Proxy+ with empty params
+        # Returns a +Proxy+ with the default params
         #
         def scoped
           where(default_params)
         end
 
         def all(params = {})
-          super(default_params(params))
+          super(default_params.merge(params))
         end
 
-        def default_params(*)
-          {}
+        def default_params(params = nil)
+          @_default_params = params if params
+          @_default_params ||= {}
         end
 
         # Adds `limit` with the given number of records
@@ -52,7 +53,7 @@ module Hawk
         end
 
         # Looks for the first record or raises a
-        # +ActiveResource::ResourceNotFound+ if not found
+        # {Hawk::Error::NotFound} if not found
         #
         def first!
           first or raise Hawk::Error::NotFound.new("Can't find first #{self}")

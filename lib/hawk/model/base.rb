@@ -10,6 +10,8 @@ module Hawk
       include Schema # First
       include Connection
       include Finder
+      include Querying
+      include Association
 
       def initialize(attributes = {})
         super

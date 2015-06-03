@@ -8,6 +8,7 @@ module Hawk
     end
 
     require 'hawk/polyfills/string'
+    require 'hawk/polyfills/module'
   end
 
 end
