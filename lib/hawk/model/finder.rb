@@ -27,6 +27,10 @@ module Hawk
           instantiate_many connection.get(model_path_from(params), params)
         end
 
+        def count(params = {})
+          connection.get([model_path_from(params), count_path].join('/'), params)
+        end
+
 
         def instantiate_one(repr)
           repr = repr.fetch(instance_key) if repr.key?(instance_key)
@@ -69,6 +73,11 @@ module Hawk
         def batch_path(path = nil)
           @_batch_path = path if path
           @_batch_path ||= 'batch'
+        end
+
+        def count_path(path = nil)
+          @_count_path = path if path
+          @_count_path ||= 'count'
         end
       end
     end
