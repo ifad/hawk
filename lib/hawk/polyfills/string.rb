@@ -21,9 +21,7 @@ module Hawk
 
     polyfill String, :camelize do
       def camelize
-        self.
-          gsub(/(^\w)/) { $1.upcase }.
-          gsub(/_(\w)/) { $1.upcase }
+        self.gsub(/^(\w)|_(\w)/) { $+.upcase }
       end
     end
 
