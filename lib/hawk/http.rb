@@ -40,7 +40,7 @@ module Hawk
     end
 
     def post(path, params = {})
-      parse request(path, method: :post, params: params)
+      parse request(path, method: :post, body: params)
     end
 
     protected
