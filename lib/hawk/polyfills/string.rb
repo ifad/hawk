@@ -19,5 +19,13 @@ module Hawk
       end
     end
 
+    polyfill String, :camelize do
+      def camelize
+        self.
+          gsub(/(^\w)/) { $1.upcase }.
+          gsub(/_(\w)/) { $1.upcase }
+      end
+    end
+
   end
 end
