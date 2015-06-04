@@ -3,15 +3,16 @@ module Hawk
   require 'uri'
   require 'typhoeus'
   require 'multi_json'
-  require 'hawk/instrumentation'
-  require 'hawk/caching'
+
+  require 'hawk/http/caching'
+  require 'hawk/http/instrumentation'
 
   ##
   # Represent an HTTP connector, to be linked to a {Model}.
   #
   class HTTP
-    include Hawk::Instrumentation
-    prepend Hawk::Caching
+    prepend Caching
+    include Instrumentation
 
     DEFAULTS = {
       timeout:         2,
