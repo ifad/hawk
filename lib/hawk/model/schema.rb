@@ -37,10 +37,10 @@ module Hawk
         end
 
         def schema(attributes = nil)
-          if attributes && self.class.schema.nil?
+          if attributes && attributes.size > 0 && self.class.schema.nil?
             self.class.define_schema_from(attributes)
           end
-          self.class.schema
+          self.class.schema || {}
         end
 
       module ClassMethods
