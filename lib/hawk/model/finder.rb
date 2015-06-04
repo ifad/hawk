@@ -16,21 +16,24 @@ module Hawk
         end
 
         def find_one(id, params = {})
-          instantiate_one connection.get([model_path_from(params), id].join('/'), params)
+          instantiate_one connection.get(path_for(id, params), params)
         end
 
         def find_many(ids, params = {})
-          instantiate_many connection.post([model_path_from(params), batch_path].join('/'), params.merge(id: ids))
+          instantiate_many connection.post(path_for(batch_path, params), params.merge(id: ids))
         end
 
         def all(params = {})
-          instantiate_many connection.get(model_path_from(params), params)
+          instantiate_many connection.get(path_for(nil, params), params)
         end
 
         def count(params = {})
-          connection.get([model_path_from(params), count_path].join('/'), params)
+          connection.get(path_for(count_path, params), params)
         end
 
+        def path_for(component, params = {})
+          [model_path_from(params), component].compact.join('/')
+        end
 
         def instantiate_from(repr)
           if repr.respond_to?(:each)
