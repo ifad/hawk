@@ -46,6 +46,14 @@ module Hawk
           where(offset: n)
         end
 
+        def order(by)
+          where(order: by)
+        end
+
+        def includes(what)
+          where(includes: what)
+        end
+
         # Adds a limit(1) and returns the first record
         #
         def first
