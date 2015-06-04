@@ -47,7 +47,7 @@ module Hawk
 
 
         def instance_key
-          @_instance_key ||= self.name.underscore
+          @_instance_key ||= self.name.demodulize.underscore
         end
 
         def collection_key
