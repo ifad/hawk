@@ -107,7 +107,7 @@ module Hawk
           has_many: -> (entities, options) {
             klass, key, from = options.values_at(*[:class_name, :primary_key, :from])
 
-            class_eval <<-RUBY, __FILE__, __LINE__ - 1
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
                 @_#{entities} ||= #{parent}::#{klass}.where(#{key}: self.id, from: #{from.inspect})
               end
@@ -117,7 +117,7 @@ module Hawk
           has_one: -> (entity, options) {
             klass = options[:class_name]
 
-            class_eval <<-RUBY, __FILE__, __LINE__ - 1
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
                 @_#{entity} ||= #{parent}::#{klass}.new(get(:#{entity}), true)
               end
@@ -150,7 +150,7 @@ module Hawk
           polymorphic_belongs_to: -> (entity, options) {
             key = options.fetch(:as)
 
-            class_eval <<-RUBY, __FILE__, __LINE__ -1
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}
                 @_#{entity} ||= begin
                   return unless self.#{key}
