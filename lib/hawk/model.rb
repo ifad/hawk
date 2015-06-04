@@ -8,6 +8,7 @@ module Hawk
     autoload :Querying,    'hawk/model/querying'
     autoload :Proxy,       'hawk/model/proxy'
     autoload :Association, 'hawk/model/association'
+    autoload :Collection,  'hawk/model/collection'
   end
 
 end

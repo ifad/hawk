@@ -39,9 +39,10 @@ module Hawk
         end
 
         def instantiate_many(repr)
-          repr = repr.fetch(collection_key) if repr.key?(collection_key)
+          collection  = repr.key?(collection_key) ? repr.fetch(collection_key)     : repr
+          total_count = repr.key?('total_count')  ? repr.fetch('total_count').to_i : nil
 
-          repr.map! {|instance| new instance}
+          Collection.new(collection.map! {|instance| new instance}, total_count)
         end
 
 
