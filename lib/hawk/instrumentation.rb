@@ -13,7 +13,7 @@ module Hawk
     module Basic
       def instrument(type, payload, &block)
         start = Time.now.to_f
-        ret = block.call
+        ret = block.call payload
         elapsed = (Time.now.to_f - start) * 1000
 
         url = payload[:url].to_s
@@ -21,7 +21,10 @@ module Hawk
           url << '?' << payload[:params].inject('') {|s, (k,v)| s << [k, '=', v, '&'].join }.chomp('&')
         end
 
-        $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} #{url} (%.2fms)\033[0m\n" % [elapsed]
+        $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} #{url} (%.2fms), cache %s\033[0m\n" % [
+          elapsed,
+          payload[:cached] ? 'HIT' : 'MISS'
+        ]
 
         return ret
       end

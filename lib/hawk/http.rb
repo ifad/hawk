@@ -4,12 +4,14 @@ module Hawk
   require 'typhoeus'
   require 'multi_json'
   require 'hawk/instrumentation'
+  require 'hawk/caching'
 
   ##
   # Represent an HTTP connector, to be linked to a {Model}.
   #
   class HTTP
     include Hawk::Instrumentation
+    prepend Hawk::Caching
 
     DEFAULTS = {
       timeout:         2,
@@ -54,12 +56,15 @@ module Hawk
       def request(path, options)
         url = base.merge(path.sub(/^\//, ''))
 
-        instrument :request, url: url, params: options[:params], method: options[:method].to_s.upcase do
-          options = typhoeus_defaults.merge(options_for_typhoeus(options))
-          request = Typhoeus::Request.new(url, options)
-          request.on_complete(&method(:response_handler))
+        descriptor = {url: url, params: options[:params], method: options[:method].to_s.upcase}
+        instrument :request, descriptor do |descriptor|
+          caching descriptor do
+            options = typhoeus_defaults.merge(options_for_typhoeus(options))
+            request = Typhoeus::Request.new(url, options)
+            request.on_complete(&method(:response_handler))
 
-          request.run.body
+            request.run.body
+          end
         end
       end
 
