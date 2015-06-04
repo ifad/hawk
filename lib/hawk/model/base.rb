@@ -24,6 +24,10 @@ module Hawk
         }
         "#<#{self.class.name}#{attributes}>"
       end
+
+      def self.configure(&block)
+        instance_eval(&block)
+      end
     end
 
   end
