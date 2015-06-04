@@ -32,6 +32,14 @@ module Hawk
         end
 
 
+        def instantiate_from(repr)
+          if repr.respond_to?(:each)
+            instantiate_many(repr)
+          else
+            instantiate_one(repr)
+          end
+        end
+
         def instantiate_one(repr)
           repr = repr.fetch(instance_key) if repr.key?(instance_key)
 
@@ -39,8 +47,13 @@ module Hawk
         end
 
         def instantiate_many(repr)
-          collection  = repr.key?(collection_key) ? repr.fetch(collection_key)     : repr
-          total_count = repr.key?('total_count')  ? repr.fetch('total_count').to_i : nil
+          if repr.respond_to?(:key?)
+            collection  = repr.key?(collection_key) ? repr.fetch(collection_key)     : repr
+            total_count = repr.key?('total_count')  ? repr.fetch('total_count').to_i : nil
+          else
+            collection  = repr
+            total_count = repr.size
+          end
 
           Collection.new(collection.map! {|instance| new instance}, total_count)
         end

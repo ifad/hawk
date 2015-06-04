@@ -9,6 +9,33 @@ module Hawk
         base.instance_eval { @_associations ||= {} }
       end
 
+      # Load associations early, to memoize them and avoid having
+      # Hashes when a Model is more appropriate.
+      #
+      def initialize(attributes = {})
+        if attributes.size > 0 && self.class.associations?
+          preload_associations(attributes, self.class.associations)
+        end
+
+        super
+      end
+
+      private
+        def preload_associations(attributes, associations)
+          associations.each do |assoc, (type, options)|
+            attr = assoc.to_s
+            if (repr = attributes.fetch(attr, nil))
+              klass = options.fetch(:class_name)
+              scope = self.class # This is a bit naive. But it's convention over configuration. And makes
+              # you architect stuff The Right Way, not throwing stuff around hoping it'll magically work.
+              klass = scope.const_defined?(klass) ? scope.const_get(klass) : scope.parent.const_get(klass)
+
+              instance_variable_set("@_#{assoc}", klass.instantiate_from(repr))
+              attributes.delete(attr)
+            end
+          end
+        end
+
       module ClassMethods
         # Propagate associations to the subclasses on inheritance
         #
@@ -34,7 +61,7 @@ module Hawk
         # Check whether associations are defined
         #
         def associations?
-          @_associations.present?
+          @_associations && @_associations.size > 0
         end
 
         # Adds an has_many association, mimicking ActiveRecord's interface
