@@ -140,7 +140,7 @@ module Hawk
                 params = instance_eval(&params) if params.respond_to?(:call)
 
                 instance_variable_get(ivar) || begin
-                  instance = self.class.parent.const_get(klass).find(id, params: params || {})
+                  instance = self.class.parent.const_get(klass).find(id, params || {})
                   instance_variable_set(ivar, instance)
                 end
               end
