@@ -9,6 +9,7 @@ module Hawk
     autoload :Proxy,       'hawk/model/proxy'
     autoload :Association, 'hawk/model/association'
     autoload :Collection,  'hawk/model/collection'
+    autoload :Pagination,  'hawk/model/pagination'
   end
 
 end

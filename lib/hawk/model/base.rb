@@ -12,6 +12,7 @@ module Hawk
       include Finder
       include Querying
       include Association
+      include Pagination
 
       def initialize(attributes = {})
         super
