@@ -16,6 +16,7 @@ module Hawk
           ret.update(key => read_attribute(key))
         end
       end
+      alias to_h attributes
 
       def read_attribute(name)
         instance_variable_get(['@', name].join)
