@@ -3,11 +3,14 @@ module Hawk
   require 'uri'
   require 'typhoeus'
   require 'multi_json'
+  require 'hawk/instrumentation'
 
   ##
   # Represent an HTTP connector, to be linked to a {Model}.
   #
   class HTTP
+    include Hawk::Instrumentation
+
     DEFAULTS = {
       timeout:         2,
       connect_timeout: 1,
@@ -51,11 +54,13 @@ module Hawk
       def request(path, options)
         url = base.merge(path.sub(/^\//, ''))
 
-        options = typhoeus_defaults.merge(options_for_typhoeus(options))
-        request = Typhoeus::Request.new(url, options)
-        request.on_complete(&method(:response_handler))
+        instrument :request, url: url, params: options[:params], method: options[:method].to_s.upcase do
+          options = typhoeus_defaults.merge(options_for_typhoeus(options))
+          request = Typhoeus::Request.new(url, options)
+          request.on_complete(&method(:response_handler))
 
-        request.run.body
+          request.run.body
+        end
       end
 
     private
