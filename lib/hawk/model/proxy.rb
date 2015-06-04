@@ -72,7 +72,7 @@ module Hawk
       def respond_to?(meth)
         super ||
           klass.respond_to?(meth) ||
-          collection.respond_to?(meth)
+          result.respond_to?(meth)
       end
 
       protected
@@ -84,7 +84,7 @@ module Hawk
             else
               retval
             end
-          elsif collection.respond_to?(meth)
+          elsif result.respond_to?(meth)
             result.public_send(meth, *args, &block)
           else
             super
@@ -99,10 +99,6 @@ module Hawk
 
         def to_void
           Void.new(klass, params)
-        end
-
-        def collection
-          @_collection ||= Collection.new
         end
     end
 
