@@ -26,7 +26,7 @@ module Hawk
           "cache: OFF"
         end
 
-        "#{super}, #{description}"
+        super.sub(/>$/, ", #{description}>")
       end
 
       protected
