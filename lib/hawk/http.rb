@@ -22,7 +22,7 @@ module Hawk
     }
 
     def initialize(base, options = {})
-      @defaults = DEFAULTS.merge(options).freeze
+      @defaults = DEFAULTS.merge(options)
 
       @base = URI.parse(base).tap do |url|
         unless %w( http https ).include? url.scheme

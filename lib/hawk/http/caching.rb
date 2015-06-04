@@ -12,10 +12,10 @@ module Hawk
         serializer: MultiJson
       }
 
-      def initialize(base, options = {})
+      def initialize(*)
         super
 
-        options = options.fetch(:cache, {})
+        options = defaults.delete(:cache) || {}
         initialize_cache(DEFAULTS.merge(options))
       end
 
