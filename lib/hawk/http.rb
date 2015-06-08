@@ -97,7 +97,21 @@ module Hawk
         when 500
           raise Error::InternalServerError, "#{it}: Server error (#{response.body[0 .. 120]})"
         else
-          raise Error, "#{it} failed with error #{response.code} (#{response.status_message})"
+          app_error = parse_app_error_from(response.body)
+
+          raise Error, "#{it} failed with error #{response.code} (#{response.status_message}): #{app_error}"
+        end
+      end
+
+      def parse_app_error_from(body)
+        if body[0] == '{' && body[-1] == '}'
+          resp = MultiJson.load(body) rescue nil
+          if resp.respond_to?(:key?) && resp.key?('error')
+            resp = resp.fetch('error')
+          end
+          resp
+        else
+          body[0..120]
         end
       end
 
