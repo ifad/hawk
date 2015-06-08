@@ -6,7 +6,6 @@ module Hawk
 
   require 'hawk/http/caching'
   require 'hawk/http/instrumentation'
-  require 'hawk/http/params'
 
   ##
   # Represent an HTTP connector, to be linked to a {Model}.
@@ -18,6 +17,7 @@ module Hawk
     DEFAULTS = {
       timeout:         2,
       connect_timeout: 1,
+      array_encoding:  :rack,
       # username:      nil,
       # password:      nil,
     }
@@ -113,9 +113,6 @@ module Hawk
 
           when :connect_timeout
             ret[:connecttimeout] = val.to_i
-
-          when :body, :params
-            ret[opt] = Params.new(val).to_s
 
           when :username        then
             unless hawk_options.key?(:password)
