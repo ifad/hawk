@@ -43,11 +43,11 @@ module Hawk
     end
 
     def get(path, params = {})
-      parse request(path, method: :get, params: params)
+      parse request('GET', path, params)
     end
 
     def post(path, params = {})
-      parse request(path, method: :post, body: params)
+      parse request('POST', path, params)
     end
 
     protected
@@ -55,14 +55,14 @@ module Hawk
         MultiJson.load(body)
       end
 
-      def request(path, options)
-        url = base.merge(path.sub(/^\//, ''))
+      def request(method, path, options)
+        url        = base.merge(path.sub(/^\//, ''))
+        request    = build_request_options_from(method, options)
+        descriptor = { url: url, method: method, params: request[:params] }
 
-        descriptor = {url: url, params: options[:params], method: options[:method].to_s.upcase}
         instrument :request, descriptor do |descriptor|
           caching descriptor do
-            options = typhoeus_defaults.merge(options_for_typhoeus(options))
-            request = Typhoeus::Request.new(url, options)
+            request = Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request)))
             request.on_complete(&method(:response_handler))
 
             request.run.body
@@ -112,6 +112,27 @@ module Hawk
           resp
         else
           body[0..120]
+        end
+      end
+
+      def build_request_options_from(method, options)
+        {}.tap do |request|
+          request[:method] = method
+
+          if options.key?(:headers)
+            request[:headers] = options.delete(:headers)
+          end
+
+          if options.key?(:options)
+            request.update options.delete(:options)
+          end
+
+          case method # Not really sure, but looks good for now
+          when 'POST', 'PUT', 'PATCH' then request[:body  ] = options
+          when 'GET',  'DELETE'       then request[:params] = options
+          else
+            raise Hawk::Error, "Invalid HTTP method: #{method}"
+          end
         end
       end
 
