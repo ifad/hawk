@@ -116,7 +116,7 @@ module Hawk
       end
 
       def typhoeus_defaults
-        @_typhoeus_defaults ||= options_for_typhoeus(defaults)
+        @_typhoeus_defaults ||= options_for_typhoeus(defaults).freeze
       end
 
       def options_for_typhoeus(hawk_options)
