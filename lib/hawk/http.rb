@@ -17,7 +17,7 @@ module Hawk
     DEFAULTS = {
       timeout:         2,
       connect_timeout: 1,
-      array_encoding:  :rack,
+      params_encoding: :rack,
       # username:      nil,
       # password:      nil,
     }
