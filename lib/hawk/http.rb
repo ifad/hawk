@@ -116,6 +116,8 @@ module Hawk
       end
 
       def build_request_options_from(method, options)
+        options = options.dup
+
         {}.tap do |request|
           request[:method] = method
 

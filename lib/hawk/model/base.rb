@@ -14,7 +14,7 @@ module Hawk
       include Association
       include Pagination
 
-      def initialize(attributes = {})
+      def initialize(attributes = {}, http_options = {})
         super
       end
 

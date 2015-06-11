@@ -6,7 +6,7 @@ module Hawk
         base.extend ClassMethods
       end
 
-      def initialize(attributes = {})
+      def initialize(attributes = {}, http_options = {})
         cast!(attributes)
         # super not required, this is the last in the chain.
       end

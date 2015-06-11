@@ -16,15 +16,18 @@ module Hawk
         end
 
         def find_one(id, params = {})
-          instantiate_one connection.get(path_for(id, params), params)
+          repr = connection.get(path_for(id, params), params)
+          instantiate_one(repr, params.fetch(:options, {}))
         end
 
         def find_many(ids, params = {})
-          instantiate_many connection.post(path_for(batch_path, params), params.deep_merge(id: ids))
+          repr = connection.post(path_for(batch_path, params), params.deep_merge(id: ids))
+          instantiate_many(repr, params.fetch(:options, {}))
         end
 
         def all(params = {})
-          instantiate_many connection.get(path_for(nil, params), params)
+          repr = connection.get(path_for(nil, params), params)
+          instantiate_many(repr, params.fetch(:options, {}))
         end
 
         def count(params = {})
@@ -35,21 +38,21 @@ module Hawk
           [model_path_from(params), component].compact.join('/')
         end
 
-        def instantiate_from(repr)
-          if repr.respond_to?(:each)
-            instantiate_many(repr)
+        def instantiate_from(repr, http_options = {})
+          if repr.is_a?(Array)
+            instantiate_many(repr, http_options)
           else
-            instantiate_one(repr)
+            instantiate_one(repr, http_options)
           end
         end
 
-        def instantiate_one(repr)
+        def instantiate_one(repr, http_options)
           repr = repr.fetch(instance_key) if repr.key?(instance_key)
 
-          new repr
+          new repr, http_options
         end
 
-        def instantiate_many(repr)
+        def instantiate_many(repr, http_options)
           if repr.respond_to?(:key?)
             collection  = repr.key?(collection_key) ? repr.fetch(collection_key)     : repr
             total_count = repr.key?('total_count')  ? repr.fetch('total_count').to_i : nil
@@ -58,7 +61,7 @@ module Hawk
             total_count = repr.size
           end
 
-          Collection.new(collection.map! {|instance| new instance}, total_count)
+          Collection.new(collection.map! {|repr| new(repr, http_options) }, total_count)
         end
 
 

@@ -12,16 +12,16 @@ module Hawk
       # Load associations early, to memoize them and avoid having
       # Hashes when a Model is more appropriate.
       #
-      def initialize(attributes = {})
+      def initialize(attributes = {}, http_options = {})
         if attributes.size > 0 && self.class.associations?
-          preload_associations(attributes, self.class)
+          preload_associations(attributes, http_options, self.class)
         end
 
         super
       end
 
       private
-        def preload_associations(attributes, scope)
+        def preload_associations(attributes, http_options, scope)
           scope.associations.each do |name, (_, options)|
             if (repr = scope.preload_association.call(attributes, name, options))
               target = options.fetch(:class_name)
@@ -33,7 +33,8 @@ module Hawk
                 scope.const_get(target)        :
                 scope.parent.const_get(target)
 
-              instance_variable_set("@_#{name}", target.instantiate_from(repr))
+              result = target.instantiate_from(repr, http_options)
+              instance_variable_set("@_#{name}", result)
             end
           end
         end
@@ -178,7 +179,11 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
-                @_#{entities} ||= #{parent}::#{klass}.where(#{key}: self.id, from: #{from.inspect})
+                @_#{entities} ||= #{parent}::#{klass}.where(
+                  #{key}:  self.id,
+                  from:    #{from.inspect},
+                  options: self.http_options
+                )
               end
             RUBY
           },
@@ -188,7 +193,11 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
-                @_#{entity} ||= #{parent}::#{klass}.new(get(:#{entity}), true)
+                @_#{entity} ||= #{parent}::#{klass}.where(
+                  #{key}:  self.id,
+                  from:    #{from.inspect},
+                  options: self.http_options
+                ).first!
               end
 
               def #{entity}
@@ -207,9 +216,12 @@ module Hawk
               define_method(entity) do
                 return unless (id = self.attributes.fetch(key.to_s, nil))
                 params = instance_eval(&params) if params.respond_to?(:call)
+                params ||= {}
 
                 instance_variable_get(ivar) || begin
-                  instance = self.class.parent.const_get(klass).find(id, params || {})
+                  params = params.deep_merge(options: self.http_options)
+
+                  instance = self.class.parent.const_get(klass).find(id, params)
                   instance_variable_set(ivar, instance)
                 end
               end
@@ -224,7 +236,7 @@ module Hawk
                 @_#{entity} ||= begin
                   return unless self.#{key}
                   klass = self.class.parent.const_get(self.#{entity}_type)
-                  klass.find(self.#{key})
+                  klass.find(self.#{key}, options: self.http_options)
                 end
               end
             RUBY
