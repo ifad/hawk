@@ -26,8 +26,9 @@ module Hawk
             if (repr = scope.preload_association.call(attributes, name, options))
               target = options.fetch(:class_name)
 
-              # This is a bit naive. But it's convention over configuration. And makes you architect
-              # stuff The Right Way, not throwing randomly stuff around hoping it'll magically work.
+              # This is a bit naive. But it's convention over configuration.
+              # And makes you architect # stuff The Right Way, not throwing
+              # randomly stuff around hoping it'll magically work.
               target = scope.const_defined?(target, inherit=false) ?
                 scope.const_get(target)        :
                 scope.parent.const_get(target)
