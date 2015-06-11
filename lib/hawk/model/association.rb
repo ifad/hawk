@@ -28,7 +28,9 @@ module Hawk
 
               # This is a bit naive. But it's convention over configuration. And makes you architect
               # stuff The Right Way, not throwing randomly stuff around hoping it'll magically work.
-              target = scope.const_defined?(target) ? scope.const_get(target) : scope.parent.const_get(target)
+              target = scope.const_defined?(target, inherit=false) ?
+                scope.const_get(target)        :
+                scope.parent.const_get(target)
 
               instance_variable_set("@_#{name}", target.instantiate_from(repr))
             end
