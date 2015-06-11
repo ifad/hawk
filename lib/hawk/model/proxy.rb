@@ -36,17 +36,17 @@ module Hawk
         @result = klass.find(id_or_ids, params)
       end
 
-      def all
-        @result ||= klass.all(params)
+      def all(params = {})
+        @result ||= klass.all(self.params.merge(params))
       end
       alias result all
 
-      def first
-        limit(1).all.first
+      def first(params = {})
+        limit(1).all(params).first
       end
 
-      def first!
-        first or raise Hawk::Error::NotFound, "Can't find #{klass} with #{params.to_json}"
+      def first!(params = {})
+        first(params) or raise Hawk::Error::NotFound, "Can't find #{klass} with #{params.to_json}"
       end
 
       def limit_value
