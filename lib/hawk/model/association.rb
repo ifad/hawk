@@ -14,24 +14,23 @@ module Hawk
       #
       def initialize(attributes = {})
         if attributes.size > 0 && self.class.associations?
-          preload_associations(attributes, self.class.associations)
+          preload_associations(attributes, self.class)
         end
 
         super
       end
 
       private
-        def preload_associations(attributes, associations)
-          associations.each do |assoc, (type, options)|
-            attr = assoc.to_s
-            if (repr = attributes.fetch(attr, nil))
-              klass = options.fetch(:class_name)
-              scope = self.class # This is a bit naive. But it's convention over configuration. And makes
-              # you architect stuff The Right Way, not throwing stuff around hoping it'll magically work.
-              klass = scope.const_defined?(klass) ? scope.const_get(klass) : scope.parent.const_get(klass)
+        def preload_associations(attributes, scope)
+          scope.associations.each do |name, (_, options)|
+            if (repr = scope.preload_association.call(attributes, name, options))
+              target = options.fetch(:class_name)
 
-              instance_variable_set("@_#{assoc}", klass.instantiate_from(repr))
-              attributes.delete(attr)
+              # This is a bit naive. But it's convention over configuration. And makes you architect
+              # stuff The Right Way, not throwing randomly stuff around hoping it'll magically work.
+              target = scope.const_defined?(target) ? scope.const_get(target) : scope.parent.const_get(target)
+
+              instance_variable_set("@_#{name}", target.instantiate_from(repr))
             end
           end
         end
@@ -48,6 +47,46 @@ module Hawk
 
             parent.associations.each do |name, (type, options)|
               _define_association(name, type, options)
+            end
+          end
+        end
+
+        # Defines how associations should be preloaded.
+        #
+        # The given block gets called when a new entity is instantiated, and
+        # it gets passed the object attributes, the association's name, type
+        # and options.
+        #
+        # Example (for Joe :-)
+        #
+        #     class Foo < Hawk::Model::Base
+        #
+        #       has_many :bars
+        #
+        #       preload_associations do |attributes, name, type, options|
+        #         if attributes.key?('links')
+        #           links = attributes['links']
+        #           if links.key?(name)
+        #             return attributes.delete(links[name])
+        #           end
+        #         end
+        #       end
+        #
+        #     end
+        #
+        # The block would get called once, with :bars as `name`, :has_many as
+        # `type` and `{class_name: 'Bar', primary_key: 'foo_id'} as `options`
+        #
+        # By default it looks up in the representation a property named after
+        # the association's name, and returns it, deleting it from the repr.
+        #
+        def preload_association(&block)
+          @_preload_association = block if block
+          @_preload_association ||= lambda do |attributes, name, options|
+            attr = name.to_s
+
+            if attributes.key?(attr)
+              return attributes.delete(attr)
             end
           end
         end
