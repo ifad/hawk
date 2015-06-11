@@ -22,11 +22,11 @@ module Hawk
         # Returns a +Proxy+ with the default params
         #
         def scoped(params = {})
-          where(default_params.merge(params))
+          where(default_params.deep_merge(params))
         end
 
         def all(params = {})
-          super(default_params.merge(params))
+          super(default_params.deep_merge(params))
         end
 
         def default_params(params = nil)

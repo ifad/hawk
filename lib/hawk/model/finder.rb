@@ -20,7 +20,7 @@ module Hawk
         end
 
         def find_many(ids, params = {})
-          instantiate_many connection.post(path_for(batch_path, params), params.merge(id: ids))
+          instantiate_many connection.post(path_for(batch_path, params), params.deep_merge(id: ids))
         end
 
         def all(params = {})

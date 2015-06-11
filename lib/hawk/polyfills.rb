@@ -9,6 +9,7 @@ module Hawk
 
     require 'hawk/polyfills/string'
     require 'hawk/polyfills/module'
+    require 'hawk/polyfills/hash'
   end
 
 end

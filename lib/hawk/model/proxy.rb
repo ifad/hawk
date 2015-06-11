@@ -29,7 +29,7 @@ module Hawk
 
       def where(params)
         params = params.reject {|_,v| v.nil?}
-        self.class.new klass, @params.merge(params)
+        self.class.new klass, @params.deep_merge(params)
       end
 
       def find(id_or_ids)
