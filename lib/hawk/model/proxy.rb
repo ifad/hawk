@@ -37,7 +37,7 @@ module Hawk
       end
 
       def all(params = {})
-        @result ||= klass.all(self.params.merge(params))
+        @result ||= klass.all(@params.deep_merge(params))
       end
       alias result all
 
