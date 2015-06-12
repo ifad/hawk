@@ -32,7 +32,7 @@ module Hawk
         self.class.new klass, @params.deep_merge(params)
       end
 
-      def find(id_or_ids, params)
+      def find(id_or_ids, params = {})
         @result = klass.find(id_or_ids, @params.deep_merge(params))
       end
 
