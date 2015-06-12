@@ -71,7 +71,7 @@ module Hawk
         #
         #       has_many :bars
         #
-        #       preload_associations do |attributes, name, type, options|
+        #       preload_association do |attributes, name, type, options|
         #         if attributes.key?('links')
         #           links = attributes['links']
         #           if links.key?(name)
@@ -83,10 +83,10 @@ module Hawk
         #     end
         #
         # The block would get called once, with :bars as `name`, :has_many as
-        # `type` and `{class_name: 'Bar', primary_key: 'foo_id'} as `options`
+        # `type` and `{class_name:'Bar', primary_key:'foo_id'}` as `options`.
         #
         # By default it looks up in the representation a property named after
-        # the association's name, and returns it, deleting it from the repr.
+        # the association's name and returns it, deleting it from the repr.
         #
         def preload_association(&block)
           @_preload_association = block if block
