@@ -55,7 +55,7 @@ module Hawk
             end
 
             # Inherit association preloading behaviour
-            preload_association parent.preload_association
+            preload_association(&parent.preload_association)
           end
         end
 
