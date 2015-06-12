@@ -18,6 +18,10 @@ module Hawk
       end
       alias to_h attributes
 
+      def to_json
+        to_h.to_json
+      end
+
       def read_attribute(name)
         instance_variable_get(['@', name].join)
       end
