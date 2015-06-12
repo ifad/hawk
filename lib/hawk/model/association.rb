@@ -47,11 +47,15 @@ module Hawk
 
           parent = self
           subclass.instance_eval do
+            # Inherit associations
             @_associations ||= {}
 
             parent.associations.each do |name, (type, options)|
               _define_association(name, type, options)
             end
+
+            # Inherit association preloading behaviour
+            preload_association parent.preload_association
           end
         end
 
