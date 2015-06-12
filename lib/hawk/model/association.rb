@@ -216,15 +216,14 @@ module Hawk
 
           monomorphic_belongs_to: -> (entity, options) {
             klass, key, params = options.values_at(*[:class_name, :primary_key, :params])
+            params ||= {}
             ivar = "@_#{entity}".intern
 
             class_eval do
               define_method(entity) do
-                return unless (id = self.attributes.fetch(key.to_s, nil))
-                params = instance_eval(&params) if params.respond_to?(:call)
-                params ||= {}
-
                 instance_variable_get(ivar) || begin
+                  return unless (id = self.attributes.fetch(key.to_s, nil))
+
                   params = params.deep_merge(options: self.http_options)
 
                   instance = self.class.parent.const_get(klass).find(id, params)
