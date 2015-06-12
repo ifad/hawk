@@ -22,8 +22,8 @@ module Hawk
 
       private
         def preload_associations(attributes, http_options, scope)
-          scope.associations.each do |name, (_, options)|
-            if (repr = scope.preload_association.call(attributes, name, options))
+          scope.associations.each do |name, (type, options)|
+            if (repr = scope.preload_association.call(attributes, name, type, options))
               target = options.fetch(:class_name)
 
               # This is a bit naive. But it's convention over configuration.
@@ -90,7 +90,7 @@ module Hawk
         #
         def preload_association(&block)
           @_preload_association = block if block
-          @_preload_association ||= lambda do |attributes, name, options|
+          @_preload_association ||= lambda do |attributes, name, type, options|
             attr = name.to_s
 
             if attributes.key?(attr)
