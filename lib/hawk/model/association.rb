@@ -135,9 +135,11 @@ module Hawk
         def has_one(entity, options = {})
           entity = entity.to_s.singularize
           klass  = options[:class_name] || entity.camelize
+          key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
+          from   = options[:from]
           # TODO params
 
-          _define_association(entity, :has_one, class_name: klass)
+          _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from)
         end
 
         # Adds a belongs_to association, mimicking ActiveRecord's interface
@@ -193,7 +195,7 @@ module Hawk
           },
 
           has_one: -> (entity, options) {
-            klass = options[:class_name]
+            klass, key, from = options.values_at(*[:class_name, :primary_key, :from])
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!

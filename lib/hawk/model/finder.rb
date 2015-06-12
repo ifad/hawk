@@ -55,7 +55,7 @@ module Hawk
         def instantiate_many(repr, http_options)
           if repr.respond_to?(:key?)
             collection  = repr.key?(collection_key) ? repr.fetch(collection_key)     : repr
-            total_count = repr.key?('total_count')  ? repr.fetch('total_count').to_i : nil
+            total_count = repr.key?(total_count_key)  ? repr.fetch(total_count_key).to_i : nil
           else
             collection  = repr
             total_count = repr.size
@@ -71,6 +71,10 @@ module Hawk
 
         def collection_key
           @_collection_key = instance_key.pluralize
+        end
+
+        def total_count_key
+          @_total_count_key = 'total_count'
         end
 
         def model_path_from(params)
