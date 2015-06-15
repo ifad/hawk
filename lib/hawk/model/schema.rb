@@ -18,8 +18,8 @@ module Hawk
       end
       alias to_h attributes
 
-      def to_json
-        to_h.to_json
+      def as_json(*ignored) # FIXME
+        to_h
       end
 
       def read_attribute(name)
