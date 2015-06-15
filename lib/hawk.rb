@@ -1,14 +1,10 @@
-require 'hawk/version'
-
 ##
 # Hawk entry point.
 #
-module Hawk
+require 'hawk/version'
 
-  autoload :Error, 'hawk/error'
-  autoload :HTTP,  'hawk/http'
-  autoload :Model, 'hawk/model'
-
-end
+require 'hawk/error'
+require 'hawk/http'
+require 'hawk/model'
 
 require 'hawk/polyfills' # DIH
