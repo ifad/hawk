@@ -1,3 +1,5 @@
+require 'English'
+
 module Hawk
   module Polyfills
 
@@ -6,10 +8,7 @@ module Hawk
       #
       #   M::N.parent_name # => "M"
       def parent_name
-        unless defined? @_parent_name
-          @_parent_name = self.name =~ /::[^:]+\Z/ ? $PREMATCH.freeze : nil
-        end
-        @_parent_name
+        @_parent_name ||= self.name =~ /::[^:]+\Z/ ? $PREMATCH : nil
       end
 
       def parent
