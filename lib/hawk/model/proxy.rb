@@ -78,6 +78,10 @@ module Hawk
       protected
         def method_missing(meth, *args, &block)
           if klass.respond_to?(meth)
+            if args.first.is_a?(Hash) && params.size > 0
+              args[0] = params.merge(args[0]) # NAIVE FIXME
+            end
+
             retval = klass.public_send(meth, *args, &block)
             if retval.kind_of?(Proxy)
               merge(retval)
