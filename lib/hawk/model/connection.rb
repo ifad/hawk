@@ -39,6 +39,10 @@ module Hawk
           end
         end
 
+        def options(opts)
+          where(options: opts)
+        end
+
         def url(url = nil)
           @_url = url.dup.freeze if url
           @_url
