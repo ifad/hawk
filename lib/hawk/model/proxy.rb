@@ -79,10 +79,19 @@ module Hawk
         def method_missing(meth, *args, &block)
           if klass.respond_to?(meth)
 
-            dsl_method = klass.method(meth).owner.parents.include?(Hawk::Model)
+            method = klass.method(meth)
+            dsl_method = method.owner.parents.include?(Hawk::Model)
 
-            if !dsl_method && args.first.is_a?(Hash) && params.size > 0
-              args[0] = params.deep_merge(args[0]) # NAIVE FIXME
+            # If the method accepts a variable number of parameters, and
+            # exactly one is missing, push the scoped params at the end.
+            if !dsl_method && (method.arity + args.size) == -1
+              args = args.push params
+
+            # If the method accepts a variable number of parameters, and
+            # the last provided one is an hash, merge the scoped params.
+            elsif method.arity < 0 && (method.arity + args.size == 0) && args.last.is_a?(Hash)
+              args[-1] = params.deep_merge(args[-1])
+
             end
 
             retval = klass.public_send(meth, *args, &block)
