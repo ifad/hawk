@@ -54,8 +54,12 @@ module Hawk
           where(includes: what)
         end
 
+        def options(opts)
+          where(options: opts)
+        end
+
         def auth(username, password)
-          where(options: {username: username, password: password})
+          options(username: username, password: password)
         end
 
         # Adds a limit(1) and returns the first record
