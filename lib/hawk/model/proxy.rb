@@ -78,8 +78,11 @@ module Hawk
       protected
         def method_missing(meth, *args, &block)
           if klass.respond_to?(meth)
-            if args.first.is_a?(Hash) && params.size > 0
-              args[0] = params.merge(args[0]) # NAIVE FIXME
+
+            dsl_method = klass.method(meth).owner.parents.include?(Hawk::Model)
+
+            if !dsl_method && args.first.is_a?(Hash) && params.size > 0
+              args[0] = params.deep_merge(args[0]) # NAIVE FIXME
             end
 
             retval = klass.public_send(meth, *args, &block)
