@@ -28,11 +28,6 @@ module Hawk
 
             options = self.http_options.dup
             headers = (options[:headers] ||= {})
-
-            if headers.key?('User-Agent')
-              raise Error::Configuration, "Please set the User-Agent header through client_name"
-            end
-
             headers['User-Agent'] = self.client_name
 
             Hawk::HTTP.new(url, options)
