@@ -18,6 +18,22 @@ module Hawk
       def constantize(string)
         string.split('::').inject(Object) {|ns, c| ns.const_get(c)}
       end
+
+      def parents
+        parents = []
+
+        if parent_name
+          parts = parent_name.split('::')
+
+          until parts.empty?
+            parents << constantize(parts * '::')
+            parts.pop
+          end
+        end
+
+        parents << Object unless parents.include? Object
+        parents
+      end
     end
 
   end
