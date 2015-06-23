@@ -2,6 +2,8 @@ module Hawk
   module Model
 
     module Finder
+      using Hawk::Polyfills # Hash#deep_merge, String#underscore, String#demodulize, String#pluralize
+
       def self.included(base)
         base.extend ClassMethods
       end

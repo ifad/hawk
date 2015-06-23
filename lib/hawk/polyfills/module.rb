@@ -4,6 +4,8 @@ module Hawk
   module Polyfills
 
     polyfill Module, :parent do
+      using Hawk::Polyfills
+
       # Returns the name of the module containing this one.
       #
       #   M::N.parent_name # => "M"

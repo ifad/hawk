@@ -4,6 +4,8 @@ module Hawk
     class Proxy
       include Enumerable
 
+      using Hawk::Polyfills # Hash#deep_merge, Module#parents
+
       def initialize(klass, params)
         @klass   = klass
         @params  = params

@@ -2,6 +2,8 @@ module Hawk
   module Polyfills
 
     polyfill Hash, :deep_merge do
+      using Hawk::Polyfills
+
       # Stolen from ActiveSupport.
       #
       # Returns a new hash with +self+ and +other_hash+ merged recursively.

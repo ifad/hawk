@@ -2,6 +2,8 @@ module Hawk
   module Model
 
     module Association
+      using Hawk::Polyfills # Hash#deep_merge, Module#parent, String#demodulize, String#underscore, String#camelize, String#singularize
+
       # Initialize the associations registry
       #
       def self.included(base)

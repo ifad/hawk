@@ -2,8 +2,10 @@ module Hawk
 
   module Polyfills
     def self.polyfill(klass, method, &impl)
-      unless klass.instance_methods.include? method
-        klass.class_eval(&impl)
+      unless klass.instance_methods.include?(method)
+        refine(klass) do
+          module_eval &impl
+        end
       end
     end
 
