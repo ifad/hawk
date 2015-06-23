@@ -48,12 +48,6 @@ module Hawk
           end
         end
 
-        def instantiate_one(repr, params)
-          repr = repr.fetch(instance_key) if repr.key?(instance_key)
-
-          new repr, params
-        end
-
         def instantiate_many(repr, params)
           if repr.respond_to?(:key?)
             collection  = repr.key?(collection_key)  ? repr.fetch(collection_key)       : repr
@@ -70,6 +64,12 @@ module Hawk
           }
 
           Collection.new(collection.map! {|repr| instantiate_one(repr, params) }, collection_options)
+        end
+
+        def instantiate_one(repr, params)
+          repr = repr.fetch(instance_key) if repr.key?(instance_key)
+
+          new repr, params
         end
 
         def instance_key
