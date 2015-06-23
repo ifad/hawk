@@ -15,19 +15,23 @@ module Hawk
           end
         end
 
+        def http_options_from( params )
+          params.fetch(:options, {}).merge(limit: params[:limit], offset: params[:offset] || params[:skip] )
+        end
+
         def find_one(id, params = {})
           repr = connection.get(path_for(id, params), params)
-          instantiate_one(repr, params.fetch(:options, {}))
+          instantiate_one(repr, http_options_from(params) )
         end
 
         def find_many(ids, params = {})
           repr = connection.post(path_for(batch_path, params), params.deep_merge(id: ids))
-          instantiate_many(repr, params.fetch(:options, {}))
+          instantiate_many(repr, http_options_from(params) )
         end
 
         def all(params = {})
           repr = connection.get(path_for(nil, params), params)
-          instantiate_many(repr, params.fetch(:options, {}))
+          instantiate_many(repr, http_options_from(params) )
         end
 
         def count(params = {})
@@ -61,7 +65,7 @@ module Hawk
             total_count = repr.size
           end
 
-          Collection.new(collection.map! {|repr| new(repr, http_options) }, total_count)
+          Collection.new(collection.map! {|repr| new(repr, http_options) }, http_options.merge( total_count: total_count ))
         end
 
 
