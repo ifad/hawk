@@ -10,6 +10,7 @@ module Hawk
     autoload :Association, 'hawk/model/association'
     autoload :Collection,  'hawk/model/collection'
     autoload :Pagination,  'hawk/model/pagination'
+    autoload :Configurator, 'hawk/model/configurator'
   end
 
 end

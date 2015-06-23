@@ -13,6 +13,7 @@ module Hawk
       include Querying
       include Association
       include Pagination
+      include Configurator
 
       def initialize(attributes = {}, http_options = {})
         super
@@ -23,10 +24,6 @@ module Hawk
           s << " #{k}=#{read_attribute(k).inspect}"
         }
         "#<#{self.class.name}#{attributes}>"
-      end
-
-      def self.configure(&block)
-        instance_eval(&block)
       end
     end
 
