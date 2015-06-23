@@ -26,14 +26,8 @@ module Hawk
         def preload_associations(attributes, params, scope)
           scope.associations.each do |name, (type, options)|
             if (repr = scope.preload_association.call(attributes, name, type, options))
-              target = options.fetch(:class_name)
 
-              # This is a bit naive. But it's convention over configuration.
-              # And makes you architect # stuff The Right Way, not throwing
-              # randomly stuff around hoping it'll magically work.
-              target = scope.const_defined?(target, inherit=false) ?
-                scope.const_get(target)        :
-                scope.parent.const_get(target)
+              target = scope.model_class_for(options.fetch(:class_name))
 
               result = target.instantiate_from(repr, params)
               instance_variable_set("@_#{name}", result)
@@ -227,7 +221,9 @@ module Hawk
                 instance_variable_get(ivar) || begin
                   return unless (id = self.attributes.fetch(key.to_s, nil))
 
-                  instance = self.class.parent.const_get(klass).find(id, self.params.deep_merge(params))
+                  instance = self.class.model_class_for(klass).
+                    find(id, self.params.deep_merge(params))
+
                   instance_variable_set(ivar, instance)
                 end
               end
@@ -241,7 +237,7 @@ module Hawk
               def #{entity}
                 @_#{entity} ||= begin
                   return unless self.#{key}
-                  klass = self.class.parent.const_get(self.#{entity}_type)
+                  klass = self.class.model_class_for(self.#{entity}_type)
                   klass.find(self.#{key}, self.params)
                 end
               end
