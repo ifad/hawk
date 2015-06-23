@@ -36,19 +36,29 @@ module Hawk
 
         def url(url = nil)
           @_url = url.dup.freeze if url
-          @_url
+
+          configurable.each {|model| model.url = @_url }
+
+          return @_url
         end
         alias url= url
 
         def http_options(options = nil)
           @_http_options = options.dup.freeze if options
           @_http_options ||= {}
+
+          configurable.each {|model| model.http_options = @_http_options }
+
+          return @_http_options
         end
         alias http_options= http_options
 
         def client_name(name = nil)
           @_client_name = name.dup.freeze if name
-          @_client_name
+
+          configurable.each {|model| model.client_name = @_client_name }
+
+          return @_client_name
         end
         alias client_name= client_name
 
