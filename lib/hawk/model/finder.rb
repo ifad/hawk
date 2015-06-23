@@ -69,7 +69,7 @@ module Hawk
             total_count: total_count
           }
 
-          Collection.new(collection.map! {|repr| new(repr, params) }, collection_options)
+          Collection.new(collection.map! {|repr| instantiate_one(repr, params) }, collection_options)
         end
 
         def instance_key
