@@ -30,14 +30,23 @@ module Hawk
         #
         # will look up a `Comment` class in `Post` first and then in `Foo`.
         #
-        # It's a bit naive. But it's convention over configuration.
-        # And makes you architect stuff The Right Way, not throwing
-        # randomly stuff around hoping it'll magically work. :-).
-        #
-        def model_class_for(name)
-          self.const_defined?(name, inherit=false) ?
-            self.const_get(name) :
-            self.parent.const_get(name)
+        def model_class_for(name, scope: self)
+          if scope.const_defined?(name, inherit=false)
+            return scope.const_get(name)
+
+          elsif scope.parent.const_defined?(name, inherit=false)
+            return scope.parent.const_get(name)
+
+          end
+
+          # Look up one level
+          #
+          if scope.superclass < Hawk::Model::Base
+            model_class_for(name, scope: scope.superclass)
+          else
+            raise Hawk::Error, "Can't find a suitable model for #{name}"
+          end
+
         end
       end
     end
