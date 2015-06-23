@@ -2,7 +2,10 @@ module Hawk
   module Model
 
     class Collection < Array
-      include Kaminari::PageScopeMethods if defined? ::Kaminari
+      if defined? ::Kaminari
+        include Kaminari::ConfigurationMethods::ClassMethods
+        include Kaminari::PageScopeMethods
+      end
 
       def initialize(elements = [], http_options={})
         self.replace(elements)
