@@ -22,7 +22,7 @@ module Hawk
       end
 
       def map(&block)
-        self.class.new(super, @total_count)
+        self.class.new(super, total_count: @total_count, limit: @limit_value, offset: @offset_value)
       end
     end
 
