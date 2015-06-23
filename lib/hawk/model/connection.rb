@@ -9,12 +9,12 @@ module Hawk
         base.extend ClassMethods
       end
 
-      def initialize(attributes = {}, http_options = {})
-        @http_options = http_options || {}
+      def initialize(attributes = {}, params = {})
+        @params = params || {}
 
         super
       end
-      attr_reader :http_options
+      attr_reader :params
 
       def connection
         self.class.connection

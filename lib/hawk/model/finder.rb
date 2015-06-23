@@ -17,23 +17,19 @@ module Hawk
           end
         end
 
-        def http_options_from( params )
-          params.fetch(:options, {}).merge(limit: params[:limit], offset: params[:offset] || params[:skip] )
-        end
-
         def find_one(id, params = {})
           repr = connection.get(path_for(id, params), params)
-          instantiate_one(repr, http_options_from(params) )
+          instantiate_one(repr, params)
         end
 
         def find_many(ids, params = {})
           repr = connection.post(path_for(batch_path, params), params.deep_merge(id: ids))
-          instantiate_many(repr, http_options_from(params) )
+          instantiate_many(repr, params)
         end
 
         def all(params = {})
           repr = connection.get(path_for(nil, params), params)
-          instantiate_many(repr, http_options_from(params) )
+          instantiate_many(repr, params)
         end
 
         def count(params = {})
@@ -44,32 +40,37 @@ module Hawk
           [model_path_from(params), component].compact.join('/')
         end
 
-        def instantiate_from(repr, http_options = {})
+        def instantiate_from(repr, params = {})
           if repr.is_a?(Array)
-            instantiate_many(repr, http_options)
+            instantiate_many(repr, params)
           else
-            instantiate_one(repr, http_options)
+            instantiate_one(repr, params)
           end
         end
 
-        def instantiate_one(repr, http_options)
+        def instantiate_one(repr, params)
           repr = repr.fetch(instance_key) if repr.key?(instance_key)
 
-          new repr, http_options
+          new repr, params
         end
 
-        def instantiate_many(repr, http_options)
+        def instantiate_many(repr, params)
           if repr.respond_to?(:key?)
-            collection  = repr.key?(collection_key) ? repr.fetch(collection_key)     : repr
-            total_count = repr.key?(total_count_key)  ? repr.fetch(total_count_key).to_i : nil
+            collection  = repr.key?(collection_key)  ? repr.fetch(collection_key)       : repr
+            total_count = repr.key?(total_count_key) ? repr.fetch(total_count_key).to_i : nil
           else
             collection  = repr
             total_count = repr.size
           end
 
-          Collection.new(collection.map! {|repr| new(repr, http_options) }, http_options.merge( total_count: total_count ))
-        end
+          collection_options = {
+            limit:       params[:limit],
+            offset:      params[:offset] || params[:skip], # FIXME
+            total_count: total_count
+          }
 
+          Collection.new(collection.map! {|repr| new(repr, params) }, collection_options)
+        end
 
         def instance_key
           @_instance_key ||= self.name.demodulize.underscore

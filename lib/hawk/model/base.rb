@@ -15,7 +15,7 @@ module Hawk
       include Pagination
       include Configurator
 
-      def initialize(attributes = {}, http_options = {})
+      def initialize(attributes = {}, params = {})
         super
       end
 

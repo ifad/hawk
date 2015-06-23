@@ -14,10 +14,15 @@ module Hawk
               end
             RUBY
           end
+        end
 
-          Proxy.instance_eval do
-            include Kaminari::PageScopeMethods
-          end
+        Proxy.instance_eval do
+          include Kaminari::PageScopeMethods
+        end
+
+        Collection.instance_eval do
+          include Kaminari::ConfigurationMethods::ClassMethods
+          include Kaminari::PageScopeMethods
         end
       end
     end
