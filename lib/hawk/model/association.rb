@@ -15,17 +15,18 @@ module Hawk
       # Hashes when a Model is more appropriate.
       #
       def initialize(attributes = {}, params = {})
+        super
+
         if attributes.size > 0 && self.class.associations?
           preload_associations(attributes, params, self.class)
         end
-
-        super
       end
 
       private
         def preload_associations(attributes, params, scope)
           scope.associations.each do |name, (type, options)|
-            if (repr = scope.preload_association.call(attributes, name, type, options))
+            if (repr = self.instance_exec(attributes, name, type, options,
+                                          &scope.preload_association))
 
               target = scope.model_class_for(options.fetch(:class_name))
 
