@@ -189,9 +189,10 @@ module Hawk
               def #{entities}
                 @_#{entities} ||= #{parent}::#{klass}.where(self.params.deep_merge(
                   #{key}: self.id,
-                  from:   #{from.inspect},
-                  limit:  nil,
-                  offset: nil,
+                  from:  #{from.inspect},
+
+                  #{parent}::#{klass}.limit_param => nil,
+                  #{parent}::#{klass}.offset_param => nil,
                 ))
               end
             RUBY

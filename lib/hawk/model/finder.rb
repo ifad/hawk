@@ -64,8 +64,8 @@ module Hawk
           end
 
           collection_options = {
-            limit:       params[:limit],
-            offset:      params[:offset] || params[:skip], # FIXME
+            limit:       params[limit_param],
+            offset:      params[offset_param],
             total_count: total_count
           }
 
@@ -82,6 +82,14 @@ module Hawk
 
         def total_count_key
           @_total_count_key = 'total_count'
+        end
+
+        def limit_param
+          :limit
+        end
+
+        def offset_param
+          :offset
         end
 
         def model_path_from(params)

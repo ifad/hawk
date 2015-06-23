@@ -51,11 +51,11 @@ module Hawk
       end
 
       def limit_value
-        params[:limit]
+        params[klass.limit_param]
       end
 
       def offset_value
-        params[:offset]
+        params[klass.offset_param]
       end
 
       def count
