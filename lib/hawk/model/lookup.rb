@@ -11,7 +11,7 @@ module Hawk
       module ClassMethods
         # Given
         #
-        #   module Foo
+        #   module Client
         #     module Base < Hawk::Model::Base
         #     end
         #
@@ -24,11 +24,30 @@ module Hawk
         #     end
         #   end
         #
+        #   module App
+        #     class Post < Client::Post
+        #     end
+        #
+        #     class Comment < Client::Comment
+        #     end
+        #   end
+        #
         # Then
         #
-        #   Post.model_class_for('Comment')
+        #   App::Post.model_class_for('Comment')
         #
-        # will look up a `Comment` class in `Post` first and then in `Foo`.
+        # will return `App::Comment`
+        #
+        # while
+        #
+        #   Client::Post.model_class_for('Comment')
+        #
+        # will return `Client::Comment`
+        #
+        # In a nutshell, first the model namespace is checked,
+        # then the containing namespace, and then the inheritance
+        # chain is walked up to the first class inheriting from
+        # Hawk::Model::Base.
         #
         def model_class_for(name, scope: self)
           if scope.const_defined?(name, inherit=false)
