@@ -60,7 +60,7 @@ module Hawk
             total_count = repr.key?(total_count_key) ? repr.fetch(total_count_key).to_i : nil
           else
             collection  = repr
-            total_count = repr.size
+            total_count = nil
           end
 
           collection_options = {
