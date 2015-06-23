@@ -30,7 +30,6 @@ module Hawk
       attr_reader :klass, :params
 
       def where(params)
-        params = params.reject {|_,v| v.nil?}
         self.class.new klass, @params.deep_merge(params)
       end
 

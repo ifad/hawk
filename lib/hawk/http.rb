@@ -129,6 +129,8 @@ module Hawk
             request.update options.delete(:options)
           end
 
+          options = options.reject {|_,v| v.nil?}
+
           case method # Not really sure, but looks good for now
           when 'POST', 'PUT', 'PATCH' then request[:body  ] = options
           when 'GET',  'DELETE'       then request[:params] = options
