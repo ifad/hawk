@@ -36,6 +36,12 @@ module Hawk
           end
         end
 
+        def clean_inherited_params inherited, opts={}
+          rv = {}.deep_merge opts
+          rv[:options] = inherited[:options] if inherited && inherited[:options]
+          rv
+        end
+
       module ClassMethods
         # Propagate associations to the subclasses on inheritance
         #
@@ -182,13 +188,10 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
-                @_#{entities} ||= #{parent}::#{klass}.where(self.params.deep_merge(
-                  '#{key}' => self.id,
-                  from:  #{from.inspect},
-
-                  #{parent}::#{klass}.limit_param => nil,
-                  #{parent}::#{klass}.offset_param => nil,
-                ))
+                @_#{entities} ||= #{parent}::#{klass}.where( clean_inherited_params( self.params, {
+                    '#{key}' => self.id,
+                    from:  #{from.inspect},
+                } ) )
               end
             RUBY
           },
@@ -198,10 +201,10 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
-                @_#{entity} ||= #{parent}::#{klass}.where(self.params.deep_merge(
-                  '#{key}' => self.id,
-                  from:   #{from.inspect},
-                )).first!
+                @_#{entity} ||= #{parent}::#{klass}.where( clean_inherited_params( self.params, {
+                    '#{key}' => self.id,
+                    from:  #{from.inspect},
+                } ) ).first!
               end
 
               def #{entity}
@@ -223,7 +226,7 @@ module Hawk
                   return unless (id = self.attributes.fetch(key.to_s, nil))
 
                   instance = self.class.model_class_for(klass).
-                    find(id, self.params.deep_merge(params))
+                    find(id, clean_inherited_params( self.params, params ))
 
                   instance_variable_set(ivar, instance)
                 end
@@ -239,7 +242,7 @@ module Hawk
                 @_#{entity} ||= begin
                   return unless self.#{key}
                   klass = self.class.model_class_for(self.#{entity}_type)
-                  klass.find(self.#{key}, self.params)
+                  klass.find(self.#{key}, clean_inherited_params(self.params) )
                 end
               end
             RUBY
