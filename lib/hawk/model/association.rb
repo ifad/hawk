@@ -183,7 +183,7 @@ module Hawk
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
                 @_#{entities} ||= #{parent}::#{klass}.where(self.params.deep_merge(
-                  #{key}: self.id,
+                  '#{key}' => self.id,
                   from:  #{from.inspect},
 
                   #{parent}::#{klass}.limit_param => nil,
@@ -199,7 +199,7 @@ module Hawk
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
                 @_#{entity} ||= #{parent}::#{klass}.where(self.params.deep_merge(
-                  #{key}: self.id,
+                  '#{key}' => self.id,
                   from:   #{from.inspect},
                 )).first!
               end
