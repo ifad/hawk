@@ -50,7 +50,7 @@ module Hawk
 
         def instantiate_many(repr, params)
           if repr.respond_to?(:key?)
-            collection  = repr.key?(collection_key)  ? repr.fetch(collection_key)       : repr
+            collection  = repr.key?(collection_key)  ? repr.fetch(collection_key)       : []
             total_count = repr.key?(total_count_key) ? repr.fetch(total_count_key).to_i : nil
           else
             collection  = repr
