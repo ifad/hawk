@@ -12,6 +12,7 @@ module Hawk
     autoload :Pagination,     'hawk/model/pagination'
     autoload :Configurator,   'hawk/model/configurator'
     autoload :Lookup,         'hawk/model/lookup'
+    autoload :Scoping,        'hawk/model/scoping'
   end
 
 end

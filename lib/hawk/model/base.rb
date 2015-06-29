@@ -15,6 +15,7 @@ module Hawk
       include Pagination
       include Configurator
       include Lookup
+      include Scoping
 
       def initialize(attributes = {}, params = {})
         super
