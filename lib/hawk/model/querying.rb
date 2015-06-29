@@ -64,6 +64,10 @@ module Hawk
           options(username: username, password: password)
         end
 
+        def from(path)
+          where(from: path)
+        end
+
         # Adds a limit(1) and returns the first record
         #
         def first(params = {})
