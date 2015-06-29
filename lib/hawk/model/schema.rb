@@ -64,10 +64,12 @@ module Hawk
           @_schema = {}
 
           attributes.each_key do |key|
-            if (caster = find_schema_caster_for(key))
-              @_schema[key] = caster.code
-              # Else it is read as-is
-            end
+            @_schema[key] =
+              if (caster = find_schema_caster_for(key))
+                caster.code
+              else
+                # read it as-is
+              end
 
             attr_reader key
           end
