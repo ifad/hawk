@@ -64,7 +64,10 @@ module Hawk
           @_schema = {}
 
           attributes.each_key do |key|
-            _, @_schema[key] = CASTERS.find {|re,| key =~ re }
+            if (caster = find_schema_caster_for(key))
+              @_schema[key] = caster.code
+              # Else it is read as-is
+            end
 
             attr_reader key
           end
@@ -74,24 +77,40 @@ module Hawk
           end
         end
 
+        def schema_type_of(attribute_name)
+          if (caster = find_schema_caster_for(attribute_name))
+            caster.type
+          else
+            :string
+          end
+        end
+
+        def find_schema_caster_for(attribute)
+          _, caster = CASTERS.find {|re,| attribute =~ re }
+          return caster
+        end
+
         def after_schema(&block)
           @_after_schema = block if block
           @_after_schema
         end
       end
 
+      class Caster < Struct.new(:type, :code)
+      end
+
       CASTERS = {
         /_(?:at|from|until|on)$/ =>
-          -> (value) { Time.parse(value) }                ,
+          Caster.new(:datetime, -> (value) { Time.parse(value) })                ,
 
         /_date$/ =>
-          -> (value) { Date.parse(value) }                ,
+          Caster.new(:date,     -> (value) { Date.parse(value) })                ,
 
         /_num$/ =>
-          -> (value) { BigDecimal.new(value) }            ,
+          Caster.new(:integer,  -> (value) { BigDecimal.new(value) })            ,
 
         /^is_/ =>
-          -> (value) { value.in? ['1', 'true', 1, true] } ,
+          Caster.new(:boolean,  -> (value) { value.in? ['1', 'true', 1, true] }) ,
       }
     end
 
