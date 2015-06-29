@@ -124,11 +124,6 @@ module Hawk
           from   = options[:from]
           # TODO params
 
-          if from && from[0,4] != 'http'
-            from = ['/', from].join unless from[0] == '/'
-            from = [site, from].join
-          end
-
           _define_association(entities, :has_many, class_name: klass, primary_key: key, from: from)
         end
 
