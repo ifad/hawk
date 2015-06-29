@@ -56,7 +56,7 @@ module Hawk
       end
 
       def request(method, path, options)
-        url        = base.merge(path.sub(/^\//, ''))
+        url        = base.merge(path.sub(/^\//, '')).to_s
         request    = build_request_options_from(method, options)
         descriptor = { url: url, method: method, params: request[:params] }
 
