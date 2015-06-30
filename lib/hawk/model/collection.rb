@@ -7,7 +7,7 @@ module Hawk
 
         @total_count  = options[:total_count]
         @limit_value  = options[:limit]
-        @offset_value = options[:offset]
+        @offset_value = options[:offset].to_i
       end
 
       def inspect
@@ -21,7 +21,7 @@ module Hawk
       end
 
       def offset_value
-        @offset_value or raise Hawk::Error, "This collection is not paginated"
+        @offset_value
       end
 
       def count
