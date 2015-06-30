@@ -55,7 +55,7 @@ module Hawk
       end
 
       def offset_value
-        params[klass.offset_param]
+        params[klass.offset_param].to_i
       end
 
       def count
