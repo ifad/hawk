@@ -16,7 +16,6 @@ module Hawk
       #
       def initialize(attributes = {}, params = {})
         super
-
         if attributes.size > 0 && self.class.associations?
           preload_associations(attributes, params, self.class)
         end
@@ -24,16 +23,38 @@ module Hawk
 
       private
         def preload_associations(attributes, params, scope)
-          scope.associations.each do |name, (type, options)|
-            if (repr = self.instance_exec(attributes, name, type, options,
-                                          &scope.preload_association))
+          self.instance_exec(scope, attributes, &scope.preload_association)
+        end
 
-              target = scope.model_class_for(options.fetch(:class_name))
-
-              result = target.instantiate_from(repr, params)
-              instance_variable_set("@_#{name}", result)
+        def add_association_object scope, name, repr
+          (type, options) = scope.associations[name.to_sym]
+          (type, options) = scope.associations[name.pluralize.to_sym] unless type
+          (type, options) = scope.associations[name.singularize.to_sym] unless type
+          if type
+            target = scope.model_class_for( options.fetch(:class_name) )
+            result = target.instantiate_from(repr, params)
+            if is_collection?(type)
+              add_to_association_collection name, result
+            else
+              set_association_value name, result
             end
+          else
+            raise "Unhandled assocation: #{name}"
           end
+        end
+
+        def is_collection? type
+          [ :polymorphic_belongs_to, :has_many ].include? type
+        end
+
+        def add_to_association_collection name, target
+          variable = "@_#{name}"
+          instance_variable_set(variable,Collection.new) unless instance_variable_defined?(variable)
+          instance_eval "#{variable} << target"
+        end
+
+        def set_association_value name, target
+          instance_variable_set("@_#{name}", target)
         end
 
         def clean_inherited_params inherited, opts={}
@@ -171,8 +192,8 @@ module Hawk
         private
 
         def _define_association(name, type, options)
-          @_associations[name] = [type, options]
-          instance_exec(name, options, &CODE.fetch(type))
+          @_associations[name.to_sym] = [type, options]
+          instance_exec(name.to_s, options, &CODE.fetch(type))
         end
 
         # The raw associations code
@@ -183,7 +204,8 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
-                @_#{entities} ||= #{parent}::#{klass}.where( clean_inherited_params( self.params, {
+                return @_#{entities} if instance_variable_defined?('@_#{entities}')
+                @_#{entities} = #{parent}::#{klass}.where( clean_inherited_params( self.params, {
                     '#{key}' => self.id,
                     from:  #{from.inspect},
                 } ) )
@@ -196,7 +218,8 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
-                @_#{entity} ||= #{parent}::#{klass}.where( clean_inherited_params( self.params, {
+                return @_#{entity} if instance_variable_defined?('@_#{entity}')
+                @_#{entity} = #{parent}::#{klass}.where( clean_inherited_params( self.params, {
                     '#{key}' => self.id,
                     from:  #{from.inspect},
                 } ) ).first!
@@ -217,14 +240,13 @@ module Hawk
 
             class_eval do
               define_method(entity) do
-                instance_variable_get(ivar) || begin
-                  return unless (id = self.attributes.fetch(key.to_s, nil))
+                return instance_variable_get(ivar) if instance_variable_defined?(ivar)
+                return unless (id = self.attributes.fetch(key.to_s, nil))
 
-                  instance = self.class.model_class_for(klass).
-                    find(id, clean_inherited_params( self.params, params ))
+                instance = self.class.model_class_for(klass).
+                  find(id, clean_inherited_params( self.params, params ))
 
-                  instance_variable_set(ivar, instance)
-                end
+                instance_variable_set(ivar, instance)
               end
             end
           },
@@ -234,7 +256,8 @@ module Hawk
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}
-                @_#{entity} ||= begin
+                return @_#{entity} if instance_variable_defined?('@_#{entity}')
+                @_#{entity} = begin
                   return unless self.#{key}
                   klass = self.class.model_class_for(self.#{entity}_type)
                   klass.find(self.#{key}, clean_inherited_params(self.params) )

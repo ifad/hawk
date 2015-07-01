@@ -33,11 +33,13 @@ module Hawk
 
       private
         def cast!(attributes)
+          return if @__schema_defined
           schema(attributes).each do |key, caster|
             next unless value = attributes.fetch(key, nil)
             value = caster.call(value) if caster
             write_attribute key, value
           end
+          @__schema_defined = true
         end
 
         def schema(attributes = nil)
