@@ -26,10 +26,11 @@ module Hawk
           self.instance_exec(scope, attributes, &scope.preload_association)
         end
 
-        def add_association_object scope, name, repr
+        def add_association_object(scope, name, repr)
           (type, options) = scope.associations[name.to_sym]
           (type, options) = scope.associations[name.pluralize.to_sym] unless type
           (type, options) = scope.associations[name.singularize.to_sym] unless type
+
           if type
             target = scope.model_class_for( options.fetch(:class_name) )
             result = target.instantiate_from(repr, params)
@@ -114,11 +115,15 @@ module Hawk
         #
         def preload_association(&block)
           @_preload_association = block if block
-          @_preload_association ||= lambda do |attributes, name, type, options|
-            attr = name.to_s
+          @_preload_association ||= lambda do |scope, attributes|
+            if scope.associations?
+              scope.associations.each_key do |name|
+                attr = name.to_s
+                next unless attributes.key?(attr)
 
-            if attributes.key?(attr)
-              return attributes.delete(attr)
+                repr = attributes.delete(attr)
+                add_association_object(scope, name, repr)
+              end
             end
           end
         end
