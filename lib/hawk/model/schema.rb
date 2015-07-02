@@ -64,6 +64,8 @@ module Hawk
           @_schema = {}
 
           attributes.each_key do |key|
+            next if association?(key)
+
             @_schema[key] =
               if (caster = find_schema_caster_for(key))
                 caster.code

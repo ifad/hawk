@@ -140,6 +140,12 @@ module Hawk
           @_associations && @_associations.size > 0
         end
 
+        # Check whether the given attribute is an association
+        #
+        def association?(attribute)
+          @_associations.key?(attribute.to_sym)
+        end
+
         # Adds an has_many association, mimicking ActiveRecord's interface
         # TODO better documentation
         #
