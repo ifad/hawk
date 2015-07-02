@@ -50,8 +50,9 @@ module Hawk
 
         def add_to_association_collection name, target
           variable = "@_#{name}"
-          instance_variable_set(variable,Collection.new) unless instance_variable_defined?(variable)
-          instance_eval "#{variable} << target"
+          instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
+          collection = instance_variable_get(variable)
+          target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
         end
 
         def set_association_value name, target
