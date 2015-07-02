@@ -41,9 +41,7 @@ module Hawk
         end
 
         def schema(attributes = nil)
-          defined_attributes = self.class.schema || {}
-
-          if attributes && attributes.size > defined_attributes.size
+          if attributes && attributes.size > 0 && self.class.schema.nil?
             self.class.define_schema_from(attributes)
           end
           self.class.schema || {}
