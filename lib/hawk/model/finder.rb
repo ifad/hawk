@@ -33,7 +33,8 @@ module Hawk
         end
 
         def count(params = {})
-          connection.get(path_for(count_path, params), params)
+          repr = connection.get(path_for(count_path, params), params)
+          repr.fetch('count').to_i
         end
 
         def path_for(component, params = {})
