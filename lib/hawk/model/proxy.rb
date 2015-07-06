@@ -51,11 +51,15 @@ module Hawk
       end
 
       def limit_value
-        params[klass.limit_param]
+        params[klass.limit_param].to_i
       end
 
       def offset_value
         params[klass.offset_param].to_i
+      end
+
+      def current_page
+        limit_value == 0 ? 1 : (offset_value / limit_value)+1
       end
 
       def count

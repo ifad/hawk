@@ -24,6 +24,10 @@ module Hawk
         @offset_value
       end
 
+      def current_page
+        limit_value == 0 ? 1 : (offset_value/limit_value)+1
+      end
+
       def count
         total_count || super
       end
