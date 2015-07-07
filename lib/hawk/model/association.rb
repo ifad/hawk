@@ -18,12 +18,6 @@ module Hawk
         super
         if attributes.size > 0 && self.class.associations?
           preload_associations(attributes, params, self.class)
-
-          # Handle assocs with no entries
-          params[:links].to_s.split(/,/).each do |name|
-            name, type, options = get_association(name,self.class)
-            instantiate_association(name, type)
-          end
         end
       end
 
@@ -31,15 +25,15 @@ module Hawk
         # Called to kick off the preloading of association objects from the response hash
         #
         def preload_associations(attributes, params, scope)
-          self.instance_exec(scope, attributes, &scope.preload_association)
+          self.instance_exec(scope, attributes, params, &scope.preload_association)
         end
 
         # Called by the subclass to instantiate an association object
         #
         def add_association_object(scope, name, repr)
-          name, type, options = get_association(name,scope)
+          (type, options) = scope.associations[name.to_sym]
           if type
-            target = scope.model_class_for( options.fetch(:class_name) )
+            target = scope.model_class_for(options.fetch(:class_name))
             result = target.instantiate_from(repr, params)
             set_or_add_association(name, type, result)
           else
@@ -53,16 +47,6 @@ module Hawk
           [ :polymorphic_belongs_to, :has_many ].include? type
         end
 
-        # Returns the association metadata for the given association name. This
-        # method is partly needed because, while the association description
-        # may be pluralised, the includes() parameter will be singularised.
-        #
-        def get_association name, scope
-          name = name.pluralize if scope.associations[name.pluralize.to_sym]
-          name = name.singularize if scope.associations[name.singularize.to_sym]
-          return name, *(scope.associations[name.to_sym])
-        end
-
         # Returns the association variable name
         #
         def association_instance_variable name
@@ -72,14 +56,14 @@ module Hawk
         # Returns true if the association has been previously assigned
         #
         def association_assigned? name
-          instance_variable_defined?( association_instance_variable(name) )
+          instance_variable_defined?(association_instance_variable(name))
         end
 
         # Creates a blank assocation (empty collection or nil, depending on the type)
         #
         def instantiate_association name, type
           variable = association_instance_variable(name)
-          return if association_assigned?(name)
+          return variable if association_assigned?(name)
           instance_variable_set( variable, is_collection?(type) ? Collection.new : nil )
           variable
         end
@@ -91,7 +75,7 @@ module Hawk
           variable = instantiate_association( name, type )
           if is_collection?(type)
             collection = instance_variable_get(variable)
-            target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
+            value.respond_to?(:each) ? collection.concat(value) : collection.push(value)
           else
             instance_variable_set(variable, value)
           end
