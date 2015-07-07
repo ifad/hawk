@@ -39,6 +39,10 @@ module Hawk
           offset:      @offset_value
         )
       end
+
+      def all
+        self
+      end
     end
 
   end
