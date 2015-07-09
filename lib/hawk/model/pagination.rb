@@ -2,6 +2,12 @@ module Hawk
   module Model
 
     module Pagination
+      module Common
+        def current_page
+          limit_value == 0 ? 1 : (offset_value / limit_value)+1
+        end
+      end
+
       if defined?(::Kaminari)
         def self.included(base)
           base.instance_eval do
@@ -18,11 +24,13 @@ module Hawk
 
         Proxy.instance_eval do
           include Kaminari::PageScopeMethods
+          include Pagination::Common
         end
 
         Collection.instance_eval do
           include Kaminari::ConfigurationMethods::ClassMethods
           include Kaminari::PageScopeMethods
+          include Pagination::Common
         end
       end
     end

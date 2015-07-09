@@ -58,10 +58,6 @@ module Hawk
         params[klass.offset_param].to_i
       end
 
-      def current_page
-        limit_value == 0 ? 1 : (offset_value / limit_value)+1
-      end
-
       def count
         if @result
           @result.count
