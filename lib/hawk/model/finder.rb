@@ -68,7 +68,9 @@ module Hawk
         end
 
         def instantiate_one(repr, params)
-          repr = repr.fetch(instance_key) if repr.key?(instance_key)
+          if repr.key?(instance_key) && (repr[instance_key].is_a?(Hash))
+            repr = repr.fetch(instance_key)
+          end
 
           new repr, params
         end
