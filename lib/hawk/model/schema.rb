@@ -112,7 +112,7 @@ module Hawk
           Caster.new(:integer,  -> (value) { BigDecimal.new(value) })            ,
 
         /^is_/ =>
-          Caster.new(:boolean,  -> (value) { value.in? ['1', 'true', 1, true] }) ,
+          Caster.new(:boolean,  -> (value) { ['1', 'true', 1, true].include?(value) }) ,
       }
     end
 
