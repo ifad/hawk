@@ -44,8 +44,11 @@ module Hawk
         alias url= url
 
         def http_options(options = nil)
-          @_http_options = options.dup.freeze if options
           @_http_options ||= {}
+
+          if options
+            @_http_options = @_http_options.merge(options.dup).freeze
+          end
 
           configurable.each {|model| model.http_options = @_http_options }
 
