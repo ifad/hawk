@@ -112,36 +112,42 @@ module Hawk
 
         # Defines how associations should be preloaded.
         #
-        # The given block gets called when a new entity is instantiated, and
-        # it gets passed the object attributes, the association's name, type
-        # and options.
+        # The given block gets called with the Hash returned in the client
+        # request. The block's task is to identify all association Hashes
+        # within the request and call "add_association_object", passing in
+        # the scope, the association name and the association Hash.
         #
-        # Example (for Joe :-)
+        # Please note: the "name" parameter should be the association name,
+        # which means it must be pluralised for has_many and polymorphic
+        # belongs_to
+        #
+        # Example (for Marcello :-)
         #
         #     class Foo < Hawk::Model::Base
         #
         #       has_many :bars
         #
-        #       preload_association do |attributes, name, type, options|
-        #         if attributes.key?('links')
-        #           links = attributes['links']
-        #           if links.key?(name)
-        #             return attributes.delete(links[name])
-        #           end
+        #       preload_association do |scope, attributes, params|
+        #         attributes['linked_objects'].each do |object|
+        #           add_association_object(scope, object['type'], object)
         #         end
         #       end
         #
         #     end
         #
-        # The block would get called once, with :bars as `name`, :has_many as
-        # `type` and `{class_name:'Bar', primary_key:'foo_id'}` as `options`.
+        # The block would get called once, with Foo as scope, attributes being
+        # the response Hash, and params holding the query parameters, which
+        # is useful if you wish to check params[:includes] to set those
+        # associations only.
         #
-        # By default it looks up in the representation a property named after
-        # the association's name and returns it, deleting it from the repr.
+        # The default implementation of preload_association will look for all
+        # attribute elements named after the association (e.g.
+        # attributes['bars']) and call add_association_object with that value,
+        # deleting it from the Hash.
         #
         def preload_association(&block)
           @_preload_association = block if block
-          @_preload_association ||= lambda do |scope, attributes|
+          @_preload_association ||= lambda do |scope, attributes, params|
             if scope.associations?
               scope.associations.each_key do |name|
                 attr = name.to_s
