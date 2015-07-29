@@ -81,7 +81,7 @@ module Hawk
 
         if response.timed_out?
           what, secs = if response.connect_time.zero? # Connect failed
-            [ :connect, req.options[:connect_timeout] ]
+            [ :connect, req.options[:connecttimeout] ]
           else
             [ :request, req.options[:timeout] ]
           end
