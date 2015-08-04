@@ -213,11 +213,12 @@ module Hawk
         CODE = {
           has_many: -> (entities, options) {
             klass, key, from = options.values_at(*[:class_name, :primary_key, :from])
+            entity = entities.to_s.singularize
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
-                return @_#{entities} if instance_variable_defined?('@_#{entities}')
-                @_#{entities} = #{parent}::#{klass}.where( clean_inherited_params( self.params, {
+                return @_#{entity} if instance_variable_defined?('@_#{entity}')
+                @_#{entity} = #{parent}::#{klass}.where( clean_inherited_params( self.params, {
                     '#{key}' => self.id,
                     from:  #{from.inspect},
                 } ) )
