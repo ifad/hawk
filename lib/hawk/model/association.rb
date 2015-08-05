@@ -22,43 +22,68 @@ module Hawk
       end
 
       private
+        # Called to kick off the preloading of association objects from the response hash
+        #
         def preload_associations(attributes, params, scope)
-          self.instance_exec(scope, attributes, &scope.preload_association)
+          self.instance_exec(scope, attributes, params, &scope.preload_association)
         end
 
+        # Called by the subclass to instantiate an association object
+        #
         def add_association_object(scope, name, repr)
           (type, options) = scope.associations[name.to_sym]
-          (type, options) = scope.associations[name.pluralize.to_sym] unless type
-          (type, options) = scope.associations[name.singularize.to_sym] unless type
-
           if type
-            target = scope.model_class_for( options.fetch(:class_name) )
+            target = scope.model_class_for(options.fetch(:class_name))
             result = target.instantiate_from(repr, params)
-            if is_collection?(type)
-              add_to_association_collection name, result
-            else
-              set_association_value name, result
-            end
+            set_or_add_association(name, type, result)
           else
             raise "Unhandled assocation: #{name}"
           end
         end
 
+        # Returns true if the association type is a collection
+        #
         def is_collection? type
           [ :polymorphic_belongs_to, :has_many ].include? type
         end
 
-        def add_to_association_collection name, target
-          variable = "@_#{name}"
-          instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
-          collection = instance_variable_get(variable)
-          target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
+        # Returns the association variable name
+        #
+        def association_instance_variable name
+          "@_#{name}"
         end
 
-        def set_association_value name, target
-          instance_variable_set("@_#{name}", target)
+        # Returns true if the association has been previously assigned
+        #
+        def association_assigned? name
+          instance_variable_defined?(association_instance_variable(name))
         end
 
+        # Creates a blank assocation (empty collection or nil, depending on the type)
+        #
+        def instantiate_association name, type
+          variable = association_instance_variable(name)
+          return variable if association_assigned?(name)
+          instance_variable_set( variable, is_collection?(type) ? Collection.new : nil )
+          variable
+        end
+
+        # Sets an association value, or adds it to the collection, depending on
+        # type
+        #
+        def set_or_add_association name, type, value
+          variable = instantiate_association( name, type )
+          if is_collection?(type)
+            collection = instance_variable_get(variable)
+            value.respond_to?(:each) ? collection.concat(value) : collection.push(value)
+          else
+            instance_variable_set(variable, value)
+          end
+        end
+
+        # Removes inherited parameters (e.g. filter constraints) to stop them
+        # tramping into association gets
+        #
         def clean_inherited_params inherited, opts={}
           rv = {}.deep_merge opts
           rv[:options] = inherited[:options] if inherited && inherited[:options]
@@ -87,36 +112,42 @@ module Hawk
 
         # Defines how associations should be preloaded.
         #
-        # The given block gets called when a new entity is instantiated, and
-        # it gets passed the object attributes, the association's name, type
-        # and options.
+        # The given block gets called with the Hash returned in the client
+        # request. The block's task is to identify all association Hashes
+        # within the request and call "add_association_object", passing in
+        # the scope, the association name and the association Hash.
         #
-        # Example (for Joe :-)
+        # Please note: the "name" parameter should be the association name,
+        # which means it must be pluralised for has_many and polymorphic
+        # belongs_to
+        #
+        # Example (for Marcello :-)
         #
         #     class Foo < Hawk::Model::Base
         #
         #       has_many :bars
         #
-        #       preload_association do |attributes, name, type, options|
-        #         if attributes.key?('links')
-        #           links = attributes['links']
-        #           if links.key?(name)
-        #             return attributes.delete(links[name])
-        #           end
+        #       preload_association do |scope, attributes, params|
+        #         attributes['linked_objects'].each do |object|
+        #           add_association_object(scope, object['type'], object)
         #         end
         #       end
         #
         #     end
         #
-        # The block would get called once, with :bars as `name`, :has_many as
-        # `type` and `{class_name:'Bar', primary_key:'foo_id'}` as `options`.
+        # The block would get called once, with Foo as scope, attributes being
+        # the response Hash, and params holding the query parameters, which
+        # is useful if you wish to check params[:includes] to set those
+        # associations only.
         #
-        # By default it looks up in the representation a property named after
-        # the association's name and returns it, deleting it from the repr.
+        # The default implementation of preload_association will look for all
+        # attribute elements named after the association (e.g.
+        # attributes['bars']) and call add_association_object with that value,
+        # deleting it from the Hash.
         #
         def preload_association(&block)
           @_preload_association = block if block
-          @_preload_association ||= lambda do |scope, attributes|
+          @_preload_association ||= lambda do |scope, attributes, params|
             if scope.associations?
               scope.associations.each_key do |name|
                 attr = name.to_s

@@ -52,8 +52,8 @@ module Hawk
           where(order: by)
         end
 
-        def includes(what)
-          where(includes: what)
+        def includes(*what)
+          where(includes: [what].flatten)
         end
 
         def options(opts)
