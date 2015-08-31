@@ -50,13 +50,19 @@ module Hawk
       parse request('POST', path, params)
     end
 
+    def url_length(path, method=:get, options={})
+      url        = build_url(path)
+      request    = build_request_options_from(method.to_s.upcase, options)
+      Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request))).url.length
+    end
+
     protected
       def parse(body)
         MultiJson.load(body)
       end
 
       def request(method, path, options)
-        url        = base.merge(path.sub(/^\//, '')).to_s
+        url        = build_url(path)
         request    = build_request_options_from(method, options)
         descriptor = { url: url, method: method, params: request[:params] }
 
@@ -71,6 +77,10 @@ module Hawk
       end
 
     private
+      def build_url path
+        base.merge(path.sub(/^\//, '')).to_s
+      end
+
       def response_handler(response)
         return if response.success?
 

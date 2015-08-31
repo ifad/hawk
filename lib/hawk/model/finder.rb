@@ -23,17 +23,23 @@ module Hawk
         end
 
         def find_many(ids, params = {})
-          repr = connection.post(path_for(batch_path, params), params.deep_merge(id: ids))
-          instantiate_many(repr, params)
+          all(params.deep_merge(id: ids))
         end
 
         def all(params = {})
-          repr = connection.get(path_for(nil, params), params)
+          path = path_for(nil, params)
+          if connection.url_length(path,:get,params) > 2000
+            path = path_for(batch_path, params)
+            method = :post
+          end
+          repr = connection.send(method||:get, path, params)
           instantiate_many(repr, params)
         end
 
         def count(params = {})
-          repr = connection.get(path_for(count_path, params), params)
+          path = path_for(count_path, params)
+          method = connection.url_length(path,:get,params) > 2000 ? :post : :get
+          repr = connection.send(method, path, params)
           repr.fetch('count').to_i
         end
 
