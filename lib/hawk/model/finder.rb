@@ -40,7 +40,7 @@ module Hawk
           path = path_for(count_path, params)
           method = connection.url_length(path,:get,params) > 2000 ? :post : :get
           repr = connection.send(method, path, params)
-          repr.fetch('count').to_i
+          repr.fetch(count_key).to_i
         end
 
         def path_for(component, params = {})
@@ -91,6 +91,10 @@ module Hawk
 
         def total_count_key
           @_total_count_key = 'total_count'
+        end
+
+        def count_key
+          @_count_key = 'count'
         end
 
         def limit_param
