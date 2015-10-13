@@ -164,7 +164,7 @@ module Hawk
         # TODO better documentation
         #
         def has_one(entity, options = {})
-          entity = entity.to_s.singularize
+          entity = entity.to_s
           klass  = options[:class_name] || entity.camelize
           key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
           from   = options[:from]
