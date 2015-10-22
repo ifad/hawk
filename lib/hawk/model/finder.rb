@@ -8,6 +8,10 @@ module Hawk
         base.extend ClassMethods
       end
 
+      def path_for(component, params = {})
+        [self.class.model_path_from(params), self.id, component].join('/')
+      end
+
       module ClassMethods
         def find(id_or_ids, params = {})
           if id_or_ids.respond_to?(:each)

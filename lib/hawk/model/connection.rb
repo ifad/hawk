@@ -20,7 +20,34 @@ module Hawk
         self.class.connection
       end
 
+      # These methods delegate to connection and path_for, but are
+      # included in both the instance and the class, and in both
+      # cases they reference the specialized implementation of
+      # path_for, class- or instance- level.
+      #
+      module SharedMethods
+        def get(component, params = {})
+          connection.get(path_for(component), params)
+        end
+
+        def raw_get(component, params = {})
+          connection.raw_get(path_for(component), params)
+        end
+
+        def post(component, params = {})
+          connection.post(path_for(component), params)
+        end
+
+        def raw_post(component, params = {})
+          connection.raw_post(path_for(component), params)
+        end
+      end
+
+      include SharedMethods
+
       module ClassMethods
+        include SharedMethods
+
         def connection
           @_connection ||= begin
             raise Error::Configuration, "URL for #{name} is not yet set" unless url
