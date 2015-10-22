@@ -218,10 +218,11 @@ module Hawk
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
                 return @_#{entity} if instance_variable_defined?('@_#{entity}')
-                @_#{entity} = #{parent}::#{klass}.where( clean_inherited_params( self.params, {
-                    '#{key}' => self.id,
-                    from:  #{from.inspect},
-                } ) )
+                params = clean_inherited_params(self.params, '#{key}' => self.id)
+
+                @_#{entity} = #{parent}::#{klass}.where(params)
+                #{"@_#{entity} = @_#{entity}.from(#{from.inspect})" if from}
+                return @_#{entity}
               end
             RUBY
           },
@@ -232,10 +233,12 @@ module Hawk
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
                 return @_#{entity} if instance_variable_defined?('@_#{entity}')
-                @_#{entity} = #{parent}::#{klass}.where( clean_inherited_params( self.params, {
-                    '#{key}' => self.id,
-                    from:  #{from.inspect},
-                } ) ).first!
+
+                params = clean_inherited_params(self.params, '#{key}' => self.id)
+                @_#{entity} = #{parent}::#{klass}.where(params)
+                #{"@_#{entity} = @_#{entity}.from(#{from.inspect})" if from}
+                @_#{entity} = @_#{entity}.first!
+                return @_#{entity}
               end
 
               def #{entity}
