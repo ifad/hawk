@@ -40,7 +40,7 @@ module Hawk
             cached
           else
             block.call.tap do |cacheable|
-              @_cache.set(key, cacheable)
+              @_cache.set(key, cacheable, descriptor[:ttl])
             end
           end
         end

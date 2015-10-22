@@ -71,11 +71,12 @@ module Hawk
 
       def request(method, path, options)
         url        = build_url(path)
+        cache_opts = options.delete(:cache) || {}
         request    = build_request_options_from(method, options)
         descriptor = { url: url, method: method, params: request[:params] }
 
         instrument :request, descriptor do |descriptor|
-          caching descriptor do
+          caching descriptor.update(cache_opts) do
             request = Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request)))
             request.on_complete(&method(:response_handler))
 
