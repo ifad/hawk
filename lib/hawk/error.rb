@@ -47,6 +47,14 @@ module Hawk
         super(404, message)
       end
     end
+
+    # Server bailed with a 403
+    #
+    class Forbidden < HTTP
+      def initialize(message)
+        super(403, message)
+      end
+    end
   end
 
 end

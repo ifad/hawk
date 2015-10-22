@@ -102,6 +102,8 @@ module Hawk
         case (code = response.response_code)
         when 0
           raise Error::Empty, "#{it}: Empty response from server (#{response.status_message})"
+        when 403
+          raise Error::Forbidden, "#{it} denied access"
         when 404
           raise Error::NotFound, "#{it} was not found"
         when 500
