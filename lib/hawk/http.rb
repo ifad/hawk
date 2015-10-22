@@ -43,11 +43,19 @@ module Hawk
     end
 
     def get(path, params = {})
-      parse request('GET', path, params)
+      parse raw_get(path, params)
+    end
+
+    def raw_get(path, params = {})
+      request('GET', path, params)
     end
 
     def post(path, params = {})
-      parse request('POST', path, params)
+      parse raw_post(path, params)
+    end
+
+    def raw_post(path, params = {})
+      request('POST', path, params)
     end
 
     def url_length(path, method=:get, options={})
