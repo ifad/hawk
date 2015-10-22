@@ -99,7 +99,7 @@ module Hawk
           raise Error::Timeout, "#{it}: #{what} timed out after #{secs} seconds"
         end
 
-        case response.response_code
+        case (code = response.response_code)
         when 0
           raise Error::Empty, "#{it}: Empty response from server (#{response.status_message})"
         when 404
@@ -109,7 +109,7 @@ module Hawk
         else
           app_error = parse_app_error_from(response.body)
 
-          raise Error, "#{it} failed with error #{response.code} (#{response.status_message}): #{app_error}"
+          raise Error::HTTP.new(code, "#{it} failed with error #{code} (#{response.status_message}): #{app_error}")
         end
       end
 
