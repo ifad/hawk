@@ -65,7 +65,7 @@ module Hawk
         end
 
         def from(path)
-          where(from: path)
+          options(endpoint: path)
         end
 
         # Adds a limit(1) and returns the first record

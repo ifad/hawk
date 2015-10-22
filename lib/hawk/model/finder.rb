@@ -106,7 +106,7 @@ module Hawk
         end
 
         def model_path_from(params)
-          if (from = params.delete(:from))
+          if (from = params.fetch(:options, {}).delete(:endpoint))
             from = [model_path, from].join('/') unless from[0] == '/'
             from
           else
