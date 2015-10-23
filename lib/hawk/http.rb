@@ -45,7 +45,6 @@ module Hawk
     def get(path, params = {})
       parse raw_get(path, params)
     end
-
     def raw_get(path, params = {})
       request('GET', path, params)
     end
@@ -53,9 +52,29 @@ module Hawk
     def post(path, params = {})
       parse raw_post(path, params)
     end
-
     def raw_post(path, params = {})
       request('POST', path, params)
+    end
+
+    def put(path, params = {})
+      parse raw_put(path, params)
+    end
+    def raw_put(path, params = {})
+      request('PUT', path, params)
+    end
+
+    def patch(path, params = {})
+      parse raw_patch(path, params)
+    end
+    def raw_patch(path, params = {})
+      request('PATCH', path, params)
+    end
+
+    def delete(path, params = {})
+      parse raw_delete(path, params)
+    end
+    def raw_delete(path, params = {})
+      request('DELETE', path, params)
     end
 
     def url_length(path, method=:get, options={})
@@ -152,9 +171,16 @@ module Hawk
 
           options = options.reject {|_,v| v.nil?}
 
-          case method # Not really sure, but looks good for now
-          when 'POST', 'PUT', 'PATCH' then request[:body  ] = options
-          when 'GET',  'DELETE'       then request[:params] = options
+          # URL-encoded only, for now.
+          #
+          case method
+          when 'POST', 'PUT', 'PATCH'
+            request[:headers] ||= {}
+            request[:headers]['Content-Type'] ||= 'application/x-www-form-urlencoded'
+
+            request[:body] = options
+          when 'GET',  'DELETE'
+            request[:params] = options
           else
             raise Hawk::Error, "Invalid HTTP method: #{method}"
           end
