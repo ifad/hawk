@@ -34,8 +34,8 @@ module Hawk
       private
         def cast!(attributes)
           schema(attributes).each do |key, caster|
-            next unless value = attributes.fetch(key, nil)
-            value = caster.call(value) if caster
+            next unless attributes.key?(key)
+            value = caster.call(attributes.fetch(key)) if caster
             write_attribute key, value
           end
         end
