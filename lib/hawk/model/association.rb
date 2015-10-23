@@ -27,10 +27,11 @@ module Hawk
         end
 
         def add_association_object(scope, name, repr)
-          (type, options) = scope.associations[name.to_sym]
-          (type, options) = scope.associations[name.pluralize.to_sym] unless type
-          (type, options) = scope.associations[name.singularize.to_sym] unless type
+          associations = scope.associations
 
+          (type, options) = associations[name.to_sym]             ||
+                            associations[name.pluralize.to_sym]   ||
+                            associations[name.singularize.to_sym]
           if type
             target = scope.model_class_for( options.fetch(:class_name) )
             result = target.instantiate_from(repr, params)
