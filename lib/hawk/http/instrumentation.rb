@@ -5,7 +5,7 @@ module Hawk
       def self.included(base)
         # https://github.com/ifad/instrumenter
         if defined?(::Instrumenter)
-          Instrumenter.instrument base, :hawk # FIXME use-replaceable
+          Instrumenter.instrument base, :hawk # FIXME user-replaceable
         else
           base.instance_eval { include Basic }
         end
