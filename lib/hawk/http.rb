@@ -11,6 +11,8 @@ module Hawk
   # Represent an HTTP connector, to be linked to a {Model}.
   #
   class HTTP
+    using Hawk::Polyfills # Hash#deep_merge
+
     prepend Caching
     include Instrumentation
 
@@ -23,7 +25,7 @@ module Hawk
     }
 
     def initialize(base, options = {})
-      @defaults = DEFAULTS.merge(options)
+      @defaults = DEFAULTS.deep_merge(options)
 
       @base = URI.parse(base).tap do |url|
         unless %w( http https ).include? url.scheme

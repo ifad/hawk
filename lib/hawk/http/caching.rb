@@ -4,6 +4,8 @@ module Hawk
   class HTTP
 
     module Caching
+      using Hawk::Polyfills # Hash#deep_merge
+
       DEFAULTS = {
         server: 'localhost:11211',
         namespace: 'hawk',
@@ -16,7 +18,7 @@ module Hawk
         super
 
         options = defaults.delete(:cache) || {}
-        initialize_cache(DEFAULTS.merge(options))
+        initialize_cache(DEFAULTS.deep_merge(options))
       end
 
       def inspect
@@ -27,6 +29,14 @@ module Hawk
         end
 
         super.sub(/>$/, ", #{description}>")
+      end
+
+      def cache_configured?
+        !@_cache.nil?
+      end
+
+      def cache_options
+        @_cache_options
       end
 
       protected
@@ -57,9 +67,12 @@ module Hawk
             descriptor[:cached] = true
             cached
           else
+            ttl = descriptor[:expires_in] ||
+                  @_cache_options[:expires_in]
+
             block.call.tap do |cacheable|
-              #$stderr.puts "CACHE: store #{key}"
-              @_cache.set(key, cacheable, descriptor[:ttl])
+              $stderr.puts "CACHE: store #{key} with ttl #{ttl}"
+              @_cache.set(key, cacheable, ttl)
             end
           end
         end
@@ -82,23 +95,39 @@ module Hawk
         end
 
         def initialize_cache(options)
-          server = options.delete(:server)
-          return unless server
+          unless options.key?(:server)
+            raise Error::Configuration, "Cache server option is mandatory"
+          end
 
-          client = Dalli::Client.new(server, options)
+          client, server, version = connect_cache(options)
 
-          if version = client.version.fetch(server, nil)
+          if client && server && version
             @_cache = client
             @_cache_server = server
-            @_cache_options = options
             @_cache_version = version
-          else
-            $stderr.puts "Hawk: can't connect to memcached server #{server}, caching disabled"
+            @_cache_options = options
           end
         end
 
-        def cache_configured?
-          !@_cache.nil?
+        def connect_cache(options)
+          static_options = options.dup
+          static_options.delete(:expires_in)
+
+          cache_servers[static_options] ||= begin
+            server = options[:server]
+            client = Dalli::Client.new(server, static_options)
+
+            if version = client.version.fetch(server, nil)
+              [client, server, version]
+            else
+              $stderr.puts "Hawk: can't connect to memcached server #{server}"
+              nil
+            end
+          end
+        end
+
+        def cache_servers
+          @@cache_servers ||= {}
         end
     end
 

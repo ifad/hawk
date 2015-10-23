@@ -93,7 +93,7 @@ module Hawk
           @_http_options ||= {}
 
           if options
-            @_http_options = @_http_options.merge(options.dup).freeze
+            @_http_options = @_http_options.deep_merge(options.dup).freeze
           end
 
           configurable.each {|model| model.http_options = @_http_options }
