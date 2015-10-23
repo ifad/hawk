@@ -169,7 +169,13 @@ module Hawk
             request.update options.delete(:options)
           end
 
-          options = options.reject {|_,v| v.nil?}
+          options.each do |k, v|
+            if v.nil?
+              options.delete(k)
+            elsif v.respond_to?(:id)
+              options[k] = v.id
+            end
+          end
 
           # URL-encoded only, for now.
           #
