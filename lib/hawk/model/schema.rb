@@ -35,7 +35,10 @@ module Hawk
         def cast!(attributes)
           schema(attributes).each do |key, caster|
             next unless attributes.key?(key)
-            value = caster.call(attributes.fetch(key)) if caster
+
+            value = attributes.fetch(key, nil)
+            value = caster.call(value) if caster
+
             write_attribute key, value
           end
         end
@@ -47,6 +50,8 @@ module Hawk
           self.class.schema || {}
         end
 
+      autoload :DSL, 'hawk/model/schema/dsl'
+
       module ClassMethods
         def inherited(subclass)
           super
@@ -54,29 +59,42 @@ module Hawk
           subclass.instance_variable_set :@_after_schema, self.after_schema if self.after_schema
         end
 
-        def schema
+        def schema(&block)
+          define_schema_via_dsl(&block) if block
+
           @_schema
+        end
+
+        def define_schema_via_dsl(&code)
+          @_schema = {}
+
+          DSL.eval(code) do |type, attributes|
+            attributes.each do |attribute|
+              define_schema_key(attribute, find_schema_caster_typed(type))
+            end
+          end
         end
 
         def define_schema_from(attributes)
           @_schema = {}
 
           attributes.each_key do |key|
-            next if association?(key)
-
-            @_schema[key] =
-              if (caster = find_schema_caster_for(key))
-                caster.code
-              else
-                # read it as-is
-              end
-
-            attr_reader key
+            define_schema_key(key, find_schema_caster_for(key))
           end
 
           if after_schema
             class_eval(&after_schema)
           end
+        end
+
+        def define_schema_key(attribute, caster)
+          key = attribute.to_s
+
+          return if association?(key)
+
+          @_schema[key] = caster
+
+          attr_reader key
         end
 
         def schema_type_of(attribute_name)
@@ -88,8 +106,17 @@ module Hawk
         end
 
         def find_schema_caster_for(attribute)
-          _, caster = CASTERS.find {|re,| attribute =~ re }
-          return caster
+          ATTRIBUTE_CASTS.each do |re, type|
+            if attribute =~ re
+              return find_schema_caster_typed(type)
+            end
+          end
+
+          nil
+        end
+
+        def find_schema_caster_typed(type)
+          CASTERS.fetch(type, nil)
         end
 
         def after_schema(&block)
@@ -98,21 +125,39 @@ module Hawk
         end
       end
 
-      class Caster < Struct.new(:type, :code)
+      class Caster
+        def initialize(type, code)
+          @type, @code = type, code
+        end
+        attr_reader :type
+
+        def call(value)
+          @code.call(value)
+        end
+
+        def to_s
+          src, line = @code.source_location
+          "#<Cast to #{type} using #{File.basename(src)}:#{line})>"
+        end
+        alias inspect to_s
+        alias pretty_inspect to_s
       end
 
-      CASTERS = {
-        /_(?:at|from|until|on)$/ =>
-          Caster.new(:datetime, -> (value) { Time.parse(value) })                ,
+      bools = Set.new(['1', 'true', 1, true])
+      CASTERS = [
+        Caster.new(:integer,  -> (value) { Integer(value) }),
+        Caster.new(:float,    -> (value) { Float(value) }),
+        Caster.new(:datetime, -> (value) { Time.parse(value) }),
+        Caster.new(:date,     -> (value) { Date.parse(value) }),
+        Caster.new(:bignum,   -> (value) { BigDecimal.new(value) }),
+        Caster.new(:boolean,  -> (value) { bools.include?(value) }),
+      ].inject({}) {|h, c| h.update(c.type => c) }
 
-        /_date$/ =>
-          Caster.new(:date,     -> (value) { Date.parse(value) })                ,
-
-        /_num$/ =>
-          Caster.new(:integer,  -> (value) { BigDecimal.new(value) })            ,
-
-        /^is_/ =>
-          Caster.new(:boolean,  -> (value) { ['1', 'true', 1, true].include?(value) }) ,
+      ATTRIBUTE_CASTS = {
+        /_(?:at|from|until|on)$/ => :datetime,
+        /_date$/                 => :date,
+        /_num$/                  => :bignum,
+        /^is_/                   => :boolean,
       }
     end
 
