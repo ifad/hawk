@@ -168,9 +168,10 @@ module Hawk
           klass  = options[:class_name] || entity.camelize
           key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
           from   = options[:from]
+          nested = options[:nested]
           # TODO params
 
-          _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from)
+          _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from, nested: nested)
         end
 
         # Adds a belongs_to association, mimicking ActiveRecord's interface
@@ -228,16 +229,23 @@ module Hawk
           },
 
           has_one: -> (entity, options) {
-            klass, key, from = options.values_at(*[:class_name, :primary_key, :from])
+            klass, key, from, nested = options.values_at(*[:class_name, :primary_key, :from, :nested])
+
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
                 return @_#{entity} if instance_variable_defined?('@_#{entity}')
 
-                params = clean_inherited_params(self.params, '#{key}' => self.id)
-                @_#{entity} = #{parent}::#{klass}.where(params)
-                #{"@_#{entity} = @_#{entity}.from(#{from.inspect})" if from}
-                @_#{entity} = @_#{entity}.first!
+                #{
+                  if nested; %[
+                    params = #{parent}::#{klass}.from('/' << path_for('#{entity}')).params
+                    @_#{entity} = #{parent}::#{klass}.find_one(nil, params)
+                  ] else %[
+                    params = clean_inherited_params(self.params, '#{key}' => self.id)
+                    @_#{entity} = #{parent}::#{klass}.from(#{from.inspect}).where(params).first!
+                  ] end
+                }
+
                 return @_#{entity}
               end
 
