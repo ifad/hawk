@@ -9,7 +9,7 @@ module Hawk
       end
 
       def path_for(component, params = {})
-        [self.class.model_path_from(params), self.id, component].join('/')
+        [self.class.model_path_from(params), self.id, component].compact.join('/')
       end
 
       module ClassMethods
