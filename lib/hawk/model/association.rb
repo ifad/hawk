@@ -33,8 +33,9 @@ module Hawk
                             associations[name.pluralize.to_sym]   ||
                             associations[name.singularize.to_sym]
           if type
-            target = scope.model_class_for( options.fetch(:class_name) )
+            target = scope.model_class_for(options.fetch(:class_name))
             result = target.instantiate_from(repr, params)
+
             if is_collection?(type)
               add_to_association_collection name, result
             else
