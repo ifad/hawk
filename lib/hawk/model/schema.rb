@@ -95,6 +95,10 @@ module Hawk
           @_schema[key] = caster
 
           attr_reader key
+
+          if caster && caster.type == :boolean
+            define_method(:"#{key}?") { !!send(key) }
+          end
         end
 
         def schema_type_of(attribute_name)
