@@ -16,7 +16,7 @@ module Hawk
       include Configurator
       include Lookup
       include Scoping
-      include Conversions
+      include Active
 
       def initialize(attributes = {}, params = {})
         super

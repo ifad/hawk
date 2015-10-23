@@ -13,7 +13,7 @@ module Hawk
     autoload :Configurator,   'hawk/model/configurator'
     autoload :Lookup,         'hawk/model/lookup'
     autoload :Scoping,        'hawk/model/scoping'
-    autoload :Conversions,    'hawk/model/conversions'
+    autoload :Active,         'hawk/model/active'
   end
 
 end
