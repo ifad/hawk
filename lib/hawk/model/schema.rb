@@ -132,7 +132,9 @@ module Hawk
         attr_reader :type
 
         def call(value)
-          @code.call(value)
+          @code.call(value) unless value.nil?
+        rescue => e
+          "## Error while casting #{value} to #{type}: #{e.message} ##"
         end
 
         def to_s
