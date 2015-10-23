@@ -123,7 +123,7 @@ module Hawk
                 next unless attributes.key?(attr)
 
                 repr = attributes.delete(attr)
-                add_association_object(scope, name, repr)
+                add_association_object(scope, name, repr) if repr
               end
             end
           end
