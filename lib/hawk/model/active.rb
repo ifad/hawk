@@ -30,6 +30,15 @@ module Hawk
 
         other.instance_of?(self.class) && self.id == other.id
       end
+      alias eql? ==
+
+      def hash
+        if respond_to?(:id) && !self.id.nil?
+          self.id.hash
+        else
+          super
+        end
+      end
 
       def persisted?
         true # Naive, for now.
