@@ -23,15 +23,22 @@ module Hawk
       end
 
       def read_attribute(name)
-        instance_variable_get(['@', name].join)
+        get_attribute(name)
       end
 
       def write_attribute(name, value)
-        instance_variable_set(['@', name].join, value)
+        set_attribute(name, value)
       end
-      private :write_attribute # For now
 
       private
+        def get_attribute(name)
+          instance_variable_get(['@', name].join)
+        end
+
+        def set_attribute(name, value)
+          instance_variable_set(['@', name].join, value)
+        end
+
         def cast!(attributes)
           schema(attributes).each do |key, caster|
             next unless attributes.key?(key)
@@ -39,7 +46,7 @@ module Hawk
             value = attributes.fetch(key, nil)
             value = caster.call(value) if caster
 
-            write_attribute key, value
+            set_attribute key, value
           end
         end
 
@@ -70,7 +77,7 @@ module Hawk
 
           DSL.eval(code) do |type, attributes|
             attributes.each do |attribute|
-              define_schema_key(attribute, find_schema_caster_typed(type))
+              define_schema_key(attribute.to_s, find_schema_caster_typed(type))
             end
           end
         end
@@ -78,8 +85,8 @@ module Hawk
         def define_schema_from(attributes)
           @_schema = {}
 
-          attributes.each_key do |key|
-            define_schema_key(key, find_schema_caster_for(key))
+          attributes.each_key do |attribute|
+            define_schema_key(attribute.to_s, find_schema_caster_for(attribute))
           end
 
           if after_schema
@@ -87,14 +94,18 @@ module Hawk
           end
         end
 
-        def define_schema_key(attribute, caster)
-          key = attribute.to_s
-
+        def define_schema_key(key, caster)
           return if association?(key)
 
           @_schema[key] = caster
 
-          attr_reader key
+          define_method(key) do
+            read_attribute(key)
+          end
+
+          define_method("#{key}=") do |value|
+            write_attribute(key, value)
+          end
 
           if caster && caster.type == :boolean
             define_method(:"#{key}?") { !!send(key) }
