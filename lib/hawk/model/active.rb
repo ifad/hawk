@@ -23,6 +23,14 @@ module Hawk
         end
       end
 
+      def ==(other)
+        unless self.respond_to?(:id)
+          raise Error, "Can't compare #{self} as it doesn't have an .id attribute"
+        end
+
+        other.instance_of?(self.class) && self.id == other.id
+      end
+
       def persisted?
         true # Naive, for now.
       end
