@@ -71,7 +71,7 @@ module Hawk
                   @_cache_options[:expires_in]
 
             block.call.tap do |cacheable|
-              $stderr.puts "CACHE: store #{key} with ttl #{ttl}"
+              #$stderr.puts "CACHE: store #{key} with ttl #{ttl}"
               @_cache.set(key, cacheable, ttl)
             end
           end
