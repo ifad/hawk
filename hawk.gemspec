@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ethon', '>= 0.7.4'
   spec.add_dependency 'multi_json'
   spec.add_dependency 'dalli'
-  spec.add_dependency 'active_model'
+  spec.add_dependency 'activemodel'
 
   spec.add_development_dependency 'bundler', '~> 1.8'
   spec.add_development_dependency 'rake', '~> 10.0'
