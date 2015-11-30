@@ -41,6 +41,8 @@ module Hawk
 
           class_eval <<-RUBY, __FILE__, __LINE__ -1 # Setter
             def #{entity}=(object)
+              return if object.blank?
+
               unless object.respond_to?(:id) && object.class.respond_to?(:find)
                 raise ArgumentError, "Invalid object: \#{object.inspect}"
               end
@@ -71,6 +73,8 @@ module Hawk
 
           class_eval <<-RUBY, __FILE__, __LINE__ -1 # Setter
             def #{entity}=(object)
+              return if object.blank?
+
               unless object.respond_to?(:id) && object.class.respond_to?(:find)
                 raise ArgumentError, "Invalid object: \#{object.inspect}"
               end
