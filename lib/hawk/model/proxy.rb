@@ -16,10 +16,11 @@ module Hawk
         def initialize(klass, params)
           super
           @params[:void] = true # Only for reporting purposes
+          @result = []
         end
 
-        def result
-          []
+        def find(*)
+          nil
         end
 
         def count
