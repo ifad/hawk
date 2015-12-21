@@ -1,7 +1,4 @@
-require 'active_model/conversion'
-require 'active_model/dirty'
-require 'active_model/naming'
-require 'active_model/translation'
+require 'active_model'
 
 module Hawk
   module Model
