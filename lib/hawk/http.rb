@@ -168,7 +168,7 @@ module Hawk
           end
 
           if options.key?(:options)
-            request.update options.delete(:options)
+            request.update options.delete(:options).except(:endpoint) # FIXME SPAGHETTI
           end
 
           options.each do |k, v|
