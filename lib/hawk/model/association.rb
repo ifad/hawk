@@ -157,9 +157,10 @@ module Hawk
           klass  = options[:class_name] || entity.camelize
           key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
           from   = options[:from]
+          as     = options[:as]
           # TODO params
 
-          _define_association(entities, :has_many, class_name: klass, primary_key: key, from: from)
+          _define_association(entities, :has_many, class_name: klass, primary_key: key, from: from, as: as)
         end
 
         # Adds an has_one association, mimicking ActiveRecord's interface
@@ -171,9 +172,10 @@ module Hawk
           key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
           from   = options[:from]
           nested = options[:nested]
+          as     = options[:as]
           # TODO params
 
-          _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from, nested: nested)
+          _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from, nested: nested, as: as)
         end
 
         # Adds a belongs_to association, mimicking ActiveRecord's interface
@@ -215,12 +217,18 @@ module Hawk
         #
         CODE = {
           has_many: -> (entities, options) {
-            klass, key, from = options.values_at(*[:class_name, :primary_key, :from])
+            klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
+
+            conditions = if as.present?
+              "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+            else
+              "'#{key}' => self.id"
+            end
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
                 return @_#{entities} if instance_variable_defined?('@_#{entities}')
-                params = clean_inherited_params(self.params, '#{key}' => self.id)
+                params = clean_inherited_params(self.params, #{conditions})
 
                 @_#{entities} = #{parent}::#{klass}.where(params)
                 #{"@_#{entities} = @_#{entities}.from(#{from.inspect})" if from}
@@ -230,8 +238,13 @@ module Hawk
           },
 
           has_one: -> (entity, options) {
-            klass, key, from, nested = options.values_at(*[:class_name, :primary_key, :from, :nested])
+            klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
 
+            conditions = if as.present?
+              "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+            else
+              "'#{key}' => self.id"
+            end
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
@@ -242,8 +255,8 @@ module Hawk
                     params = #{parent}::#{klass}.from('/' << path_for('#{entity}')).params
                     @_#{entity} = #{parent}::#{klass}.find_one(nil, params)
                   ] else %[
-                    params = clean_inherited_params(self.params, '#{key}' => self.id)
-                    @_#{entity} = #{parent}::#{klass}.from(#{from.inspect}).where(params).first!
+                    params = clean_inherited_params(self.params, #{conditions})
+                    @_#{entity} = #{parent}::#{klass}.from(#{from.inspect}).where(params).first
                   ] end
                 }
 
