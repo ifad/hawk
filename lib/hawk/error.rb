@@ -40,6 +40,14 @@ module Hawk
       end
     end
 
+    # Server bailed with a 400
+    #
+    class BadRequest < HTTP
+      def initialize(message)
+        super(400, message)
+      end
+    end
+
     # Server bailed with a 404
     #
     class NotFound < HTTP
