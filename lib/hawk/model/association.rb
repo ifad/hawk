@@ -256,7 +256,7 @@ module Hawk
                     @_#{entity} = #{parent}::#{klass}.find_one(nil, params)
                   ] else %[
                     params = clean_inherited_params(self.params, #{conditions})
-                    @_#{entity} = #{parent}::#{klass}.from(#{from.inspect}).where(params).first
+                    @_#{entity} = #{parent}::#{klass}.from(#{from.inspect}).where(params).first!
                   ] end
                 }
 
