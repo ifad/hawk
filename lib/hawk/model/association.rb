@@ -79,6 +79,18 @@ module Hawk
             @_associations ||= {}
 
             parent.associations.each do |name, (type, options)|
+              # Try to look up this class' name in the same namespace it is defined.
+              # If you have a Remote::Country inheriting from a Reticulum::Country,
+              # an associated Project will be looked up by default in the Remote
+              # namespace.
+              #
+              # If the constant doesn't exist, it will fall back in looking it up in
+              # the parent's namespace.
+              #
+              # This works well thanks to `.deconstantize`, that returns an empty
+              # string for toplevel constants, and thanks to Object.const_get that
+              # accepts a namespaced class name as input.
+              #
               self_constant   = '::' + [ self.to_s.deconstantize.presence,   name.to_s.singularize.classify].compact.join('::')
               parent_constant = '::' + [ parent.to_s.deconstantize.presence, name.to_s.singularize.classify].compact.join('::')
 
