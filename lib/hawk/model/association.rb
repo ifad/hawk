@@ -219,6 +219,8 @@ module Hawk
           has_many: -> (entities, options) {
             klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
 
+            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{self.parent}::")
+
             conditions = if as.present?
               "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
             else
@@ -230,7 +232,7 @@ module Hawk
                 return @_#{entities} if instance_variable_defined?('@_#{entities}')
                 params = clean_inherited_params(self.params, #{conditions})
 
-                @_#{entities} = #{parent}::#{klass}.where(params)
+                @_#{entities} = #{klass_name}.where(params)
                 #{"@_#{entities} = @_#{entities}.from(#{from.inspect})" if from}
                 return @_#{entities}
               end
@@ -239,6 +241,8 @@ module Hawk
 
           has_one: -> (entity, options) {
             klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
+
+            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{self.parent}::")
 
             conditions = if as.present?
               "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
@@ -252,11 +256,11 @@ module Hawk
 
                 #{
                   if nested; %[
-                    params = #{parent}::#{klass}.from('/' << path_for('#{entity}')).params
-                    @_#{entity} = #{parent}::#{klass}.find_one(nil, params)
+                    params = #{klass_name}.from('/' << path_for('#{entity}')).params
+                    @_#{entity} = #{klass_name}.find_one(nil, params)
                   ] else %[
                     params = clean_inherited_params(self.params, #{conditions})
-                    @_#{entity} = #{parent}::#{klass}.from(#{from.inspect}).where(params).first!
+                    @_#{entity} = #{klass_name}.from(#{from.inspect}).where(params).first!
                   ] end
                 }
 
