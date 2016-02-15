@@ -73,16 +73,28 @@ module Hawk
         def inherited(subclass)
           super
 
+          parent = self
           subclass.instance_eval do
             # Inherit associations
             @_associations ||= {}
 
-            self.associations.each do |name, (type, options)|
+            parent.associations.each do |name, (type, options)|
+              self_constant   = '::' + [ self.to_s.deconstantize.presence,   name.to_s.singularize.classify].compact.join('::')
+              parent_constant = '::' + [ parent.to_s.deconstantize.presence, name.to_s.singularize.classify].compact.join('::')
+
+              namespaced = Object.const_get(self_constant) rescue nil
+
+              options[:class_name] = if namespaced && (parent.to_s.deconstantize != self.to_s.deconstantize)
+                self_constant
+              else
+                parent_constant
+              end
+
               _define_association(name, type, options)
             end
 
             # Inherit association preloading behaviour
-            preload_association(&self.preload_association)
+            preload_association(&parent.preload_association)
           end
         end
 
@@ -218,7 +230,7 @@ module Hawk
           has_many: -> (entities, options) {
             klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
 
-            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{parent}::")
+            klass_name = klass =~ /^::/ ? klass : "#{parent}::#{klass}"
 
             conditions = if as.present?
               "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
@@ -241,7 +253,7 @@ module Hawk
           has_one: -> (entity, options) {
             klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
 
-            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{parent}::")
+            klass_name = klass =~ /^::/ ? klass : "#{parent}::#{klass}"
 
             conditions = if as.present?
               "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
