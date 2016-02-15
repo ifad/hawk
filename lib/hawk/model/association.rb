@@ -218,7 +218,7 @@ module Hawk
           has_many: -> (entities, options) {
             klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
 
-            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{self.parent}::")
+            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{parent}::")
 
             conditions = if as.present?
               "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
@@ -241,7 +241,7 @@ module Hawk
           has_one: -> (entity, options) {
             klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
 
-            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{self.parent}::")
+            klass_name = klass.to_s.prepend(klass =~ /^::/ ? 'Object' : "#{parent}::")
 
             conditions = if as.present?
               "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
