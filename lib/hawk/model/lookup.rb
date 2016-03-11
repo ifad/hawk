@@ -9,6 +9,11 @@ module Hawk
       end
 
       module ClassMethods
+        def inherited(subclass)
+          super
+          subclass.instance_eval { @_class_cache = {} }
+        end
+
         # Given
         #
         #   module Client
@@ -50,12 +55,19 @@ module Hawk
         # Hawk::Model::Base.
         #
         def model_class_for(name, scope: self)
-          if scope.const_defined?(name, inherit=false)
-            return scope.const_get(name)
+          cached_model_class_for(name, scope) do
+            look_up_model_class(name, scope)
+          end
+        end
 
-          elsif scope.parent.const_defined?(name, inherit=false)
-            return scope.parent.const_get(name)
+        private
+        def look_up_model_class(name, scope)
+          if self_constant = look_up_constant_in(name, scope)
+            return self_constant
+          end
 
+          if (parent_constant = look_up_constant_in(name, scope.parent))
+            return parent_constant
           end
 
           # Look up one level
@@ -65,8 +77,18 @@ module Hawk
           else
             raise Hawk::Error, "Can't find a suitable model for #{name}"
           end
-
         end
+
+        def look_up_constant_in(name, scope)
+          scope.parent.const_get(name)
+        rescue NameError
+          nil
+        end
+
+        def cached_model_class_for(name, scope, &block)
+          @_class_cache[[name, scope.name]] ||= block.call
+        end
+
       end
     end
 
