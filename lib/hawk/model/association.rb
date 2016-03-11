@@ -91,8 +91,11 @@ module Hawk
               # string for toplevel constants, and thanks to Object.const_get that
               # accepts a namespaced class name as input.
               #
-              self_constant   = '::' + [ self.to_s.deconstantize.presence,   name.to_s.singularize.classify].compact.join('::')
-              parent_constant = '::' + [ parent.to_s.deconstantize.presence, name.to_s.singularize.classify].compact.join('::')
+              class_name = options[:class_name] || name.to_s.singularize.classify
+              class_name = '::' + class_name if class_name !~ /^::/
+
+              self_constant   = '::' + [ self.to_s.deconstantize.presence,   class_name].compact.join
+              parent_constant = '::' + [ parent.to_s.deconstantize.presence, class_name].compact.join
 
               namespaced = Object.const_get(self_constant) rescue nil
 
