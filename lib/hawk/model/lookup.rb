@@ -62,11 +62,15 @@ module Hawk
 
         private
         def look_up_model_class(name, scope)
+          puts "#{self.name}: look up #{name} in #{scope.name}"
+
           if self_constant = look_up_constant_in(name, scope)
+            puts "#{self.name}: #{name} resolved to #{self_constant}"
             return self_constant
           end
 
           if (parent_constant = look_up_constant_in(name, scope.parent))
+            puts "#{self.name}: #{name} resolved to #{parent_constant}"
             return parent_constant
           end
 
