@@ -300,7 +300,7 @@ module Hawk
                 @_#{entity} = begin
                   return unless self.#{key}
                   klass = self.class.model_class_for(self.#{entity}_type)
-                  klass.find(self.#{key}, clean_inherited_params(self.params) )
+                  klass.find(self.#{key})
                 end
               end
             RUBY
