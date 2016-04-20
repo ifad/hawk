@@ -11,23 +11,35 @@ module Hawk
         end
       end
 
+      def self.suppress_verbose_output(value = nil)
+        if value.nil?
+          @suppress_verbose_output
+        else
+          @suppress_verbose_output = value
+        end
+      end
+
       module Basic
         def instrument(type, payload, &block)
-          start = Time.now.to_f
-          ret = block.call payload
-          elapsed = (Time.now.to_f - start) * 1000
+          if Hawk::HTTP::Instrumentation.suppress_verbose_output
+            block.call payload
+          else
+            start = Time.now.to_f
+            ret = block.call payload
+            elapsed = (Time.now.to_f - start) * 1000
 
-          url = payload[:url].to_s
-          if payload[:params] && payload[:params].size > 0
-            url << '?' << payload[:params].inject('') {|s, (k,v)| s << [k, '=', v, '&'].join }.chomp('&')
+            url = payload[:url].to_s
+            if payload[:params] && payload[:params].size > 0
+              url << '?' << payload[:params].inject('') {|s, (k,v)| s << [k, '=', v, '&'].join }.chomp('&')
+            end
+
+            $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} #{url} (%.2fms), cache %s\033[0m\n" % [
+              elapsed,
+              payload[:cached] ? 'HIT' : 'MISS'
+            ]
+
+            ret
           end
-
-          $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} #{url} (%.2fms), cache %s\033[0m\n" % [
-            elapsed,
-            payload[:cached] ? 'HIT' : 'MISS'
-          ]
-
-          return ret
         end
       end
     end

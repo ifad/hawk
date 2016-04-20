@@ -4,3 +4,5 @@ require 'byebug'
 require 'webmock/rspec'
 
 WebMock.disable_net_connect!
+
+Hawk::HTTP::Instrumentation.suppress_verbose_output true
