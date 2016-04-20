@@ -65,4 +65,15 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
       expect(collection.size).to eq(1)
     end
   end
+
+  describe '.order' do
+    specify do
+      stub_request(:GET, "http://zombo.com/persons?order=name").
+        with(:headers => {'User-Agent'=>'Foobar'}).
+        to_return(status: 200, body: [person_attributes].to_json, headers: {})
+
+      collection = Person.order(:name).all
+      expect(collection.size).to eq(1)
+    end
+  end
 end
