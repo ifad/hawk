@@ -55,7 +55,7 @@ module Hawk
       else
         def save!
           persist!
-          @changed_attributes.try(:clear)
+          @changed_attributes && @changed_attributes.clear
           true
         end
       end
