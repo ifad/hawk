@@ -2,13 +2,8 @@ require 'spec_helper'
 
 describe 'basic operations with a class that inherits from Hawk::Model::Base' do
   class Person < Hawk::Model::Base
-    def self.url
-      "http://zombo.com/"
-    end
-
-    def self.client_name
-      "Foobar"
-    end
+    url "http://zombo.com/"
+    client_name "Foobar"
 
     schema do
       integer :id
@@ -42,7 +37,6 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(status: 200, body: [person_attributes].to_json, headers: {})
 
-
       person = Person.first
       expect(person).to be_kind_of(Person)
       expect(person.id).to eq(2)
@@ -50,7 +44,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
     end
   end
 
-  describe 'all' do
+  describe '.all' do
     specify do
       stub_request(:GET, "http://zombo.com/persons").
         with(:headers => {'User-Agent'=>'Foobar'}).
@@ -58,6 +52,17 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
 
       collection = Person.all
       expect(collection.size).to eq(2)
+    end
+  end
+
+  describe '.where' do
+    specify do
+      stub_request(:GET, "http://zombo.com/persons?name=Zelig").
+        with(:headers => {'User-Agent'=>'Foobar'}).
+        to_return(status: 200, body: [person_attributes].to_json, headers: {})
+
+      collection = Person.where(name: 'Zelig').all
+      expect(collection.size).to eq(1)
     end
   end
 end
