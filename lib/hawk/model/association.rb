@@ -164,7 +164,11 @@ module Hawk
         end
 
         # Adds an has_one association, mimicking ActiveRecord's interface
-        # TODO better documentation
+        #
+        # Specifies a one-to-one association with another class. This method
+        # should only be used if the other class contains the foreign key. If
+        # the current class contains the foreign key, then you should use
+        # belongs_to instead.
         #
         def has_one(entity, options = {})
           entity = entity.to_s
@@ -178,8 +182,18 @@ module Hawk
           _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from, nested: nested, as: as)
         end
 
-        # Adds a belongs_to association, mimicking ActiveRecord's interface
-        # TODO better documentation
+        # Adds a belongs_to association, mimicking ActiveRecord's interface.
+        #
+        # Specifies a one-to-one association with another class. This method
+        # should only be used if this class contains the foreign key. If the
+        # other class contains the foreign key, then you should use has_one
+        # instead.
+        #
+        # Options:
+        #
+        # - class_name
+        # - primary_key
+        # - polymorphic
         #
         def belongs_to(entity, options = {})
           if options[:polymorphic]
