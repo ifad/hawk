@@ -76,4 +76,18 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
       expect(collection.size).to eq(1)
     end
   end
+
+  describe 'scoping' do
+    class Person < Hawk::Model::Base
+      scope :by_name, ->(q) { where(name: q)}
+    end
+
+    it 'allows active_record-like scopes' do
+      stub_request(:GET, "http://zombo.com/persons?limit=1&name=pluto").
+               with(:headers => {'User-Agent'=>'Foobar'}).
+               to_return(:status => 200, :body => [person_attributes].to_json, :headers => {})
+      person = Person.by_name('pluto').first
+      expect(person).to be_kind_of(Person)
+    end
+  end
 end
