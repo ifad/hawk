@@ -32,6 +32,15 @@ describe 'associations' do
     end
   end
 
+  class Image < AssociationTestBase
+    schema do
+      integer :id, :imageable_id
+      string :url, :imageable_type
+    end
+
+    belongs_to :imageable, polymorphic: true
+  end
+
   let(:farm_attributes) {
     {
       id: 1,
@@ -67,6 +76,22 @@ describe 'associations' do
       expect(farm).to be_kind_of(Farm)
       expect(farm.id).to eq(1)
       expect(farm.city).to eq('Tahiti')
+    end
+  end
+
+  describe 'polymorphic belongs_to' do
+    specify do
+      image = Image.new.tap{|i| i.imageable_type = "Animal"; i.imageable_id = 1}
+
+      stub_request(:GET, "http://zombo.com/animals/1").
+        with(:headers => {'User-Agent'=>'Foobar'}).
+        to_return(:status => 200, :body => animal_attributes.to_json, :headers => {})
+
+      animal = image.imageable
+
+      expect(animal).to be_kind_of(Animal)
+      expect(animal.id).to eq(1)
+      expect(animal.name).to eq('Paddington')
     end
   end
 
