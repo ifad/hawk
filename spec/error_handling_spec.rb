@@ -29,4 +29,12 @@ describe 'error handling' do
 
     expect { Failure.find(666) }.to raise_error(Hawk::Error)
   end
+
+  it 'raises an exception when the server times out' do
+    stub_request(:GET, "http://zombo.com/failures/123").
+             with(:headers => {'User-Agent'=>'Foobar'}).
+             to_timeout
+
+    expect { Failure.find(123) }.to raise_error(Hawk::Error::Timeout)
+  end
 end
