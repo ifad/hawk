@@ -1,4 +1,5 @@
 require 'dalli'
+require 'active_support/core_ext/array/wrap'
 
 module Hawk
   class HTTP
