@@ -22,6 +22,14 @@ describe 'associations' do
     end
 
     belongs_to :farm
+    has_one :favourite_food, class_name: "Food"
+  end
+
+  class Food < AssociationTestBase
+    schema do
+      integer :id
+      string :name
+    end
   end
 
   let(:farm_attributes) {
@@ -39,6 +47,14 @@ describe 'associations' do
     }
   }
 
+  let(:food_attributes) {
+    {
+      id: 1,
+      animal_id: 1,
+      name: 'salad'
+    }
+  }
+
   describe 'belongs_to' do
     specify do
       dog = Animal.new(farm_id: 1).tap{|d| d.farm_id = 1}
@@ -51,6 +67,21 @@ describe 'associations' do
       expect(farm).to be_kind_of(Farm)
       expect(farm.id).to eq(1)
       expect(farm.city).to eq('Tahiti')
+    end
+  end
+
+  describe 'has_one' do
+    specify do
+      dog = Animal.new.tap{|d| d.id = 1}
+      stub_request(:GET, "http://zombo.com/foods?animal_id=1&limit=1").
+        with(:headers => {'User-Agent'=>'Foobar'}).
+        to_return(:status => 200, :body => [food_attributes].to_json, :headers => {})
+
+      food = dog.favourite_food
+
+      expect(food).to be_kind_of(Food)
+      expect(food.id).to eq(1)
+      expect(food.name).to eq('salad')
     end
   end
 
