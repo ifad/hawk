@@ -1,11 +1,9 @@
 require 'dalli'
-require 'active_support/core_ext/array/wrap'
 
 module Hawk
   class HTTP
 
     module Caching
-      using Hawk::Polyfills # Hash#deep_merge
 
       DEFAULTS = {
         server: 'localhost:11211',

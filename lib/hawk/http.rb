@@ -11,7 +11,6 @@ module Hawk
   # Represent an HTTP connector, to be linked to a {Model}.
   #
   class HTTP
-    using Hawk::Polyfills # Hash#deep_merge
 
     prepend Caching
     include Instrumentation
