@@ -20,7 +20,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
 
   describe '.find(id)' do
     specify do
-      stub_request(:GET, "http://zombo.com/persons/2").
+      stub_request(:GET, "http://zombo.com/people/2").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(status: 200, body: person_attributes.to_json, headers: {})
 
@@ -33,7 +33,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
 
   describe '.first' do
     specify do
-      stub_request(:GET, "http://zombo.com/persons?limit=1").
+      stub_request(:GET, "http://zombo.com/people?limit=1").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(status: 200, body: [person_attributes].to_json, headers: {})
 
@@ -46,7 +46,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
 
   describe '.all' do
     specify do
-      stub_request(:GET, "http://zombo.com/persons").
+      stub_request(:GET, "http://zombo.com/people").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(status: 200, body: [person_attributes, person_attributes].to_json, headers: {})
 
@@ -57,7 +57,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
 
   describe '.where' do
     specify do
-      stub_request(:GET, "http://zombo.com/persons?name=Zelig").
+      stub_request(:GET, "http://zombo.com/people?name=Zelig").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(status: 200, body: [person_attributes].to_json, headers: {})
 
@@ -68,7 +68,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
 
   describe '.order' do
     specify do
-      stub_request(:GET, "http://zombo.com/persons?order=name").
+      stub_request(:GET, "http://zombo.com/people?order=name").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(status: 200, body: [person_attributes].to_json, headers: {})
 
@@ -83,7 +83,7 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
     end
 
     it 'allows active_record-like scopes' do
-      stub_request(:GET, "http://zombo.com/persons?limit=1&name=pluto").
+      stub_request(:GET, "http://zombo.com/people?limit=1&name=pluto").
                with(:headers => {'User-Agent'=>'Foobar'}).
                to_return(:status => 200, :body => [person_attributes].to_json, :headers => {})
       person = Person.by_name('pluto').first

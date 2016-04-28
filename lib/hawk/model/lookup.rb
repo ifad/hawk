@@ -2,7 +2,6 @@ module Hawk
   module Model
 
     module Lookup
-      using Hawk::Polyfills # Module#parent
 
       def self.included(base)
         base.extend ClassMethods

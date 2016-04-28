@@ -1,8 +1,11 @@
 ##
 # Hawk entry point.
 #
+#
+
+require 'active_support/core_ext/array/wrap'
+
 require 'hawk/version'
-require 'hawk/polyfills' # DIH
 
 require 'hawk/error'
 require 'hawk/http'

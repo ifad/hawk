@@ -2,7 +2,6 @@ module Hawk
   module Model
 
     module Querying
-      using Hawk::Polyfills # Hash#deep_merge
 
       def self.included(base)
         base.extend ClassMethods
