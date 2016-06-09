@@ -69,10 +69,10 @@ module Hawk
         all.each(*args, &block)
       end
 
-      def respond_to?(meth)
+      def respond_to?(meth, include_all=false)
         super ||
-          klass.respond_to?(meth) ||
-          result.respond_to?(meth)
+          klass.respond_to?(meth, include_all) ||
+          result.respond_to?(meth, include_all)
       end
 
       protected
