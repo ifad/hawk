@@ -94,6 +94,8 @@ module Hawk
         end
 
         def initialize_cache(options)
+          return if options[:disabled]
+
           unless options.key?(:server)
             raise Error::Configuration, "Cache server option is mandatory"
           end
