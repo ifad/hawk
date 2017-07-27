@@ -1,3 +1,45 @@
-language: ruby
 rvm:
-  - 2.1.0
+  - 2.1.10
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+
+gemfile:
+  - gemfiles/am_3.2.gemfile
+  - gemfiles/am_4.0.gemfile
+  - gemfiles/am_4.1.gemfile
+  - gemfiles/am_4.2.gemfile
+  - gemfiles/am_5.0.gemfile
+  - gemfiles/am_5.1.gemfile
+
+matrix:
+  exclude:
+    - rvm: 2.1.10
+      gemfile: gemfiles/am_5.0.gemfile
+    - rvm: 2.1.10
+      gemfile: gemfiles/am_5.1.gemfile
+
+    - rvm: 2.3.4
+      gemfile: gemfiles/am_3.2.gemfile
+    - rvm: 2.3.4
+      gemfile: gemfiles/am_4.0.gemfile
+    - rvm: 2.3.4
+      gemfile: gemfiles/am_4.1.gemfile
+    - rvm: 2.3.4
+      gemfile: gemfiles/am_4.2.gemfile
+
+    - rvm: 2.4.1
+      gemfile: gemfiles/am_3.2.gemfile
+    - rvm: 2.4.1
+      gemfile: gemfiles/am_4.0.gemfile
+    - rvm: 2.4.1
+      gemfile: gemfiles/am_4.1.gemfile
+    - rvm: 2.4.1
+      gemfile: gemfiles/am_4.2.gemfile
+
+sudo: false
+
+language: ruby
+cache: bundler
+
+script: bundle exec rake
