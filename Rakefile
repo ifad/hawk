@@ -1,2 +1,17 @@
-require "bundler/gem_tasks"
+# Bundler
+require 'bundler/setup'
+require 'bundler/gem_tasks'
 
+# RSpec
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new
+
+# Appraisal
+require 'appraisal/task'
+Appraisal::Task.new
+
+# Our default rake task
+require 'hawk/rake'
+Hawk::Rake::DefaultTask.new
+
+# Thanks for reading.
