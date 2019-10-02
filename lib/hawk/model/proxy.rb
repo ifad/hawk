@@ -80,7 +80,7 @@ module Hawk
           if klass.respond_to?(meth)
 
             method = klass.method(meth)
-            dsl_method = method.owner.parents.include?(Hawk::Model)
+            dsl_method = method.owner.module_parents.include?(Hawk::Model)
 
             # If the method accepts a variable number of parameters, and
             # exactly one is missing, push the scoped params at the end.
