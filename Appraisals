@@ -29,3 +29,8 @@ appraise 'am-5.1' do
   gem 'activemodel', "~> 5.1.0"
   gem 'activesupport', "~> 5.1.0"
 end
+
+appraise 'am-5.2' do
+  gem 'activemodel', "~> 5.2.0"
+  gem 'activesupport', "~> 5.2.0"
+end
