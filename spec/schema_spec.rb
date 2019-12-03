@@ -31,7 +31,7 @@ describe 'schema' do
       "price" => "999999999999999999999"
     })
 
-    expect(car.id).to be_kind_of(Fixnum)
+    expect(car.id).to be_kind_of(Integer)
     expect(car.brand).to be_kind_of(String)
     expect(car.hybrid).to be_kind_of(TrueClass)
     expect(car.hp).to be_kind_of(Float)

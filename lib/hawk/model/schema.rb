@@ -166,7 +166,7 @@ module Hawk
         Caster.new(:float,    -> (value) { Float(value) }),
         Caster.new(:datetime, -> (value) { Time.parse(value) }),
         Caster.new(:date,     -> (value) { Date.parse(value) }),
-        Caster.new(:bignum,   -> (value) { BigDecimal.new(value) }),
+        Caster.new(:bignum,   -> (value) { BigDecimal(value) }),
         Caster.new(:boolean,  -> (value) { bools.include?(value) }),
       ].inject({}) {|h, c| h.update(c.type => c) }
 
