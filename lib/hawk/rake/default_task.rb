@@ -154,7 +154,7 @@ module Hawk
       end
 
       ##
-      # @see {Rake::Utils.gemfile}
+      # @see Rake::Utils.gemfile
       # @private
       #
       def gemfile
