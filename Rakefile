@@ -10,6 +10,10 @@ RSpec::Core::RakeTask.new
 require 'appraisal/task'
 Appraisal::Task.new
 
+# Yard
+require 'yard'
+YARD::Rake::YardocTask.new
+
 # Our default rake task
 require 'hawk/rake'
 Hawk::Rake::DefaultTask.new

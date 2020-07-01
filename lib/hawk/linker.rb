@@ -35,7 +35,7 @@ module Hawk
             def #{entity}
               return nil unless self.#{key}.present?
 
-              @_#{entity} ||= #{parent}::#{klass}.find(self.#{key})
+              @_#{entity} ||= #{respond_to?(:module_parent) ? module_parent : parent}::#{klass}.find(self.#{key})
             end
           RUBY
 
