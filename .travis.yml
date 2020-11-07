@@ -11,7 +11,7 @@ rvm:
   - 2.4.10
   - 2.5.8
   - 2.6.6
-  - 2.7.1
+  - 2.7.2
   - ruby-head
 
 gemfile:
@@ -23,6 +23,7 @@ gemfile:
   - gemfiles/am_5.1.gemfile
   - gemfiles/am_5.2.gemfile
   - gemfiles/am_6.0.gemfile
+  - gemfiles/am_6.1.gemfile
   - gemfiles/am_edge.gemfile
 
 jobs:
@@ -39,11 +40,15 @@ jobs:
     - rvm: 2.1.10
       gemfile: gemfiles/am_6.0.gemfile
     - rvm: 2.1.10
+      gemfile: gemfiles/am_6.1.gemfile
+    - rvm: 2.1.10
       gemfile: gemfiles/am_edge.gemfile
 
     - rvm: 2.2.10
       gemfile: gemfiles/am_6.0.gemfile
     - rvm: 2.2.10
+      gemfile: gemfiles/am_6.1.gemfile
+    - rvm: 2.2.10
       gemfile: gemfiles/am_edge.gemfile
 
     - rvm: 2.3.8
@@ -53,6 +58,8 @@ jobs:
     - rvm: 2.3.8
       gemfile: gemfiles/am_6.0.gemfile
     - rvm: 2.3.8
+      gemfile: gemfiles/am_6.1.gemfile
+    - rvm: 2.3.8
       gemfile: gemfiles/am_edge.gemfile
 
     - rvm: 2.4.10
@@ -64,6 +71,8 @@ jobs:
     - rvm: 2.4.10
       gemfile: gemfiles/am_6.0.gemfile
     - rvm: 2.4.10
+      gemfile: gemfiles/am_6.1.gemfile
+    - rvm: 2.4.10
       gemfile: gemfiles/am_edge.gemfile
 
     - rvm: 2.5.8
@@ -84,19 +93,19 @@ jobs:
     - rvm: 2.6.6
       gemfile: gemfiles/am_4.2.gemfile
 
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_3.2.gemfile
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_4.0.gemfile
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_4.1.gemfile
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_4.2.gemfile
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_5.0.gemfile
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_5.1.gemfile
-    - rvm: 2.7.1
+    - rvm: 2.7.2
       gemfile: gemfiles/am_5.2.gemfile
 
     - rvm: ruby-head
