@@ -44,6 +44,7 @@ module Hawk
       def first(params = {})
         limit(1).all(params).first
       end
+      alias find_by first
 
       def first!(params = {})
         first(params) or raise Hawk::Error::NotFound, "Can't find #{klass} with #{params.to_json}"

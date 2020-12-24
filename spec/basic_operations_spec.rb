@@ -44,6 +44,12 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
     end
   end
 
+  describe '.find_by' do
+    it 'is an alias of first' do
+      expect(Person.method(:find_by).original_name).to eq(:first)
+    end
+  end
+
   describe '.all' do
     specify do
       stub_request(:GET, "http://zombo.com/people").
