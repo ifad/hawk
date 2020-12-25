@@ -72,6 +72,7 @@ module Hawk
         def first(params = {})
           limit(1).first(params)
         end
+        alias find_by first
 
         # Looks for the first record or raises a
         # {Hawk::Error::NotFound} if not found
