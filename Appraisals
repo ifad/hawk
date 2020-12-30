@@ -40,6 +40,11 @@ appraise 'am-6.0' do
   gem 'activesupport', "~> 6.0.0"
 end
 
+appraise 'am-6.1' do
+  gem 'activemodel', "~> 6.1.0"
+  gem 'activesupport', "~> 6.1.0"
+end
+
 appraise 'am-edge' do
   gem 'activemodel', git: "https://github.com/rails/rails.git"
   gem 'activesupport', git: "https://github.com/rails/rails.git"
