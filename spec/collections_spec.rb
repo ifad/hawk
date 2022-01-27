@@ -52,12 +52,20 @@ describe 'collections and pagination' do
   end
 
   describe '.count' do
-    specify do
+    before do
       stub_request(:GET, "http://zombo.com/mosquitos/count").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => {count: 123}.to_json, :headers => {})
+    end
 
+    specify do
       expect(Mosquito.count).to eq(123)
+    end
+
+    context 'when parameter is not a hash' do
+      specify do
+        expect { Mosquito.count(:all) }.not_to raise_error
+      end
     end
   end
 end
