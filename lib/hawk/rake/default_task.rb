@@ -14,7 +14,7 @@ module Hawk
       ##
       # Main +Eaco+ rake task.
       #
-      # If running appraisals or running within Travis CI, run all specs.
+      # If running appraisals or running within CI, run all specs.
       #
       def initialize
         if running_appraisals?
@@ -22,7 +22,7 @@ module Hawk
             run_specs
           end
 
-        elsif running_in_travis?
+        elsif running_in_ci?
           task :default do
             run_specs
           end
@@ -169,10 +169,10 @@ module Hawk
       end
 
       ##
-      # @return [Boolean] Are we running on Travis CI?
+      # @return [Boolean] Are we running on CI?
       #
-      def running_in_travis?
-        ENV["TRAVIS"]
+      def running_in_ci?
+        ENV["CI"]
       end
     end
 

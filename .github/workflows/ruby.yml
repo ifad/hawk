@@ -1,0 +1,138 @@
+name: Ruby specs
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Ruby specs
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby-version: ['2.6.9', '2.7.5', '3.0.3', '3.1.0']
+        gemfile: [am_5.2, am_6.0, am_6.1, am_7.0]
+        experimental: [false]
+
+        include:
+          # Ruby 2.1.10 is not available on GitHub Actions' ubuntu-20.04
+          # Ruby 2.1.9 returns segmentation faults, so this is marked as
+          # experimental
+          - ruby-version: '2.1.9'
+            gemfile: am_3.2
+            experimental: true
+          - ruby-version: '2.1.9'
+            gemfile: am_4.0
+            experimental: true
+          - ruby-version: '2.1.9'
+            gemfile: am_4.1
+            experimental: true
+          - ruby-version: '2.1.9'
+            gemfile: am_4.2
+            experimental: true
+
+          - ruby-version: '2.2.10'
+            gemfile: am_3.2
+            experimental: false
+          - ruby-version: '2.2.10'
+            gemfile: am_4.0
+            experimental: false
+          - ruby-version: '2.2.10'
+            gemfile: am_4.1
+            experimental: false
+          - ruby-version: '2.2.10'
+            gemfile: am_4.2
+            experimental: false
+          - ruby-version: '2.2.10'
+            gemfile: am_5.0
+            experimental: false
+          - ruby-version: '2.2.10'
+            gemfile: am_5.1
+            experimental: false
+          - ruby-version: '2.2.10'
+            gemfile: am_5.2
+            experimental: false
+
+          - ruby-version: '2.4.10'
+            gemfile: am_4.2
+            experimental: false
+          - ruby-version: '2.4.10'
+            gemfile: am_5.0
+            experimental: false
+          - ruby-version: '2.4.10'
+            gemfile: am_5.1
+            experimental: false
+          - ruby-version: '2.4.10'
+            gemfile: am_5.2
+            experimental: false
+
+          - ruby-version: '2.5.9'
+            gemfile: am_5.0
+            experimental: false
+          - ruby-version: '2.5.9'
+            gemfile: am_5.1
+            experimental: false
+          - ruby-version: '2.5.9'
+            gemfile: am_5.2
+            experimental: false
+          - ruby-version: '2.5.9'
+            gemfile: am_6.0
+            experimental: false
+          - ruby-version: '2.5.9'
+            gemfile: am_6.1
+            experimental: false
+
+          - ruby-version: '2.7.5'
+            gemfile: am_edge
+            experimental: true
+
+          - ruby-version: '3.0.3'
+            gemfile: am_edge
+            experimental: true
+
+          - ruby-version: '3.1.0'
+            gemfile: am_edge
+            experimental: true
+
+          - ruby-version: 'head'
+            gemfile: am_7.0
+            experimental: true
+          - ruby-version: 'head'
+            gemfile: am_edge
+            experimental: true
+
+        exclude:
+          - ruby-version: '2.6.9'
+            gemfile: am_7.0
+
+          - ruby-version: '2.7.5'
+            gemfile: am_5.2
+
+          - ruby-version: '3.0.3'
+            gemfile: am_5.2
+
+          - ruby-version: '3.1.0'
+            gemfile: am_5.2
+          - ruby-version: '3.1.0'
+            gemfile: am_6.0
+          - ruby-version: '3.1.0'
+            gemfile: am_6.1
+
+    env:
+      BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
+      TEST_CONFIG: ./spec/config.github.yml
+
+    continue-on-error: ${{ matrix.experimental }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Run specs
+      run: bundle exec rake spec
