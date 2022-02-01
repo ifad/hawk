@@ -5,7 +5,6 @@ end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'hawk'
-require 'pry'
 require 'webmock/rspec'
 require 'support/dalli_client_mock'
 
