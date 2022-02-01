@@ -40,6 +40,7 @@ module Hawk
         end
 
         def count(params = {})
+          params = {} unless params.is_a?(Hash)
           path = path_for(count_path, params)
           method = connection.url_length(path,:get,params) > 2000 ? :post : :get
           repr = connection.send(method, path, params)
