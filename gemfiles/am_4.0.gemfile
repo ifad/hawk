@@ -5,5 +5,8 @@ source "https://rubygems.org"
 gem "activemodel", "~> 4.0.0"
 gem "activesupport", "~> 4.0.0"
 gem "dalli", "< 3"
+gem "json", "< 2"
+gem "ffi", "< 1.10"
+gem "pry", "< 0.11"
 
 gemspec path: "../"
