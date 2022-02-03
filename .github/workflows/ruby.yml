@@ -56,6 +56,22 @@ jobs:
             gemfile: am_5.2
             experimental: false
 
+          - ruby-version: '2.3.8'
+            gemfile: am_3.2
+            experimental: false
+          - ruby-version: '2.3.8'
+            gemfile: am_4.2
+            experimental: false
+          - ruby-version: '2.3.8'
+            gemfile: am_5.0
+            experimental: false
+          - ruby-version: '2.3.8'
+            gemfile: am_5.1
+            experimental: false
+          - ruby-version: '2.3.8'
+            gemfile: am_5.2
+            experimental: false
+
           - ruby-version: '2.4.10'
             gemfile: am_4.2
             experimental: false
