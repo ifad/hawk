@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'schema' do
   class Car < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
 
     schema do
