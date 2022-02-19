@@ -3,7 +3,7 @@ require 'hawk/linker'
 
 describe 'linker' do
   class Author < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
 
     schema do
@@ -28,7 +28,7 @@ describe 'linker' do
 
   describe 'remote resource loading' do
     specify do
-      stub_request(:GET, "http://zombo.com/authors/1").
+      stub_request(:GET, "https://example.org/authors/1").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => author_attributes.to_json, :headers => {})
 

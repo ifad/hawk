@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'persisting operations' do
   class Bear < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
 
     schema do
@@ -19,7 +19,7 @@ describe 'persisting operations' do
 
   describe "#save" do
     it 'triggers an HTTP request' do
-      stub_request(:PUT, "http://zombo.com/bears").
+      stub_request(:PUT, "https://example.org/bears").
         with(:body => {"name"=>"Paddington"},
              :headers => {
                'Content-Type'=>'application/x-www-form-urlencoded',

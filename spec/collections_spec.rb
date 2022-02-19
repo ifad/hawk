@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'collections and pagination' do
   class Mosquito < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
 
     schema do
@@ -31,7 +31,7 @@ describe 'collections and pagination' do
 
     describe 'collection as an array' do
       specify do
-        stub_request(:GET, "http://zombo.com/mosquitos"). # pluralization can be improved
+        stub_request(:GET, "https://example.org/mosquitos"). # pluralization can be improved
           with(:headers => {'User-Agent'=>'Foobar'}).
           to_return(:status => 200, :body => collection_as_an_array.to_json, :headers => {})
         collection = Mosquito.all
@@ -41,7 +41,7 @@ describe 'collections and pagination' do
 
     describe 'collection as a hash' do
       specify do
-        stub_request(:GET, "http://zombo.com/mosquitos").
+        stub_request(:GET, "https://example.org/mosquitos").
           with(:headers => {'User-Agent'=>'Foobar'}).
           to_return(:status => 200, :body => collection_as_a_hash.to_json, :headers => {})
         collection = Mosquito.all
@@ -53,7 +53,7 @@ describe 'collections and pagination' do
 
   describe '.count' do
     before do
-      stub_request(:GET, "http://zombo.com/mosquitos/count").
+      stub_request(:GET, "https://example.org/mosquitos/count").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => {count: 123}.to_json, :headers => {})
     end

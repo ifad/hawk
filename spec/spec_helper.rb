@@ -18,4 +18,3 @@ RSpec.configure do |config|
     allow(Dalli::Client).to receive(:new).and_return DalliClientMock.new
   end
 end
-

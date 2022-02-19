@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'namespacing and subclassing' do
   class Cat < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
 
     schema do
@@ -23,7 +23,7 @@ describe 'namespacing and subclassing' do
   describe 'name and module resolution' do
     context 'top-level classes' do
       specify do
-        stub_request(:GET, "http://zombo.com/cats?limit=1").
+        stub_request(:GET, "https://example.org/cats?limit=1").
           with(:headers => {'User-Agent'=>'Foobar'}).
           to_return(:status => 200, :body => cats_json, :headers => {})
         object = Cat.first
@@ -34,7 +34,7 @@ describe 'namespacing and subclassing' do
 
     context 'top-level classes' do
       specify do
-        stub_request(:GET, "http://zombo.com/big_cats?limit=1").
+        stub_request(:GET, "https://example.org/big_cats?limit=1").
           with(:headers => {'User-Agent'=>'Foobar'}).
           to_return(:status => 200, :body => cats_json, :headers => {})
 
@@ -46,7 +46,7 @@ describe 'namespacing and subclassing' do
 
     context 'different module, same name' do
       specify do
-        stub_request(:GET, "http://zombo.com/cats?limit=1").
+        stub_request(:GET, "https://example.org/cats?limit=1").
           with(:headers => {'User-Agent'=>'Foobar'}).
           to_return(:status => 200, :body => cats_json, :headers => {})
 
@@ -58,7 +58,7 @@ describe 'namespacing and subclassing' do
 
     context 'different module, different name' do
       specify do
-        stub_request(:GET, "http://zombo.com/big_cats?limit=1").
+        stub_request(:GET, "https://example.org/big_cats?limit=1").
           with(:headers => {'User-Agent'=>'Foobar'}).
           to_return(:status => 200, :body => cats_json, :headers => {})
 

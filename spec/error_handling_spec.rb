@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe 'error handling' do
   class Failure < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
   end
 
   it 'raises an exception when the record is missing' do
-    stub_request(:GET, "http://zombo.com/failures/404").
+    stub_request(:GET, "https://example.org/failures/404").
              with(:headers => {'User-Agent'=>'Foobar'}).
              to_return(:status => 404, :body => "Not found", :headers => {})
 
@@ -15,7 +15,7 @@ describe 'error handling' do
   end
 
   it 'raises an exception when the server returns an HTTP 500' do
-    stub_request(:GET, "http://zombo.com/failures/500").
+    stub_request(:GET, "https://example.org/failures/500").
              with(:headers => {'User-Agent'=>'Foobar'}).
              to_return(:status => 500, :body => ":(", :headers => {})
 
@@ -23,7 +23,7 @@ describe 'error handling' do
   end
 
   it 'raises an exception when the server returns unexpected HTTP codes' do
-    stub_request(:GET, "http://zombo.com/failures/666").
+    stub_request(:GET, "https://example.org/failures/666").
              with(:headers => {'User-Agent'=>'Foobar'}).
              to_return(:status => 666, :body => "{}", :headers => {})
 
@@ -31,7 +31,7 @@ describe 'error handling' do
   end
 
   it 'raises an exception when the server times out' do
-    stub_request(:GET, "http://zombo.com/failures/123").
+    stub_request(:GET, "https://example.org/failures/123").
              with(:headers => {'User-Agent'=>'Foobar'}).
              to_timeout
 

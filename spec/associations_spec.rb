@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'associations' do
   class AssociationTestBase  < Hawk::Model::Base
-    url "http://zombo.com/"
+    url "https://example.org/"
     client_name "Foobar"
   end
 
@@ -68,7 +68,7 @@ describe 'associations' do
     specify do
       dog = Animal.new(farm_id: 1).tap{|d| d.farm_id = 1}
 
-      stub_request(:GET, "http://zombo.com/farms/1").
+      stub_request(:GET, "https://example.org/farms/1").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => farm_attributes.to_json, :headers => {})
 
@@ -83,7 +83,7 @@ describe 'associations' do
     specify do
       image = Image.new.tap{|i| i.imageable_type = "Animal"; i.imageable_id = 1}
 
-      stub_request(:GET, "http://zombo.com/animals/1").
+      stub_request(:GET, "https://example.org/animals/1").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => animal_attributes.to_json, :headers => {})
 
@@ -98,7 +98,7 @@ describe 'associations' do
   describe 'has_one' do
     specify do
       dog = Animal.new.tap{|d| d.id = 1}
-      stub_request(:GET, "http://zombo.com/foods?animal_id=1&limit=1").
+      stub_request(:GET, "https://example.org/foods?animal_id=1&limit=1").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => [food_attributes].to_json, :headers => {})
 
@@ -114,7 +114,7 @@ describe 'associations' do
     specify do
       farm = Farm.new.tap{|f| f.id = 1}
 
-      stub_request(:GET, "http://zombo.com/animals?farm_id=1").
+      stub_request(:GET, "https://example.org/animals?farm_id=1").
         with(:headers => {'User-Agent'=>'Foobar'}).
         to_return(:status => 200, :body => [animal_attributes].to_json, :headers => {})
 
