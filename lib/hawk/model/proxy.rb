@@ -21,7 +21,7 @@ module Hawk
           nil
         end
 
-        def count
+        def count(*)
           0
         end
       end
@@ -58,7 +58,7 @@ module Hawk
         params[klass.offset_param].to_i
       end
 
-      def count
+      def count(*)
         if @result
           @result.count
         else
