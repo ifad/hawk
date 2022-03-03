@@ -49,6 +49,7 @@ module Hawk
       def first!(params = {})
         first(params) or raise Hawk::Error::NotFound, "Can't find #{klass} with #{params.to_json}"
       end
+      alias find_by! first!
 
       def limit_value
         params[klass.limit_param].to_i
