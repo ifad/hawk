@@ -80,6 +80,7 @@ module Hawk
         def first!(params = {})
           first(params) or raise Hawk::Error::NotFound.new("Can't find first #{self}")
         end
+        alias find_by! first!
       end
     end
 

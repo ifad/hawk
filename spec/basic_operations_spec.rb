@@ -50,6 +50,24 @@ describe 'basic operations with a class that inherits from Hawk::Model::Base' do
     end
   end
 
+  describe '.first!' do
+    specify do
+      stub_request(:GET, "https://example.org/people?limit=1").
+        with(:headers => {'User-Agent'=>'Foobar'}).
+        to_return(status: 404, headers: {})
+
+      expect {
+        Person.first!
+      }.to raise_error Hawk::Error::NotFound
+    end
+  end
+
+  describe '.find_by!' do
+    it 'is an alias of first!' do
+      expect(Person.method(:find_by!).original_name).to eq(:first!)
+    end
+  end
+
   describe '.all' do
     specify do
       stub_request(:GET, "https://example.org/people").
