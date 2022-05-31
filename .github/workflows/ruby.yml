@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: ['2.6.9', '2.7.5', '3.0.3', '3.1.0']
+        ruby-version: ['2.6.10', '2.7.6', '3.0.4', '3.1.2']
         gemfile: [am_5.2, am_6.0, am_6.1, am_7.0]
         experimental: [false]
 
@@ -101,15 +101,15 @@ jobs:
             gemfile: am_6.1
             experimental: false
 
-          - ruby-version: '2.7.5'
+          - ruby-version: '2.7.6'
             gemfile: am_edge
             experimental: true
 
-          - ruby-version: '3.0.3'
+          - ruby-version: '3.0.4'
             gemfile: am_edge
             experimental: true
 
-          - ruby-version: '3.1.0'
+          - ruby-version: '3.1.2'
             gemfile: am_edge
             experimental: true
 
@@ -121,20 +121,20 @@ jobs:
             experimental: true
 
         exclude:
-          - ruby-version: '2.6.9'
+          - ruby-version: '2.6.10'
             gemfile: am_7.0
 
-          - ruby-version: '2.7.5'
+          - ruby-version: '2.7.6'
             gemfile: am_5.2
 
-          - ruby-version: '3.0.3'
+          - ruby-version: '3.0.4'
             gemfile: am_5.2
 
-          - ruby-version: '3.1.0'
+          - ruby-version: '3.1.2'
             gemfile: am_5.2
-          - ruby-version: '3.1.0'
+          - ruby-version: '3.1.2'
             gemfile: am_6.0
-          - ruby-version: '3.1.0'
+          - ruby-version: '3.1.2'
             gemfile: am_6.1
 
     env:
