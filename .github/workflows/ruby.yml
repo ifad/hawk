@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Ruby specs
@@ -13,20 +16,24 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: ['2.6.10', '2.7.6', '3.0.4', '3.1.2']
+        ruby-version: ['2.6', '2.7', '3.0', '3.1', '3.2']
         gemfile: [am_6.0, am_6.1, am_7.0]
         experimental: [false]
 
         include:
-          - ruby-version: '2.7.6'
+          - ruby-version: '2.7'
             gemfile: am_edge
             experimental: true
 
-          - ruby-version: '3.0.4'
+          - ruby-version: '3.0'
             gemfile: am_edge
             experimental: true
 
-          - ruby-version: '3.1.2'
+          - ruby-version: '3.1'
+            gemfile: am_edge
+            experimental: true
+
+          - ruby-version: '3.2'
             gemfile: am_edge
             experimental: true
 
@@ -38,12 +45,17 @@ jobs:
             experimental: true
 
         exclude:
-          - ruby-version: '2.6.10'
+          - ruby-version: '2.6'
             gemfile: am_7.0
 
-          - ruby-version: '3.1.2'
+          - ruby-version: '3.1'
             gemfile: am_6.0
-          - ruby-version: '3.1.2'
+          - ruby-version: '3.1'
+            gemfile: am_6.1
+
+          - ruby-version: '3.2'
+            gemfile: am_6.0
+          - ruby-version: '3.2'
             gemfile: am_6.1
 
     env:
