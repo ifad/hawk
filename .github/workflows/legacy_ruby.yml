@@ -12,30 +12,30 @@ permissions:
 jobs:
   test:
     name: Legacy Ruby specs
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
         ruby-version: ['2.2', '2.3', '2.4', '2.5']
         gemfile: [am_3.2, am_4.0, am_4.1, am_4.2, am_5.0, am_5.1, am_5.2, am_6.0, am_6.1]
-        experimental: [false]
+        channel: [stable]
 
         include:
-          # Ruby 2.1.10 is not available on GitHub Actions' ubuntu-18.04
+          # Ruby 2.1.10 is not available with ruby/setup-ruby@v1
           # Ruby 2.1.9 often returns segmentation faults, so this is marked as
           # experimental
           - ruby-version: '2.1'
             gemfile: am_3.2
-            experimental: true
+            channel: experimental
           - ruby-version: '2.1'
             gemfile: am_4.0
-            experimental: true
+            channel: experimental
           - ruby-version: '2.1'
             gemfile: am_4.1
-            experimental: true
+            channel: experimental
           - ruby-version: '2.1'
             gemfile: am_4.2
-            experimental: true
+            channel: experimental
 
         exclude:
           - ruby-version: '2.2'
@@ -76,7 +76,7 @@ jobs:
       BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
       TEST_CONFIG: ./spec/config.github.yml
 
-    continue-on-error: ${{ matrix.experimental }}
+    continue-on-error: ${{ matrix.channel != 'stable' }}
 
     steps:
     - uses: actions/checkout@v3
