@@ -12,7 +12,7 @@ permissions:
 jobs:
   test:
     name: Legacy Ruby specs
-    runs-on: ubuntu-20.04
+    runs-on: latest
 
     strategy:
       matrix:
