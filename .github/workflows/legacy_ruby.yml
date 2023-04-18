@@ -18,6 +18,7 @@ jobs:
       matrix:
         ruby-version: ['2.2']
         gemfile: [am_5.1]
+        channel: stable
 
     env:
       BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
