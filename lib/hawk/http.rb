@@ -107,8 +107,7 @@ module Hawk
 
     private
       def build_url path
-        uri = base.merge(path.sub(/^\//, ''))
-        uri.path.squeeze!
+        uri = base.merge(path.sub(/^\//, '').squeeze('/')).to_s
         uri.to_s
       end
 
