@@ -107,7 +107,9 @@ module Hawk
 
     private
       def build_url path
-        base.merge(path.sub(/^\//, '')).to_s
+        uri = base.merge(path.sub(/^\//, ''))
+        uri.path.squeeze!
+        uri.to_s
       end
 
       def response_handler(response)
