@@ -1,5 +1,3 @@
-# Test against 3.2 -> 5.1
-#
 appraise 'am-3.2' do
   gem 'activemodel', "~> 3.2.0"
   gem 'activesupport', "~> 3.2.0"
@@ -55,6 +53,11 @@ end
 appraise 'am-7.0' do
   gem 'activemodel', "~> 7.0.0"
   gem 'activesupport', "~> 7.0.0"
+end
+
+appraise 'am-7.1' do
+  gem 'activemodel', "~> 7.1.0"
+  gem 'activesupport', "~> 7.1.0"
 end
 
 appraise 'am-edge' do
