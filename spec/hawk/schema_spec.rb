@@ -17,7 +17,7 @@ class Car < Hawk::Model::Base
   end
 end
 
-RSpec.describe 'schema' do
+RSpec.describe Hawk, '.schema' do
   specify do
     expect(Car.schema).to be_a(Hash)
   end
