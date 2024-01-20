@@ -21,7 +21,7 @@ class Post
   resource_accessor :author
 end
 
-RSpec.describe 'linker' do
+RSpec.describe Hawk::Linker do
   let(:author_attributes) do
     {
       id: 1,

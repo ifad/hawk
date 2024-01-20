@@ -12,8 +12,4 @@ RSpec/DescribeClass:
     - 'spec/associations_spec.rb'
     - 'spec/basic_operations_spec.rb'
     - 'spec/collections_spec.rb'
-    - 'spec/error_handling_spec.rb'
-    - 'spec/linker_spec.rb'
     - 'spec/namespacing_spec.rb'
-    - 'spec/schema_spec.rb'
-    - 'spec/writing_operations_spec.rb'
