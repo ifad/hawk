@@ -2,7 +2,15 @@
 
 source "https://rubygems.org"
 
+gem "appraisal"
+gem "bundler"
+gem "byebug"
+gem "pry"
+gem "rake"
+gem "rspec"
+gem "simplecov"
+gem "webmock"
+gem "yard"
 gem "activemodel", "~> 7.1.0"
-gem "activesupport", "~> 7.1.0"
 
 gemspec path: "../"
