@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DalliClientMock
   def version
     @version ||= Version.new
@@ -8,7 +10,6 @@ class DalliClientMock
   def delete(_key); end
 
   class Version
-    def fetch(_, _); 1.23; end
+    def fetch(_, _) = 1.23
   end
-
 end

@@ -1,7 +1,6 @@
 # Hawk
 
 [![Build Status](https://github.com/ifad/hawk/actions/workflows/ruby.yml/badge.svg)](https://github.com/ifad/hawk/actions)
-[![Legacy Build Status](https://github.com/ifad/hawk/actions/workflows/legacy_ruby.yml/badge.svg)](https://github.com/ifad/hawk/actions)
 
 Hawk is an API Client framework. It is used as a base to then build your API
 clients. It consumes JSON and produces Ruby objects without any Hash magic.

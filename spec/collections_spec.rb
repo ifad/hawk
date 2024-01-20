@@ -1,39 +1,41 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-describe 'collections and pagination' do
-  class Mosquito < Hawk::Model::Base
-    url "https://example.org/"
-    client_name "Foobar"
+class Mosquito < Hawk::Model::Base
+  url 'https://example.org/'
+  client_name 'Foobar'
 
-    schema do
-      integer :id
-      string :name
-    end
+  schema do
+    integer :id
+    string :name
   end
+end
 
+RSpec.describe 'collections and pagination' do
   describe 'collection behaviour' do
-    let(:collection_as_an_array) {
+    let(:collection_as_an_array) do
       [
-        {id: 1, name: 'bzzz'},
-        {id: 2, name: 'bzbzzzz'},
-        {id: 3, name: 'bzzzzbzbzzz'}
+        { id: 1, name: 'bzzz' },
+        { id: 2, name: 'bzbzzzz' },
+        { id: 3, name: 'bzzzzbzbzzz' }
       ]
-    }
+    end
 
-    let(:collection_as_a_hash) {
+    let(:collection_as_a_hash) do
       {
         mosquitos: collection_as_an_array,
         total_count: 123,
         limit: 20,
         offset: 50
       }
-    }
+    end
 
     describe 'collection as an array' do
       specify do
-        stub_request(:GET, "https://example.org/mosquitos"). # pluralization can be improved
-          with(:headers => {'User-Agent'=>'Foobar'}).
-          to_return(:status => 200, :body => collection_as_an_array.to_json, :headers => {})
+        stub_request(:GET, 'https://example.org/mosquitos') # pluralization can be improved
+          .with(headers: { 'User-Agent' => 'Foobar' })
+          .to_return(status: 200, body: collection_as_an_array.to_json, headers: {})
         collection = Mosquito.all
         expect(collection.size).to eq(3)
       end
@@ -41,21 +43,20 @@ describe 'collections and pagination' do
 
     describe 'collection as a hash' do
       specify do
-        stub_request(:GET, "https://example.org/mosquitos").
-          with(:headers => {'User-Agent'=>'Foobar'}).
-          to_return(:status => 200, :body => collection_as_a_hash.to_json, :headers => {})
+        stub_request(:GET, 'https://example.org/mosquitos')
+          .with(headers: { 'User-Agent' => 'Foobar' })
+          .to_return(status: 200, body: collection_as_a_hash.to_json, headers: {})
         collection = Mosquito.all
         expect(collection.size).to eq(3)
       end
     end
-
   end
 
   describe '.count' do
     before do
-      stub_request(:GET, "https://example.org/mosquitos/count").
-        with(:headers => {'User-Agent'=>'Foobar'}).
-        to_return(:status => 200, :body => {count: 123}.to_json, :headers => {})
+      stub_request(:GET, 'https://example.org/mosquitos/count')
+        .with(headers: { 'User-Agent' => 'Foobar' })
+        .to_return(status: 200, body: { count: 123 }.to_json, headers: {})
     end
 
     specify do
