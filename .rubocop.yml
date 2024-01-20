@@ -1,0 +1,27 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-packaging
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRailsVersion: 7.0
+  TargetRubyVersion: 3.0
+  Exclude:
+    - 'lib/**/*'
+    - 'gemfiles/**/*'
+    - 'vendor/bundle/**/*'
+    - 'tmp/**/*'
+
+Layout/LineLength:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
