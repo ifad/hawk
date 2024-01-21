@@ -12,7 +12,8 @@ module Hawk
       # @return [String] the captured output
       #
       def capture_stdout
-        stdout, string = $stdout, StringIO.new
+        stdout = $stdout
+        string = StringIO.new
         $stdout = string
 
         yield

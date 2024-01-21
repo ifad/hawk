@@ -228,12 +228,6 @@ Style/OptionalBooleanParameter:
   Exclude:
     - 'lib/hawk/model/proxy.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/ParallelAssignment:
-  Exclude:
-    - 'lib/hawk/model/schema.rb'
-    - 'lib/hawk/rake/utils.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantSelfAssignment:
   Exclude:
