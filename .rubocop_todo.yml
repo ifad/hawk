@@ -152,12 +152,6 @@ Style/FormatString:
 Style/FormatStringToken:
   EnforcedStyle: unannotated
 
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
 Style/GuardClause:
@@ -199,16 +193,6 @@ Style/MissingRespondToMissing:
 Style/ModuleFunction:
   Exclude:
     - 'lib/hawk/rake/utils.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/model/schema.rb'
-    - 'lib/hawk/version.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, AllowedMethods, AllowedPatterns.

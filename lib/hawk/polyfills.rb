@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hawk
   module Polyfills
     def self.polyfill(klass, method, &impl)

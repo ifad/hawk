@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hawk
   # Allows adding to any Ruby object an accessor referencing an {Hawk::Model}.
   #
