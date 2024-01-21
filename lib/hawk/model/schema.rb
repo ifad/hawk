@@ -172,9 +172,9 @@ module Hawk
 
       ATTRIBUTE_CASTS = {
         /_(?:at|from|until|on)$/ => :datetime,
-        /_date$/                 => :date,
-        /_num$/                  => :bignum,
-        /^is_/                   => :boolean,
+        /_date$/ => :date,
+        /_num$/ => :bignum,
+        /^is_/ => :boolean,
       }
     end
   end

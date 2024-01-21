@@ -67,8 +67,8 @@ module Hawk
           end
 
           collection_options = {
-            limit:       params[limit_param],
-            offset:      params[offset_param],
+            limit: params[limit_param],
+            offset: params[offset_param],
             total_count: total_count
           }
 

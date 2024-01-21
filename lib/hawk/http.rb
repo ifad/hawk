@@ -14,7 +14,7 @@ module Hawk
     include Instrumentation
 
     DEFAULTS = {
-      timeout:         2,
+      timeout: 2,
       connect_timeout: 1,
       params_encoding: :rack,
       # username:      nil,
