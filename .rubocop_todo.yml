@@ -50,29 +50,6 @@ Layout/HashAlignment:
     - 'lib/hawk/model/schema.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, indented_internal_methods
-Layout/IndentationConsistency:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/linker.rb'
-    - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/proxy.rb'
-    - 'lib/hawk/model/schema.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Width, AllowedPatterns.
-Layout/IndentationWidth:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/linker.rb'
-    - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/proxy.rb'
-    - 'lib/hawk/model/schema.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment.
 Layout/LeadingCommentSpace:
   Exclude:

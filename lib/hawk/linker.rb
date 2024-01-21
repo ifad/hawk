@@ -27,19 +27,19 @@ module Hawk
 
       private
 
-        def _monomorphic_resource_accessor(entity, options)
-          klass = options[:class_name] || entity.to_s.camelize
-          key   = options[:primary_key] || [entity, :id].join('_')
+      def _monomorphic_resource_accessor(entity, options)
+        klass = options[:class_name] || entity.to_s.camelize
+        key   = options[:primary_key] || [entity, :id].join('_')
 
-          class_eval <<-RUBY, __FILE__, __LINE__ -1 # Getter
+        class_eval <<-RUBY, __FILE__, __LINE__ -1 # Getter
             def #{entity}
               return nil unless self.#{key}.present?
 
               @_#{entity} ||= #{respond_to?(:module_parent) ? module_parent : parent}::#{klass}.find(self.#{key})
             end
-          RUBY
+        RUBY
 
-          class_eval <<-RUBY, __FILE__, __LINE__ -1 # Setter
+        class_eval <<-RUBY, __FILE__, __LINE__ -1 # Setter
             def #{entity}=(object)
               return if object.blank?
 
@@ -51,27 +51,27 @@ module Hawk
 
               @_#{entity} = object
             end
-          RUBY
+        RUBY
 
-          class_eval <<-RUBY, __FILE__, __LINE__ -1 # Reloader
+        class_eval <<-RUBY, __FILE__, __LINE__ -1 # Reloader
             def reload(*)
               super.tap { @_#{entity} = nil }
             end
-          RUBY
-        end
+        RUBY
+      end
 
-        def _polymorphic_resource_accessor(entity, options)
-          key = options[:as] || entity
+      def _polymorphic_resource_accessor(entity, options)
+        key = options[:as] || entity
 
-          class_eval <<-RUBY, __FILE__, __LINE__ -1 # Getter
+        class_eval <<-RUBY, __FILE__, __LINE__ -1 # Getter
             def #{entity}
               return nil unless self.#{key}_id.present? && self.#{key}_type.present?
 
               @_#{entity} ||= self.#{key}_type.constantize.find(self.#{key}_id)
             end
-          RUBY
+        RUBY
 
-          class_eval <<-RUBY, __FILE__, __LINE__ -1 # Setter
+        class_eval <<-RUBY, __FILE__, __LINE__ -1 # Setter
             def #{entity}=(object)
               return if object.blank?
 
@@ -84,14 +84,14 @@ module Hawk
 
               @_#{entity} = object
             end
-          RUBY
+        RUBY
 
-          class_eval <<-RUBY, __FILE__, __LINE__ -1 # Reloader
+        class_eval <<-RUBY, __FILE__, __LINE__ -1 # Reloader
             def reload(*)
               super.tap { @_#{entity} = nil }
             end
-          RUBY
-        end
+        RUBY
+      end
     end
   end
 end

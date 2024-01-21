@@ -20,50 +20,50 @@ module Hawk
 
       private
 
-        def preload_associations(attributes, params, scope)
-          self.instance_exec(scope, attributes, &scope.preload_association)
-        end
+      def preload_associations(attributes, params, scope)
+        self.instance_exec(scope, attributes, &scope.preload_association)
+      end
 
-        def add_association_object(scope, name, repr)
-          associations = scope.associations
+      def add_association_object(scope, name, repr)
+        associations = scope.associations
 
-          (type, options) = associations[name.to_sym]             ||
-                            associations[name.pluralize.to_sym]   ||
-                            associations[name.singularize.to_sym]
-          if type
-            target = scope.model_class_for(options.fetch(:class_name))
-            result = target.instantiate_from(repr, params)
+        (type, options) = associations[name.to_sym]             ||
+                          associations[name.pluralize.to_sym]   ||
+                          associations[name.singularize.to_sym]
+        if type
+          target = scope.model_class_for(options.fetch(:class_name))
+          result = target.instantiate_from(repr, params)
 
-            if is_collection?(type)
-              add_to_association_collection name, result
-            else
-              set_association_value name, result
-            end
+          if is_collection?(type)
+            add_to_association_collection name, result
           else
-            raise Hawk::Error, "Unhandled assocation: #{name}"
+            set_association_value name, result
           end
+        else
+          raise Hawk::Error, "Unhandled assocation: #{name}"
         end
+      end
 
-        def is_collection? type
-          [ :polymorphic_belongs_to, :has_many ].include? type
-        end
+      def is_collection? type
+        [ :polymorphic_belongs_to, :has_many ].include? type
+      end
 
-        def add_to_association_collection name, target
-          variable = "@_#{name}"
-          instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
-          collection = instance_variable_get(variable)
-          target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
-        end
+      def add_to_association_collection name, target
+        variable = "@_#{name}"
+        instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
+        collection = instance_variable_get(variable)
+        target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
+      end
 
-        def set_association_value name, target
-          instance_variable_set("@_#{name}", target)
-        end
+      def set_association_value name, target
+        instance_variable_set("@_#{name}", target)
+      end
 
-        def clean_inherited_params inherited, opts={}
-          rv = {}.deep_merge opts
-          rv[:options] = inherited[:options] if inherited && inherited[:options]
-          rv
-        end
+      def clean_inherited_params inherited, opts={}
+        rv = {}.deep_merge opts
+        rv[:options] = inherited[:options] if inherited && inherited[:options]
+        rv
+      end
 
       module ClassMethods
         # Propagate associations to the subclasses on inheritance
@@ -232,7 +232,7 @@ module Hawk
             klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
 
             conditions = if as.present?
-              "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+                           "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
             else
               "'#{key}' => self.id"
             end
@@ -253,7 +253,7 @@ module Hawk
             klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
 
             conditions = if as.present?
-              "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+                           "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
             else
               "'#{key}' => self.id"
             end
