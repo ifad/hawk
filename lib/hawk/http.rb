@@ -102,7 +102,7 @@ module Hawk
       instrument :request, descriptor do |descriptor|
         caching descriptor.update(cache_opts) do
           request = Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request)))
-          request.on_complete(&method(:response_handler))
+          request.on_complete { |response| response_handler(response) }
 
           request.run.body
         end

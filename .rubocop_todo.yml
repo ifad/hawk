@@ -91,10 +91,6 @@ Naming/PredicateName:
   Exclude:
     - 'lib/hawk/model/association.rb'
 
-Performance/MethodObjectAsBlock:
-  Exclude:
-    - 'lib/hawk/http.rb'
-
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
   Exclude:
