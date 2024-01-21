@@ -102,7 +102,7 @@ module Hawk
           end
 
           retval = klass.public_send(meth, *args, &block)
-          if retval.kind_of?(Proxy)
+          if retval.is_a?(Proxy)
             merge(retval)
           else
             retval

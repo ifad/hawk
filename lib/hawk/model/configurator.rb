@@ -21,10 +21,10 @@ module Hawk
         protected
 
         def configurable
-          (@_configurable ||= []).inject(Set.new) { |s, klass|
+          (@_configurable ||= []).inject(Set.new) do |s, klass|
             s.add klass
             s.merge klass.configurable
-          }.to_a
+          end.to_a
         end
       end
     end
