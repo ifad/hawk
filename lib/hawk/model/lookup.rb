@@ -38,13 +38,13 @@ module Hawk
         #
         #   App::Post.model_class_for('Comment')
         #
-        # will return `App::Comment`
+        # will return +App::Comment+
         #
         # while
         #
         #   Client::Post.model_class_for('Comment')
         #
-        # will return `Client::Comment`
+        # will return +Client::Comment+
         #
         # In a nutshell, first the model namespace is checked,
         # then the containing namespace, and then the inheritance
@@ -89,8 +89,8 @@ module Hawk
           nil
         end
 
-        def cached_model_class_for(name, scope, &block)
-          @_class_cache[[name, scope.name]] ||= block.call
+        def cached_model_class_for(name, scope)
+          @_class_cache[[name, scope.name]] ||= yield
         end
       end
     end

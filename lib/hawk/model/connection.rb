@@ -74,11 +74,11 @@ module Hawk
         def connection
           @_connection ||= begin
             raise Error::Configuration, "URL for #{name} is not yet set" unless url
-            raise Error::Configuration, "Please set the client_name"     unless client_name
+            raise Error::Configuration, 'Please set the client_name'     unless client_name
 
-            options = self.http_options.dup
+            options = http_options.dup
             headers = (options[:headers] ||= {})
-            headers['User-Agent'] = self.client_name
+            headers['User-Agent'] = client_name
 
             Hawk::HTTP.new(url, options)
           end
@@ -89,7 +89,7 @@ module Hawk
 
           configurable.each { |model| model.url = @_url }
 
-          return @_url
+          @_url
         end
         alias url= url
 
@@ -102,7 +102,7 @@ module Hawk
 
           configurable.each { |model| model.http_options = @_http_options }
 
-          return @_http_options
+          @_http_options
         end
         alias http_options= http_options
 
@@ -111,16 +111,16 @@ module Hawk
 
           configurable.each { |model| model.client_name = @_client_name }
 
-          return @_client_name
+          @_client_name
         end
         alias client_name= client_name
 
         def inherited(subclass)
           super
 
-          subclass.url          = self.url
-          subclass.http_options = self.http_options
-          subclass.client_name  = self.client_name
+          subclass.url          = url
+          subclass.http_options = http_options
+          subclass.client_name  = client_name
         end
       end
     end

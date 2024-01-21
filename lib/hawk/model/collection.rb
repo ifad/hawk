@@ -2,7 +2,7 @@ module Hawk
   module Model
     class Collection < Array
       def initialize(elements = [], options = {})
-        self.replace(elements)
+        replace(elements)
 
         @total_count  = options[:total_count]
         @limit_value  = options[:limit]
@@ -13,14 +13,10 @@ module Hawk
         "#<#{self.class.name} count:#{total_count} contents:#{super}>"
       end
 
-      attr_reader :total_count
+      attr_reader :total_count, :offset_value
 
       def limit_value
-        @limit_value or raise Hawk::Error, "This collection is not paginated"
-      end
-
-      def offset_value
-        @offset_value
+        @limit_value or raise Hawk::Error, 'This collection is not paginated'
       end
 
       def count
@@ -30,8 +26,8 @@ module Hawk
       def map(&block)
         self.class.new(super,
                        total_count: @total_count,
-                       limit:       @limit_value,
-                       offset:      @offset_value
+                       limit: @limit_value,
+                       offset: @offset_value
                       )
       end
     end

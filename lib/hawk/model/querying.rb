@@ -33,13 +33,13 @@ module Hawk
           @_default_params ||= {}
         end
 
-        # Adds `limit` with the given number of records
+        # Adds +limit+ with the given number of records
         #
         def limit(n)
           where(limit_param => n)
         end
 
-        # Adds an `offset` with the given number of records
+        # Adds an +offset+ with the given number of records
         #
         def offset(n)
           where(offset_param => n)
@@ -76,7 +76,7 @@ module Hawk
         # {Hawk::Error::NotFound} if not found
         #
         def first!(params = {})
-          first(params) or raise Hawk::Error::NotFound.new("Can't find first #{self}")
+          first(params) or raise(Hawk::Error::NotFound, "Can't find first #{self}")
         end
         alias find_by! first!
       end

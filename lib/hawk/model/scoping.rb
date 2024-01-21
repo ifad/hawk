@@ -7,7 +7,7 @@ module Hawk
 
       module ClassMethods
         def scope(name, impl)
-          if self.respond_to?(name)
+          if respond_to?(name)
             raise Error::Configuration, "#{self.name} already has a #{name} singleton method defined"
           end
 

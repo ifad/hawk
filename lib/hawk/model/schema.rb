@@ -5,7 +5,7 @@ module Hawk
         base.extend ClassMethods
       end
 
-      def initialize(attributes = {}, params = {})
+      def initialize(attributes = {}, _params = {})
         cast!(attributes)
         # super not required, this is the last in the chain.
       end
@@ -17,7 +17,7 @@ module Hawk
       end
       alias to_h attributes
 
-      def as_json(*ignored) # FIXME
+      def as_json(*_ignored) # FIXME
         to_h
       end
 
@@ -62,8 +62,8 @@ module Hawk
       module ClassMethods
         def inherited(subclass)
           super
-          subclass.instance_variable_set :@_schema,       self.schema       if self.schema
-          subclass.instance_variable_set :@_after_schema, self.after_schema if self.after_schema
+          subclass.instance_variable_set :@_schema,       schema       if schema
+          subclass.instance_variable_set :@_after_schema, after_schema if after_schema
         end
 
         def schema(&block)
@@ -103,7 +103,7 @@ module Hawk
             read_attribute(key)
           end
 
-          define_method("#{key}=") do |value|
+          define_method(:"#{key}=") do |value|
             write_attribute(key, value)
           end
 
@@ -122,7 +122,7 @@ module Hawk
 
         def find_schema_caster_for(attribute)
           ATTRIBUTE_CASTS.each do |re, type|
-            if attribute =~ re
+            if attribute&.match?(re)
               return find_schema_caster_typed(type)
             end
           end
@@ -148,7 +148,7 @@ module Hawk
 
         def call(value)
           @code.call(value) unless value.nil?
-        rescue => e
+        rescue StandardError => e
           "## Error while casting #{value} to #{type}: #{e.message} ##"
         end
 
@@ -167,14 +167,14 @@ module Hawk
         Caster.new(:datetime, ->(value) { Time.parse(value) }),
         Caster.new(:date,     ->(value) { Date.parse(value) }),
         Caster.new(:bignum,   ->(value) { BigDecimal(value) }),
-        Caster.new(:boolean,  ->(value) { bools.include?(value) }),
+        Caster.new(:boolean,  ->(value) { bools.include?(value) })
       ].inject({}) { |h, c| h.update(c.type => c) }
 
       ATTRIBUTE_CASTS = {
         /_(?:at|from|until|on)$/ => :datetime,
-        /_date$/                 => :date,
-        /_num$/                  => :bignum,
-        /^is_/                   => :boolean,
+        /_date$/ => :date,
+        /_num$/ => :bignum,
+        /^is_/ => :boolean
       }
     end
   end

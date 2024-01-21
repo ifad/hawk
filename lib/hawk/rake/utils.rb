@@ -9,10 +9,9 @@ module Hawk
       ##
       # Captures the stdout emitted by the given +block+
       #
-      # @param block [Proc]
       # @return [String] the captured output
       #
-      def capture_stdout(&block)
+      def capture_stdout
         stdout, string = $stdout, StringIO.new
         $stdout = string
 

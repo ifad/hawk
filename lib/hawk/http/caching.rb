@@ -22,7 +22,7 @@ module Hawk
         description = if cache_configured?
                         "cache: ON #{@_cache_server} v#{@_cache_version}"
                       else
-                        "cache: OFF"
+                        'cache: OFF'
                       end
 
         super.sub(/>$/, ", #{description}>")
@@ -39,7 +39,7 @@ module Hawk
       protected
 
       def caching(descriptor, &block)
-        return block.call unless cache_configured?
+        return yield unless cache_configured?
 
         result = try_cache(descriptor, &block)
 
@@ -47,7 +47,7 @@ module Hawk
           invalidate(descriptor)
         end
 
-        return result
+        result
       end
 
       private
@@ -56,8 +56,8 @@ module Hawk
         MultiJson.dump(descriptor)
       end
 
-      def try_cache(descriptor, &block)
-        return block.call unless descriptor[:method] == 'GET'
+      def try_cache(descriptor)
+        return yield unless descriptor[:method] == 'GET'
 
         key = cache_key(descriptor)
 
@@ -69,14 +69,14 @@ module Hawk
           ttl = descriptor[:expires_in] ||
                 @_cache_options[:expires_in]
 
-          block.call.tap do |cacheable|
+          yield.tap do |cacheable|
             # $stderr.puts "CACHE: store #{key} with ttl #{ttl}"
             @_cache.set(key, cacheable, ttl)
           end
         end
       end
 
-      def invalidate(descriptor, &block)
+      def invalidate(descriptor)
         descriptor = descriptor.dup
         descriptor[:method] = 'GET'
         descriptor[:params] ||= {}
@@ -97,7 +97,7 @@ module Hawk
         return if options[:disabled]
 
         unless options.key?(:server)
-          raise Error::Configuration, "Cache server option is mandatory"
+          raise Error::Configuration, 'Cache server option is mandatory'
         end
 
         client, server, version = connect_cache(options)
@@ -121,7 +121,7 @@ module Hawk
           if version = client.version.fetch(server, nil)
             [client, server, version]
           else
-            $stderr.puts "Hawk: can't connect to memcached server #{server}"
+            warn "Hawk: can't connect to memcached server #{server}"
             nil
           end
         end

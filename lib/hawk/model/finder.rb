@@ -6,7 +6,7 @@ module Hawk
       end
 
       def path_for(component, params = {})
-        [self.class.model_path_from(params), self.id, component].compact.join('/')
+        [self.class.model_path_from(params), id, component].compact.join('/')
       end
 
       module ClassMethods
@@ -67,8 +67,8 @@ module Hawk
           end
 
           collection_options = {
-            limit:       params[limit_param],
-            offset:      params[offset_param],
+            limit: params[limit_param],
+            offset: params[offset_param],
             total_count: total_count
           }
 
@@ -76,7 +76,7 @@ module Hawk
         end
 
         def instantiate_one(repr, params)
-          if repr.key?(instance_key) && (repr[instance_key].is_a?(Hash))
+          if repr.key?(instance_key) && repr[instance_key].is_a?(Hash)
             repr = repr.fetch(instance_key)
           end
 
@@ -84,7 +84,7 @@ module Hawk
         end
 
         def instance_key
-          @_instance_key ||= self.name.demodulize.underscore
+          @_instance_key ||= name.demodulize.underscore
         end
 
         def collection_key
@@ -126,7 +126,7 @@ module Hawk
         end
 
         def default_model_path
-          self.name.demodulize.underscore.pluralize.freeze
+          name.demodulize.underscore.pluralize.freeze
         end
 
         def batch_path(path = nil)

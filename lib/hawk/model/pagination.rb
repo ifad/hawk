@@ -12,7 +12,7 @@ module Hawk
           base.instance_eval do
             include Kaminari::ConfigurationMethods
 
-            eval <<-RUBY
+            eval <<-RUBY, binding, __FILE__, __LINE__ + 1
               def #{Kaminari.config.page_method_name}(num = nil)
                 limit(default_per_page).
                 offset(default_per_page * ([num.to_i, 1].max - 1))

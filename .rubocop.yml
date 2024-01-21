@@ -24,3 +24,6 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false

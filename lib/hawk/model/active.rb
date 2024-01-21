@@ -19,17 +19,17 @@ module Hawk
       end
 
       def ==(other)
-        unless self.respond_to?(:id)
+        unless respond_to?(:id)
           raise Error, "Can't compare #{self} as it doesn't have an .id attribute"
         end
 
-        other.instance_of?(self.class) && self.id == other.id
+        other.instance_of?(self.class) && id == other.id
       end
       alias eql? ==
 
       def hash
-        if respond_to?(:id) && !self.id.nil?
-          self.id.hash
+        if respond_to?(:id) && !id.nil?
+          id.hash
         else
           super
         end
@@ -65,7 +65,7 @@ module Hawk
       end
 
       def persist!
-        connection.put(path_for(nil), self.attributes.merge(cache: { invalidate: path_for(nil) }))
+        connection.put(path_for(nil), attributes.merge(cache: { invalidate: path_for(nil) }))
       end
     end
   end
