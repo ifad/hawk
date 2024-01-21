@@ -1,8 +1,6 @@
 module Hawk
   module Model
-
     module Querying
-
       def self.included(base)
         base.extend ClassMethods
       end
@@ -83,6 +81,5 @@ module Hawk
         alias find_by! first!
       end
     end
-
   end
 end

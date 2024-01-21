@@ -6,6 +6,174 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: leading, trailing
+Layout/DotPosition:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
+# SupportedHashRocketStyles: key, separator, table
+# SupportedColonStyles: key, separator, table
+# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
+Layout/HashAlignment:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/collection.rb'
+    - 'lib/hawk/model/finder.rb'
+    - 'lib/hawk/model/schema.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: symmetrical, new_line, same_line
+Layout/MultilineMethodCallBraceLayout:
+  Exclude:
+    - 'lib/hawk/model/collection.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Lint/AmbiguousOperator:
+  Exclude:
+    - 'lib/hawk/model/configurator.rb'
+    - 'lib/hawk/polyfills.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: AllowSafeAssignment.
+Lint/AssignmentInCondition:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/model/lookup.rb'
+
+# Configuration parameters: IgnoreLiteralBranches, IgnoreConstantBranches.
+Lint/DuplicateBranch:
+  Exclude:
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Lint/ElseLayout:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+# Configuration parameters: AllowedParentClasses.
+Lint/MissingSuper:
+  Exclude:
+    - 'lib/hawk/model/collection.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowPercentLiteralArrayArgument.
+Lint/RedundantSplatExpansion:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+Lint/ShadowingOuterLocalVariable:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/finder.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: strict, consistent
+Lint/SymbolConversion:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
+Lint/UnusedBlockArgument:
+  Exclude:
+    - 'lib/hawk/model/base.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/model/schema/dsl.rb'
+    - 'lib/hawk/rake/utils.rb'
+
+# Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
+Metrics/AbcSize:
+  Max: 40
+
+# Configuration parameters: CountComments, CountAsOne.
+Metrics/ClassLength:
+  Max: 171
+
+# Configuration parameters: AllowedMethods, AllowedPatterns.
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+# Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
+Metrics/MethodLength:
+  Max: 28
+
+# Configuration parameters: CountComments, CountAsOne.
+Metrics/ModuleLength:
+  Max: 146
+
+# Configuration parameters: AllowedMethods, AllowedPatterns.
+Metrics/PerceivedComplexity:
+  Max: 14
+
+# Configuration parameters: ForbiddenDelimiters.
+# ForbiddenDelimiters: (?i-mx:(^|\s)(EO[A-Z]{1}|END)(\s|$))
+Naming/HeredocDelimiterNaming:
+  Exclude:
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyleForLeadingUnderscores.
+# SupportedStylesForLeadingUnderscores: disallowed, required, optional
+Naming/MemoizedInstanceVariableName:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/connection.rb'
+    - 'lib/hawk/model/finder.rb'
+    - 'lib/hawk/model/proxy.rb'
+    - 'lib/hawk/model/querying.rb'
+
+# Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
+# AllowedNames: as, at, by, cc, db, id, if, in, io, ip, of, on, os, pp, to
+Naming/MethodParameterName:
+  Exclude:
+    - 'lib/hawk/model/querying.rb'
+
+# Configuration parameters: NamePrefix, ForbiddenPrefixes, AllowedMethods, MethodDefinitionMacros.
+# NamePrefix: is_, has_, have_
+# ForbiddenPrefixes: is_, has_, have_
+# AllowedMethods: is_a?
+# MethodDefinitionMacros: define_method, define_singleton_method
+Naming/PredicateName:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+Performance/MethodObjectAsBlock:
+  Exclude:
+    - 'lib/hawk/http.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Performance/RedundantBlockCall:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/http/instrumentation.rb'
+    - 'lib/hawk/model/lookup.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Performance/RegexpMatch:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/schema.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Performance/StringIdentifierArgument:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/schema.rb'
+
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
   Exclude:
@@ -13,3 +181,332 @@ RSpec/DescribeClass:
     - 'spec/basic_operations_spec.rb'
     - 'spec/collections_spec.rb'
     - 'spec/namespacing_spec.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: strict, flexible
+Rails/TimeZone:
+  Exclude:
+    - 'lib/hawk/model/schema.rb'
+
+Security/Eval:
+  Exclude:
+    - 'lib/hawk/model/pagination.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowOnlyRestArgument, UseAnonymousForwarding, RedundantRestArgumentNames, RedundantKeywordRestArgumentNames, RedundantBlockArgumentNames.
+# RedundantRestArgumentNames: args, arguments
+# RedundantKeywordRestArgumentNames: kwargs, options, opts
+# RedundantBlockArgumentNames: blk, block, proc
+Style/ArgumentsForwarding:
+  Exclude:
+    - 'lib/hawk/model/configurator.rb'
+    - 'lib/hawk/model/proxy.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
+# SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
+# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
+# FunctionalMethods: let, let!, subject, watch
+# AllowedMethods: lambda, proc, it
+Style/BlockDelimiters:
+  Exclude:
+    - 'lib/hawk/model/base.rb'
+    - 'lib/hawk/model/configurator.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: is_a?, kind_of?
+Style/ClassCheck:
+  Exclude:
+    - 'lib/hawk/model/proxy.rb'
+
+Style/ClassVars:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/ColonMethodCall:
+  Exclude:
+    - 'lib/hawk/http/instrumentation.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: Keywords, RequireColon.
+# Keywords: TODO, FIXME, OPTIMIZE, HACK, REVIEW, NOTE
+Style/CommentAnnotation:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/http/instrumentation.rb'
+    - 'lib/hawk/model/association.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+Style/CommentedKeyword:
+  Exclude:
+    - 'lib/hawk/linker.rb'
+    - 'lib/hawk/model/schema.rb'
+
+Style/DocumentDynamicEvalDefinition:
+  Exclude:
+    - 'lib/hawk/linker.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/pagination.rb'
+
+# Configuration parameters: AllowedConstants.
+Style/Documentation:
+  Enabled: false
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/EachWithObject:
+  Exclude:
+    - 'lib/hawk/http.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/EvalWithLocation:
+  Exclude:
+    - 'lib/hawk/linker.rb'
+    - 'lib/hawk/model/pagination.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowedVars.
+Style/FetchEnvVar:
+  Exclude:
+    - 'lib/hawk/rake/default_task.rb'
+    - 'lib/hawk/rake/utils.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: format, sprintf, percent
+Style/FormatString:
+  Exclude:
+    - 'lib/hawk/http/instrumentation.rb'
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: MaxUnannotatedPlaceholdersAllowed, AllowedMethods, AllowedPatterns.
+# SupportedStyles: annotated, template, unannotated
+# AllowedMethods: redirect
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: always, always_true, never
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
+Style/GuardClause:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/lookup.rb'
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/polyfills.rb'
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/IfUnlessModifier:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/http/instrumentation.rb'
+    - 'lib/hawk/model/active.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/connection.rb'
+    - 'lib/hawk/model/finder.rb'
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/model/scoping.rb'
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/IfWithSemicolon:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: line_count_dependent, lambda, literal
+Style/Lambda:
+  Exclude:
+    - 'lib/hawk/model/association.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: require_parentheses, require_no_parentheses, require_no_parentheses_except_multiline
+Style/MethodDefParentheses:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/association.rb'
+
+Style/MissingRespondToMissing:
+  Exclude:
+    - 'lib/hawk/model/proxy.rb'
+    - 'lib/hawk/model/schema/dsl.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyle, Autocorrect.
+# SupportedStyles: module_function, extend_self, forbidden
+Style/ModuleFunction:
+  Exclude:
+    - 'lib/hawk/rake/utils.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: literals, strict
+Style/MutableConstant:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/version.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyle, AllowedMethods, AllowedPatterns.
+# SupportedStyles: predicate, comparison
+Style/NumericPredicate:
+  Exclude:
+    - 'lib/hawk/http/instrumentation.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/pagination.rb'
+    - 'lib/hawk/model/proxy.rb'
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/rake/default_task.rb'
+
+# Configuration parameters: AllowedMethods.
+# AllowedMethods: respond_to_missing?
+Style/OptionalBooleanParameter:
+  Exclude:
+    - 'lib/hawk/model/proxy.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/ParallelAssignment:
+  Exclude:
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/rake/utils.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: PreferredDelimiters.
+Style/PercentLiteralDelimiters:
+  Exclude:
+    - 'lib/hawk/http.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle, AllowedCompactTypes.
+# SupportedStyles: compact, exploded
+Style/RaiseArgs:
+  Exclude:
+    - 'lib/hawk/model/querying.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/RedundantException:
+  Exclude:
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/RedundantParentheses:
+  Exclude:
+    - 'lib/hawk/model/finder.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowMultipleReturnValues.
+Style/RedundantReturn:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/model/connection.rb'
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/RedundantSelf:
+  Exclude:
+    - 'lib/hawk/model/active.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/collection.rb'
+    - 'lib/hawk/model/connection.rb'
+    - 'lib/hawk/model/finder.rb'
+    - 'lib/hawk/model/schema.rb'
+    - 'lib/hawk/model/scoping.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+Style/RedundantSelfAssignment:
+  Exclude:
+    - 'lib/hawk/model/proxy.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
+# SupportedStyles: slashes, percent_r, mixed
+Style/RegexpLiteral:
+  Exclude:
+    - 'lib/hawk/http.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/RescueModifier:
+  Exclude:
+    - 'lib/hawk/http.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: implicit, explicit
+Style/RescueStandardError:
+  Exclude:
+    - 'lib/hawk/model/schema.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
+# AllowedMethods: present?, blank?, presence, try, try!
+Style/SafeNavigation:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/active.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+Style/StderrPuts:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/rake/default_task.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
+# SupportedStyles: single_quotes, double_quotes
+Style/StringLiterals:
+  Exclude:
+    - 'lib/hawk/http/caching.rb'
+    - 'lib/hawk/model/collection.rb'
+    - 'lib/hawk/model/connection.rb'
+    - 'lib/hawk/rake/default_task.rb'
+    - 'lib/hawk/version.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: MinSize.
+# SupportedStyles: percent, brackets
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyleForMultiline.
+# SupportedStylesForMultiline: comma, consistent_comma, no_comma
+Style/TrailingCommaInArrayLiteral:
+  Exclude:
+    - 'lib/hawk/model/schema.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: EnforcedStyleForMultiline.
+# SupportedStylesForMultiline: comma, consistent_comma, no_comma
+Style/TrailingCommaInHashLiteral:
+  Exclude:
+    - 'lib/hawk/http.rb'
+    - 'lib/hawk/model/schema.rb'
+
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, AllowedMethods.
+# AllowedMethods: to_ary, to_a, to_c, to_enum, to_h, to_hash, to_i, to_int, to_io, to_open, to_path, to_proc, to_r, to_regexp, to_str, to_s, to_sym
+Style/TrivialAccessors:
+  Exclude:
+    - 'lib/hawk/model/collection.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+Style/ZeroLengthPredicate:
+  Exclude:
+    - 'lib/hawk/http/instrumentation.rb'
+    - 'lib/hawk/model/association.rb'
+    - 'lib/hawk/model/schema.rb'

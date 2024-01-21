@@ -1,6 +1,5 @@
 module Hawk
   module Rake
-
     ##
     # Defines the default Eaco rake task. It runs tests and generates the docs.
     #
@@ -144,12 +143,12 @@ module Hawk
       # @return [String]
       #
       def fancy(msg)
-        <<-EOF
-\033[0m
-\033[1;32m>>>
-\033[1;32m>>> HAWK: \033[1;37m#{msg}
-\033[1;32m>>>
-\033[0m
+        <<~EOF
+          \033[0m
+          \033[1;32m>>>
+          \033[1;32m>>> HAWK: \033[1;37m#{msg}
+          \033[1;32m>>>
+          \033[0m
         EOF
       end
 
@@ -175,6 +174,5 @@ module Hawk
         ENV["CI"]
       end
     end
-
   end
 end

@@ -1,6 +1,5 @@
 module Hawk
   module Rake
-
     ##
     # Assorted utilities.
     #
@@ -33,6 +32,5 @@ module Hawk
         File.basename(gemfile, '.*') if gemfile
       end
     end
-
   end
 end

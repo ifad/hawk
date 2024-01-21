@@ -2,9 +2,7 @@ require 'dalli'
 
 module Hawk
   class HTTP
-
     module Caching
-
       DEFAULTS = {
         server: 'localhost:11211',
         namespace: 'hawk',
@@ -22,10 +20,10 @@ module Hawk
 
       def inspect
         description = if cache_configured?
-          "cache: ON #{@_cache_server} v#{@_cache_version}"
-        else
-          "cache: OFF"
-        end
+                        "cache: ON #{@_cache_server} v#{@_cache_version}"
+                      else
+                        "cache: OFF"
+                      end
 
         super.sub(/>$/, ", #{description}>")
       end
@@ -39,98 +37,99 @@ module Hawk
       end
 
       protected
-        def caching(descriptor, &block)
-          return block.call unless cache_configured?
 
-          result = try_cache(descriptor, &block)
+      def caching(descriptor, &block)
+        return block.call unless cache_configured?
 
-          if descriptor.key?(:invalidate)
-            invalidate(descriptor)
-          end
+        result = try_cache(descriptor, &block)
 
-          return result
+        if descriptor.key?(:invalidate)
+          invalidate(descriptor)
         end
+
+        return result
+      end
 
       private
-        def cache_key(descriptor)
-          MultiJson.dump(descriptor)
-        end
 
-        def try_cache(descriptor, &block)
-          return block.call unless descriptor[:method] == 'GET'
+      def cache_key(descriptor)
+        MultiJson.dump(descriptor)
+      end
+
+      def try_cache(descriptor, &block)
+        return block.call unless descriptor[:method] == 'GET'
+
+        key = cache_key(descriptor)
+
+        cached = @_cache.get(key)
+        if cached
+          descriptor[:cached] = true
+          cached
+        else
+          ttl = descriptor[:expires_in] ||
+                @_cache_options[:expires_in]
+
+          block.call.tap do |cacheable|
+            # $stderr.puts "CACHE: store #{key} with ttl #{ttl}"
+            @_cache.set(key, cacheable, ttl)
+          end
+        end
+      end
+
+      def invalidate(descriptor, &block)
+        descriptor = descriptor.dup
+        descriptor[:method] = 'GET'
+        descriptor[:params] ||= {}
+
+        paths = Array.wrap(descriptor.delete(:invalidate))
+
+        paths.each do |path|
+          descriptor[:url] = build_url(path)
 
           key = cache_key(descriptor)
 
-          cached = @_cache.get(key)
-          if cached
-            descriptor[:cached] = true
-            cached
+          # $stderr.puts "CACHE: delete #{key}"
+          @_cache.delete(key)
+        end
+      end
+
+      def initialize_cache(options)
+        return if options[:disabled]
+
+        unless options.key?(:server)
+          raise Error::Configuration, "Cache server option is mandatory"
+        end
+
+        client, server, version = connect_cache(options)
+
+        if client && server && version
+          @_cache = client
+          @_cache_server = server
+          @_cache_version = version
+          @_cache_options = options
+        end
+      end
+
+      def connect_cache(options)
+        static_options = options.dup
+        static_options.delete(:expires_in)
+
+        cache_servers[static_options] ||= begin
+          server = options[:server]
+          client = Dalli::Client.new(server, static_options)
+
+          if version = client.version.fetch(server, nil)
+            [client, server, version]
           else
-            ttl = descriptor[:expires_in] ||
-                  @_cache_options[:expires_in]
-
-            block.call.tap do |cacheable|
-              #$stderr.puts "CACHE: store #{key} with ttl #{ttl}"
-              @_cache.set(key, cacheable, ttl)
-            end
+            $stderr.puts "Hawk: can't connect to memcached server #{server}"
+            nil
           end
         end
+      end
 
-        def invalidate(descriptor, &block)
-          descriptor = descriptor.dup
-          descriptor[:method] = 'GET'
-          descriptor[:params] ||= {}
-
-          paths = Array.wrap(descriptor.delete(:invalidate))
-
-          paths.each do |path|
-            descriptor[:url] = build_url(path)
-
-            key = cache_key(descriptor)
-
-            #$stderr.puts "CACHE: delete #{key}"
-            @_cache.delete(key)
-          end
-        end
-
-        def initialize_cache(options)
-          return if options[:disabled]
-
-          unless options.key?(:server)
-            raise Error::Configuration, "Cache server option is mandatory"
-          end
-
-          client, server, version = connect_cache(options)
-
-          if client && server && version
-            @_cache = client
-            @_cache_server = server
-            @_cache_version = version
-            @_cache_options = options
-          end
-        end
-
-        def connect_cache(options)
-          static_options = options.dup
-          static_options.delete(:expires_in)
-
-          cache_servers[static_options] ||= begin
-            server = options[:server]
-            client = Dalli::Client.new(server, static_options)
-
-            if version = client.version.fetch(server, nil)
-              [client, server, version]
-            else
-              $stderr.puts "Hawk: can't connect to memcached server #{server}"
-              nil
-            end
-          end
-        end
-
-        def cache_servers
-          @@cache_servers ||= {}
-        end
+      def cache_servers
+        @@cache_servers ||= {}
+      end
     end
-
   end
 end

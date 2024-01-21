@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     class Proxy
       include Enumerable
 
@@ -71,59 +70,60 @@ module Hawk
         all.each(*args, &block)
       end
 
-      def respond_to?(meth, include_all=false)
+      def respond_to?(meth, include_all = false)
         super ||
           klass.respond_to?(meth, include_all) ||
           result.respond_to?(meth, include_all)
       end
 
       protected
-        def method_missing(meth, *args, &block)
-          if klass.respond_to?(meth)
 
-            method = klass.method(meth)
-            dsl_method =
-              if method.owner.respond_to?(:module_parents)
-                method.owner.module_parents.include?(Hawk::Model)
-              else
-                method.owner.parents.include?(Hawk::Model)
-              end
+      def method_missing(meth, *args, &block)
+        if klass.respond_to?(meth)
 
-            # If the method accepts a variable number of parameters, and
-            # exactly one is missing, push the scoped params at the end.
-            if !dsl_method && (method.arity + args.size) == -1
-              args = args.push params
-
-            # If the method accepts a variable number of parameters, and
-            # the last provided one is an hash, merge the scoped params.
-            elsif method.arity < 0 && (method.arity + args.size == 0) && args.last.is_a?(Hash)
-              args[-1] = params.deep_merge(args[-1])
-
-            end
-
-            retval = klass.public_send(meth, *args, &block)
-            if retval.kind_of?(Proxy)
-              merge(retval)
+          method = klass.method(meth)
+          dsl_method =
+            if method.owner.respond_to?(:module_parents)
+              method.owner.module_parents.include?(Hawk::Model)
             else
-              retval
+              method.owner.parents.include?(Hawk::Model)
             end
-          elsif result.respond_to?(meth)
-            result.public_send(meth, *args, &block)
-          else
-            super
+
+          # If the method accepts a variable number of parameters, and
+          # exactly one is missing, push the scoped params at the end.
+          if !dsl_method && (method.arity + args.size) == -1
+            args = args.push params
+
+          # If the method accepts a variable number of parameters, and
+          # the last provided one is an hash, merge the scoped params.
+          elsif method.arity < 0 && (method.arity + args.size == 0) && args.last.is_a?(Hash)
+            args[-1] = params.deep_merge(args[-1])
+
           end
+
+          retval = klass.public_send(meth, *args, &block)
+          if retval.kind_of?(Proxy)
+            merge(retval)
+          else
+            retval
+          end
+        elsif result.respond_to?(meth)
+          result.public_send(meth, *args, &block)
+        else
+          super
         end
+      end
 
       private
-        def merge(other)
-          target = other.is_a?(Void) ? to_void : self
-          target.where(other.params)
-        end
 
-        def to_void
-          Void.new(klass, params)
-        end
+      def merge(other)
+        target = other.is_a?(Void) ? to_void : self
+        target.where(other.params)
+      end
+
+      def to_void
+        Void.new(klass, params)
+      end
     end
-
   end
 end

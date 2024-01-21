@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     module Schema
       def self.included(base)
         base.extend ClassMethods
@@ -31,31 +30,32 @@ module Hawk
       end
 
       private
-        def get_attribute(name)
-          instance_variable_get(['@', name].join)
+
+      def get_attribute(name)
+        instance_variable_get(['@', name].join)
+      end
+
+      def set_attribute(name, value)
+        instance_variable_set(['@', name].join, value)
+      end
+
+      def cast!(attributes)
+        schema(attributes).each do |key, caster|
+          next unless attributes.key?(key)
+
+          value = attributes.fetch(key, nil)
+          value = caster.call(value) if caster
+
+          set_attribute key, value
         end
+      end
 
-        def set_attribute(name, value)
-          instance_variable_set(['@', name].join, value)
+      def schema(attributes = nil)
+        if attributes && attributes.size > 0 && self.class.schema.nil?
+          self.class.define_schema_from(attributes)
         end
-
-        def cast!(attributes)
-          schema(attributes).each do |key, caster|
-            next unless attributes.key?(key)
-
-            value = attributes.fetch(key, nil)
-            value = caster.call(value) if caster
-
-            set_attribute key, value
-          end
-        end
-
-        def schema(attributes = nil)
-          if attributes && attributes.size > 0 && self.class.schema.nil?
-            self.class.define_schema_from(attributes)
-          end
-          self.class.schema || {}
-        end
+        self.class.schema || {}
+      end
 
       autoload :DSL, 'hawk/model/schema/dsl'
 
@@ -162,13 +162,13 @@ module Hawk
 
       bools = Set.new(['1', 'true', 1, true])
       CASTERS = [
-        Caster.new(:integer,  -> (value) { Integer(value) }),
-        Caster.new(:float,    -> (value) { Float(value) }),
-        Caster.new(:datetime, -> (value) { Time.parse(value) }),
-        Caster.new(:date,     -> (value) { Date.parse(value) }),
-        Caster.new(:bignum,   -> (value) { BigDecimal(value) }),
-        Caster.new(:boolean,  -> (value) { bools.include?(value) }),
-      ].inject({}) {|h, c| h.update(c.type => c) }
+        Caster.new(:integer,  ->(value) { Integer(value) }),
+        Caster.new(:float,    ->(value) { Float(value) }),
+        Caster.new(:datetime, ->(value) { Time.parse(value) }),
+        Caster.new(:date,     ->(value) { Date.parse(value) }),
+        Caster.new(:bignum,   ->(value) { BigDecimal(value) }),
+        Caster.new(:boolean,  ->(value) { bools.include?(value) }),
+      ].inject({}) { |h, c| h.update(c.type => c) }
 
       ATTRIBUTE_CASTS = {
         /_(?:at|from|until|on)$/ => :datetime,
@@ -177,6 +177,5 @@ module Hawk
         /^is_/                   => :boolean,
       }
     end
-
   end
 end

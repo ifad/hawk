@@ -1,5 +1,4 @@
 module Hawk
-
   module Polyfills
     def self.polyfill(klass, method, &impl)
       unless klass.instance_methods.include?(method)
@@ -13,5 +12,4 @@ module Hawk
     require 'hawk/polyfills/module'
     require 'hawk/polyfills/hash'
   end
-
 end

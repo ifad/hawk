@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     ##
     # Fetches models from the remote HTTP endpoint.
     #
@@ -29,6 +28,7 @@ module Hawk
         def get(component, params = {})
           connection.get(path_for(component), params)
         end
+
         def raw_get(component, params = {})
           connection.raw_get(path_for(component), params)
         end
@@ -36,6 +36,7 @@ module Hawk
         def post(component, params = {})
           connection.post(path_for(component), params)
         end
+
         def raw_post(component, params = {})
           connection.raw_post(path_for(component), params)
         end
@@ -43,6 +44,7 @@ module Hawk
         def put(component, params = {})
           connection.put(path_for(component), params)
         end
+
         def raw_put(component, params = {})
           connection.raw_put(path_for(component), params)
         end
@@ -50,6 +52,7 @@ module Hawk
         def patch(component, params = {})
           connection.patch(path_for(component), params)
         end
+
         def raw_patch(component, params = {})
           connection.raw_patch(path_for(component), params)
         end
@@ -57,6 +60,7 @@ module Hawk
         def delete(component, params = {})
           connection.delete(path_for(component), params)
         end
+
         def raw_delete(component, params = {})
           connection.raw_delete(path_for(component), params)
         end
@@ -83,7 +87,7 @@ module Hawk
         def url(url = nil)
           @_url = url.dup.freeze if url
 
-          configurable.each {|model| model.url = @_url }
+          configurable.each { |model| model.url = @_url }
 
           return @_url
         end
@@ -96,7 +100,7 @@ module Hawk
             @_http_options = @_http_options.deep_merge(options.dup).freeze
           end
 
-          configurable.each {|model| model.http_options = @_http_options }
+          configurable.each { |model| model.http_options = @_http_options }
 
           return @_http_options
         end
@@ -105,7 +109,7 @@ module Hawk
         def client_name(name = nil)
           @_client_name = name.dup.freeze if name
 
-          configurable.each {|model| model.client_name = @_client_name }
+          configurable.each { |model| model.client_name = @_client_name }
 
           return @_client_name
         end
@@ -120,6 +124,5 @@ module Hawk
         end
       end
     end
-
   end
 end

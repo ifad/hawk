@@ -1,10 +1,8 @@
 module Hawk
-
   ##
   # Represents an error.
   #
   class Error < StandardError
-
     # Usage error
     #
     class Configuration < self
@@ -64,5 +62,4 @@ module Hawk
       end
     end
   end
-
 end

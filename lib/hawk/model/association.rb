@@ -1,8 +1,6 @@
 module Hawk
   module Model
-
     module Association
-
       # Initialize the associations registry
       #
       def self.included(base)
@@ -21,50 +19,51 @@ module Hawk
       end
 
       private
-        def preload_associations(attributes, params, scope)
-          self.instance_exec(scope, attributes, &scope.preload_association)
-        end
 
-        def add_association_object(scope, name, repr)
-          associations = scope.associations
+      def preload_associations(attributes, params, scope)
+        self.instance_exec(scope, attributes, &scope.preload_association)
+      end
 
-          (type, options) = associations[name.to_sym]             ||
-                            associations[name.pluralize.to_sym]   ||
-                            associations[name.singularize.to_sym]
-          if type
-            target = scope.model_class_for(options.fetch(:class_name))
-            result = target.instantiate_from(repr, params)
+      def add_association_object(scope, name, repr)
+        associations = scope.associations
 
-            if is_collection?(type)
-              add_to_association_collection name, result
-            else
-              set_association_value name, result
-            end
+        (type, options) = associations[name.to_sym]             ||
+                          associations[name.pluralize.to_sym]   ||
+                          associations[name.singularize.to_sym]
+        if type
+          target = scope.model_class_for(options.fetch(:class_name))
+          result = target.instantiate_from(repr, params)
+
+          if is_collection?(type)
+            add_to_association_collection name, result
           else
-            raise Hawk::Error, "Unhandled assocation: #{name}"
+            set_association_value name, result
           end
+        else
+          raise Hawk::Error, "Unhandled assocation: #{name}"
         end
+      end
 
-        def is_collection? type
-          [ :polymorphic_belongs_to, :has_many ].include? type
-        end
+      def is_collection? type
+        [:polymorphic_belongs_to, :has_many].include? type
+      end
 
-        def add_to_association_collection name, target
-          variable = "@_#{name}"
-          instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
-          collection = instance_variable_get(variable)
-          target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
-        end
+      def add_to_association_collection name, target
+        variable = "@_#{name}"
+        instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
+        collection = instance_variable_get(variable)
+        target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
+      end
 
-        def set_association_value name, target
-          instance_variable_set("@_#{name}", target)
-        end
+      def set_association_value name, target
+        instance_variable_set("@_#{name}", target)
+      end
 
-        def clean_inherited_params inherited, opts={}
-          rv = {}.deep_merge opts
-          rv[:options] = inherited[:options] if inherited && inherited[:options]
-          rv
-        end
+      def clean_inherited_params inherited, opts = {}
+        rv = {}.deep_merge opts
+        rv[:options] = inherited[:options] if inherited && inherited[:options]
+        rv
+      end
 
       module ClassMethods
         # Propagate associations to the subclasses on inheritance
@@ -229,14 +228,14 @@ module Hawk
         # The raw associations code
         #
         CODE = {
-          has_many: -> (entities, options) {
+          has_many: ->(entities, options) {
             klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
 
             conditions = if as.present?
-              "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
-            else
-              "'#{key}' => self.id"
-            end
+                           "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+                         else
+                           "'#{key}' => self.id"
+                         end
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
@@ -250,14 +249,14 @@ module Hawk
             RUBY
           },
 
-          has_one: -> (entity, options) {
+          has_one: ->(entity, options) {
             klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
 
             conditions = if as.present?
-              "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
-            else
-              "'#{key}' => self.id"
-            end
+                           "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+                         else
+                           "'#{key}' => self.id"
+                         end
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
@@ -286,7 +285,7 @@ module Hawk
             RUBY
           },
 
-          monomorphic_belongs_to: -> (entity, options) {
+          monomorphic_belongs_to: ->(entity, options) {
             klass, key, params = options.values_at(*[:class_name, :primary_key, :params])
             params ||= {}
             ivar = "@_#{entity}".intern
@@ -297,14 +296,14 @@ module Hawk
                 return unless (id = self.attributes.fetch(key.to_s, nil))
 
                 instance = self.class.model_class_for(klass).
-                  find(id, clean_inherited_params( self.params, params ))
+                           find(id, clean_inherited_params(self.params, params))
 
                 instance_variable_set(ivar, instance)
               end
             end
           },
 
-          polymorphic_belongs_to: -> (entity, options) {
+          polymorphic_belongs_to: ->(entity, options) {
             key = options.fetch(:as)
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -322,6 +321,5 @@ module Hawk
         }.freeze
       end
     end
-
   end
 end
