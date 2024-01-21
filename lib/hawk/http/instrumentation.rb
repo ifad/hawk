@@ -32,7 +32,7 @@ module Hawk
             elapsed = (Time.now.to_f - start) * 1000
 
             url = payload[:url].to_s
-            if payload[:params] && payload[:params].size > 0
+            if payload[:params].present?
               url << '?' << payload[:params].inject('') { |s, (k, v)| s << [k, '=', v, '&'].join }.chomp('&')
             end
 

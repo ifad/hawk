@@ -98,7 +98,7 @@ module Hawk
 
           # If the method accepts a variable number of parameters, and
           # the last provided one is an hash, merge the scoped params.
-          elsif method.arity < 0 && (method.arity + args.size == 0) && args.last.is_a?(Hash)
+          elsif method.arity < 0 && (method.arity + args.empty?) && args.last.is_a?(Hash)
             args[-1] = params.deep_merge(args[-1])
 
           end

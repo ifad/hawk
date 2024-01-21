@@ -42,7 +42,7 @@ Lint/ShadowingOuterLocalVariable:
 
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 40
+  Max: 39
 
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
@@ -199,11 +199,8 @@ Style/ModuleFunction:
 # SupportedStyles: predicate, comparison
 Style/NumericPredicate:
   Exclude:
-    - 'lib/hawk/http/instrumentation.rb'
-    - 'lib/hawk/model/association.rb'
     - 'lib/hawk/model/pagination.rb'
     - 'lib/hawk/model/proxy.rb'
-    - 'lib/hawk/model/schema.rb'
     - 'lib/hawk/rake/default_task.rb'
 
 # Configuration parameters: AllowedMethods.
@@ -216,10 +213,3 @@ Style/OptionalBooleanParameter:
 Style/RedundantSelfAssignment:
   Exclude:
     - 'lib/hawk/model/proxy.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'lib/hawk/http/instrumentation.rb'
-    - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/schema.rb'
