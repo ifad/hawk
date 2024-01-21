@@ -5,7 +5,7 @@ module Hawk
         base.extend ClassMethods
       end
 
-      def initialize(attributes = {}, params = {})
+      def initialize(attributes = {}, _params = {})
         cast!(attributes)
         # super not required, this is the last in the chain.
       end
@@ -17,7 +17,7 @@ module Hawk
       end
       alias to_h attributes
 
-      def as_json(*ignored) # FIXME
+      def as_json(*_ignored) # FIXME
         to_h
       end
 

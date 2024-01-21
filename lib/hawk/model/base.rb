@@ -22,7 +22,7 @@ module Hawk
       end
 
       def inspect
-        attributes = schema.inject('') { |s, (k, v)|
+        attributes = schema.inject('') { |s, (k, _v)|
           s << " #{k}=#{read_attribute(k).inspect}"
         }
         "#<#{self.class.name}#{attributes}>"

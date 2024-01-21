@@ -3,7 +3,7 @@ module Hawk
     def self.polyfill(klass, method, &impl)
       unless klass.instance_methods.include?(method)
         refine(klass) do
-          module_eval &impl
+          module_eval(&impl)
         end
       end
     end

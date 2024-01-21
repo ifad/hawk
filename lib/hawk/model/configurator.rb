@@ -8,7 +8,7 @@ module Hawk
       module ClassMethods
         def configure(&block)
           ([self] + configurable).each do |model|
-            model.instance_eval &block
+            model.instance_eval(&block)
           end
         end
 

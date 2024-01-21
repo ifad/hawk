@@ -16,7 +16,7 @@ module Hawk
           @types.each(&block)
         end
 
-        def method_missing(meth, *args, &block)
+        def method_missing(meth, *args)
           @types[meth] += args
         end
       end

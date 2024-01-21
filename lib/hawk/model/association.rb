@@ -20,7 +20,7 @@ module Hawk
 
       private
 
-      def preload_associations(attributes, params, scope)
+      def preload_associations(attributes, _params, scope)
         instance_exec(scope, attributes, &scope.preload_association)
       end
 
@@ -288,15 +288,15 @@ module Hawk
           monomorphic_belongs_to: ->(entity, options) {
             klass, key, params = options.values_at(:class_name, :primary_key, :params)
             params ||= {}
-            ivar = "@_#{entity}".intern
+            ivar = :"@_#{entity}"
 
             class_eval do
               define_method(entity) do
                 return instance_variable_get(ivar) if instance_variable_defined?(ivar)
                 return unless (id = attributes.fetch(key.to_s, nil))
 
-                instance = self.class.model_class_for(klass).
-                           find(id, clean_inherited_params(self.params, params))
+                instance = self.class.model_class_for(klass)
+                               .find(id, clean_inherited_params(self.params, params))
 
                 instance_variable_set(ivar, instance)
               end

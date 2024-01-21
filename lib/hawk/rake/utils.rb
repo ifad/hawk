@@ -12,7 +12,7 @@ module Hawk
       # @param block [Proc]
       # @return [String] the captured output
       #
-      def capture_stdout(&block)
+      def capture_stdout
         stdout, string = $stdout, StringIO.new
         $stdout = string
 

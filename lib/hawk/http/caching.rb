@@ -56,7 +56,7 @@ module Hawk
         MultiJson.dump(descriptor)
       end
 
-      def try_cache(descriptor, &block)
+      def try_cache(descriptor)
         return yield unless descriptor[:method] == 'GET'
 
         key = cache_key(descriptor)
@@ -76,7 +76,7 @@ module Hawk
         end
       end
 
-      def invalidate(descriptor, &block)
+      def invalidate(descriptor)
         descriptor = descriptor.dup
         descriptor[:method] = 'GET'
         descriptor[:params] ||= {}
