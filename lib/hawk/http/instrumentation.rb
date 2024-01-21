@@ -4,7 +4,7 @@ module Hawk
       def self.included(base)
         # https://github.com/ifad/instrumenter
         if defined?(::Instrumenter)
-          Instrumenter.instrument base, :hawk # FIXME user-replaceable
+          Instrumenter.instrument base, :hawk # FIXME: user-replaceable
         else
           base.instance_eval { include Basic }
         end
@@ -33,7 +33,7 @@ module Hawk
             end
 
             $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} %s (%.2fms), cache %s\033[0m\n" % [
-              CGI::unescape(url),
+              CGI.unescape(url),
               elapsed,
               payload[:cached] ? 'HIT' : 'MISS'
             ]

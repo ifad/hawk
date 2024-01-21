@@ -156,7 +156,7 @@ module Hawk
           key    = options[:primary_key] || [name.demodulize.underscore, :id].join('_')
           from   = options[:from]
           as     = options[:as]
-          # TODO params
+          # TODO: params
 
           _define_association(entities, :has_many, class_name: klass, primary_key: key, from: from, as: as)
         end
@@ -175,7 +175,7 @@ module Hawk
           from   = options[:from]
           nested = options[:nested]
           as     = options[:as]
-          # TODO params
+          # TODO: params
 
           _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from, nested: nested, as: as)
         end
@@ -213,7 +213,7 @@ module Hawk
 
         def polymorphic_belongs_to(entity, options)
           key = [options[:as] || entity, :id].join('_')
-          # TODO params
+          # TODO: params
 
           _define_association(entity, :polymorphic_belongs_to, as: key)
         end

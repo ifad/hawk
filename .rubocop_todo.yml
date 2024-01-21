@@ -136,20 +136,6 @@ Style/ClassVars:
   Exclude:
     - 'lib/hawk/http/caching.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Style/ColonMethodCall:
-  Exclude:
-    - 'lib/hawk/http/instrumentation.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Keywords, RequireColon.
-# Keywords: TODO, FIXME, OPTIMIZE, HACK, REVIEW, NOTE
-Style/CommentAnnotation:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/instrumentation.rb'
-    - 'lib/hawk/model/association.rb'
-
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/CommentedKeyword:
   Exclude:
