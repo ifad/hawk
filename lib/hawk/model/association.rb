@@ -44,22 +44,22 @@ module Hawk
         end
       end
 
-      def is_collection? type
+      def is_collection?(type)
         [:polymorphic_belongs_to, :has_many].include? type
       end
 
-      def add_to_association_collection name, target
+      def add_to_association_collection(name, target)
         variable = "@_#{name}"
         instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
         collection = instance_variable_get(variable)
         target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
       end
 
-      def set_association_value name, target
+      def set_association_value(name, target)
         instance_variable_set(:"@_#{name}", target)
       end
 
-      def clean_inherited_params inherited, opts = {}
+      def clean_inherited_params(inherited, opts = {})
         rv = {}.deep_merge opts
         rv[:options] = inherited[:options] if inherited && inherited[:options]
         rv
@@ -228,7 +228,7 @@ module Hawk
         # The raw associations code
         #
         CODE = {
-          has_many: ->(entities, options) {
+          has_many: lambda { |entities, options|
             klass, key, from, as = options.values_at(:class_name, :primary_key, :from, :as)
 
             conditions = if as.present?
@@ -249,7 +249,7 @@ module Hawk
             RUBY
           },
 
-          has_one: ->(entity, options) {
+          has_one: lambda { |entity, options|
             klass, key, from, nested, as = options.values_at(:class_name, :primary_key, :from, :nested, :as)
 
             conditions = if as.present?
@@ -285,7 +285,7 @@ module Hawk
             RUBY
           },
 
-          monomorphic_belongs_to: ->(entity, options) {
+          monomorphic_belongs_to: lambda { |entity, options|
             klass, key, params = options.values_at(:class_name, :primary_key, :params)
             params ||= {}
             ivar = :"@_#{entity}"
@@ -303,7 +303,7 @@ module Hawk
             end
           },
 
-          polymorphic_belongs_to: ->(entity, options) {
+          polymorphic_belongs_to: lambda { |entity, options|
             key = options.fetch(:as)
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1

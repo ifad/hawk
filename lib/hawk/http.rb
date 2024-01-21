@@ -111,7 +111,7 @@ module Hawk
 
     private
 
-    def build_url path
+    def build_url(path)
       base.merge(path.sub(/^\//, '')).to_s
     end
 
