@@ -142,7 +142,8 @@ module Hawk
 
       class Caster
         def initialize(type, code)
-          @type, @code = type, code
+          @type = type
+          @code = code
         end
         attr_reader :type
 
