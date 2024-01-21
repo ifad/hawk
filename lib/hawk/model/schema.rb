@@ -103,7 +103,7 @@ module Hawk
             read_attribute(key)
           end
 
-          define_method("#{key}=") do |value|
+          define_method(:"#{key}=") do |value|
             write_attribute(key, value)
           end
 
@@ -122,7 +122,7 @@ module Hawk
 
         def find_schema_caster_for(attribute)
           ATTRIBUTE_CASTS.each do |re, type|
-            if attribute =~ re
+            if attribute&.match?(re)
               return find_schema_caster_typed(type)
             end
           end

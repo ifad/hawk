@@ -30,7 +30,7 @@ module Hawk
                 "URL '#{url}' is not valid: only http and https schemes are supported"
         end
 
-        url.path += '/' unless url.path =~ /\/$/
+        url.path += '/' unless /\/$/.match?(url.path)
         url.freeze
       end
     end

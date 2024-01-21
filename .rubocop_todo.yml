@@ -113,18 +113,6 @@ Performance/MethodObjectAsBlock:
   Exclude:
     - 'lib/hawk/http.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-Performance/RegexpMatch:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/model/schema.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Performance/StringIdentifierArgument:
-  Exclude:
-    - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/schema.rb'
-
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
   Exclude:

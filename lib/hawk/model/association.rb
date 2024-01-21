@@ -56,7 +56,7 @@ module Hawk
       end
 
       def set_association_value name, target
-        instance_variable_set("@_#{name}", target)
+        instance_variable_set(:"@_#{name}", target)
       end
 
       def clean_inherited_params inherited, opts = {}
