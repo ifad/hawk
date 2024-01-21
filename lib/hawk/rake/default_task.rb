@@ -143,13 +143,13 @@ module Hawk
       # @return [String]
       #
       def fancy(msg)
-        <<~EOF
+        <<~MSG
           \033[0m
           \033[1;32m>>>
           \033[1;32m>>> HAWK: \033[1;37m#{msg}
           \033[1;32m>>>
           \033[0m
-        EOF
+        MSG
       end
 
       ##
