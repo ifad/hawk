@@ -218,14 +218,6 @@ Style/RedundantSelfAssignment:
     - 'lib/hawk/model/proxy.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
-# AllowedMethods: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/model/active.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
 Style/ZeroLengthPredicate:
   Exclude:
     - 'lib/hawk/http/instrumentation.rb'
