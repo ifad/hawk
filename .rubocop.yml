@@ -12,7 +12,6 @@ AllCops:
   TargetRailsVersion: 7.0
   TargetRubyVersion: 3.0
   Exclude:
-    - 'lib/**/*'
     - 'gemfiles/**/*'
     - 'vendor/bundle/**/*'
     - 'tmp/**/*'
