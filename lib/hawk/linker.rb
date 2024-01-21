@@ -1,5 +1,4 @@
 module Hawk
-
   # Allows adding to any Ruby object an accessor referencing an {Hawk::Model}.
   #
   # Example, assuming Bar is defined and Foo responds_to `bar_id`:
@@ -27,6 +26,7 @@ module Hawk
       end
 
       private
+
         def _monomorphic_resource_accessor(entity, options)
           klass = options[:class_name] || entity.to_s.camelize
           key   = options[:primary_key] || [entity, :id].join('_')
@@ -94,5 +94,4 @@ module Hawk
         end
     end
   end
-
 end

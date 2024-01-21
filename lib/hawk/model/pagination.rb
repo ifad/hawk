@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     module Pagination
       module Common
         def current_page
@@ -34,6 +33,5 @@ module Hawk
         end
       end
     end
-
   end
 end

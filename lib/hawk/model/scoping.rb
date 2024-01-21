@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     module Scoping
       def self.included(base)
         base.extend ClassMethods
@@ -16,6 +15,5 @@ module Hawk
         end
       end
     end
-
   end
 end

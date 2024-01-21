@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     module Schema
       def self.included(base)
         base.extend ClassMethods
@@ -31,6 +30,7 @@ module Hawk
       end
 
       private
+
         def get_attribute(name)
           instance_variable_get(['@', name].join)
         end
@@ -177,6 +177,5 @@ module Hawk
         /^is_/                   => :boolean,
       }
     end
-
   end
 end

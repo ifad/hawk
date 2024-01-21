@@ -1,8 +1,6 @@
 module Hawk
   module Model
-
     module Association
-
       # Initialize the associations registry
       #
       def self.included(base)
@@ -21,6 +19,7 @@ module Hawk
       end
 
       private
+
         def preload_associations(attributes, params, scope)
           self.instance_exec(scope, attributes, &scope.preload_association)
         end
@@ -322,6 +321,5 @@ module Hawk
         }.freeze
       end
     end
-
   end
 end

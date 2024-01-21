@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     class Collection < Array
       def initialize(elements = [], options = {})
         self.replace(elements)
@@ -36,6 +35,5 @@ module Hawk
         )
       end
     end
-
   end
 end

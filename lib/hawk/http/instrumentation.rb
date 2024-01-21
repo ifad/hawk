@@ -1,6 +1,5 @@
 module Hawk
   class HTTP
-
     module Instrumentation
       def self.included(base)
         # https://github.com/ifad/instrumenter
@@ -44,6 +43,5 @@ module Hawk
         end
       end
     end
-
   end
 end

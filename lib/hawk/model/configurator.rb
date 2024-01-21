@@ -1,8 +1,6 @@
 module Hawk
   module Model
-
     module Configurator
-
       def self.included(base)
         base.extend ClassMethods
       end
@@ -30,6 +28,5 @@ module Hawk
         end
       end
     end
-
   end
 end

@@ -2,9 +2,7 @@ require 'dalli'
 
 module Hawk
   class HTTP
-
     module Caching
-
       DEFAULTS = {
         server: 'localhost:11211',
         namespace: 'hawk',
@@ -39,6 +37,7 @@ module Hawk
       end
 
       protected
+
         def caching(descriptor, &block)
           return block.call unless cache_configured?
 
@@ -52,6 +51,7 @@ module Hawk
         end
 
       private
+
         def cache_key(descriptor)
           MultiJson.dump(descriptor)
         end
@@ -131,6 +131,5 @@ module Hawk
           @@cache_servers ||= {}
         end
     end
-
   end
 end

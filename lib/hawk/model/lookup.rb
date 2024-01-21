@@ -1,8 +1,6 @@
 module Hawk
   module Model
-
     module Lookup
-
       def self.included(base)
         base.extend ClassMethods
       end
@@ -60,6 +58,7 @@ module Hawk
         end
 
         private
+
         def look_up_model_class(name, scope)
           if self_constant = look_up_constant_in(name, scope)
             return self_constant
@@ -93,9 +92,7 @@ module Hawk
         def cached_model_class_for(name, scope, &block)
           @_class_cache[[name, scope.name]] ||= block.call
         end
-
       end
     end
-
   end
 end

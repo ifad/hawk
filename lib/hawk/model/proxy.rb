@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     class Proxy
       include Enumerable
 
@@ -78,6 +77,7 @@ module Hawk
       end
 
       protected
+
         def method_missing(meth, *args, &block)
           if klass.respond_to?(meth)
 
@@ -115,6 +115,7 @@ module Hawk
         end
 
       private
+
         def merge(other)
           target = other.is_a?(Void) ? to_void : self
           target.where(other.params)
@@ -124,6 +125,5 @@ module Hawk
           Void.new(klass, params)
         end
     end
-
   end
 end

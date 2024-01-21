@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     ##
     # Represents a remote entity, wrapped into a model holding each property in
     # an instance variable, casting the JSON values to data types inferred from
@@ -29,6 +28,5 @@ module Hawk
         "#<#{self.class.name}#{attributes}>"
       end
     end
-
   end
 end

@@ -1,8 +1,6 @@
 module Hawk
   module Model
-
     module Finder
-
       def self.included(base)
         base.extend ClassMethods
       end
@@ -142,6 +140,5 @@ module Hawk
         end
       end
     end
-
   end
 end

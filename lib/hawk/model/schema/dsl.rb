@@ -1,7 +1,6 @@
 module Hawk
   module Model
     module Schema
-
       class DSL
         def self.eval(code, &block)
           new(code).each(&block)
@@ -21,7 +20,6 @@ module Hawk
           @types[meth] += args
         end
       end
-
     end
   end
 end

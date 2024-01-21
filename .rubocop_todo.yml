@@ -8,13 +8,6 @@
 
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: outdent, indent
-Layout/AccessModifierIndentation:
-  Exclude:
-    - 'lib/hawk/http.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: with_first_argument, with_fixed_indentation
 Layout/ArgumentAlignment:
   Exclude:
@@ -36,42 +29,6 @@ Layout/ElseAlignment:
     - 'lib/hawk/model/association.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, DefLikeMacros, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/model/connection.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: around, only_before
-Layout/EmptyLinesAroundAccessModifier:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/linker.rb'
-    - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/lookup.rb'
-    - 'lib/hawk/model/proxy.rb'
-    - 'lib/hawk/model/schema.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Exclude:
-    - 'lib/hawk/error.rb'
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/http/instrumentation.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyleAlignWith, Severity.
 # SupportedStylesAlignWith: keyword, variable, start_of_line
 Layout/EndAlignment:
@@ -79,12 +36,6 @@ Layout/EndAlignment:
     - 'lib/hawk/http.rb'
     - 'lib/hawk/http/caching.rb'
     - 'lib/hawk/model/association.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowForAlignment, AllowBeforeTrailingComments, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'lib/hawk/http.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
@@ -97,11 +48,6 @@ Layout/HashAlignment:
     - 'lib/hawk/model/collection.rb'
     - 'lib/hawk/model/finder.rb'
     - 'lib/hawk/model/schema.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Layout/HeredocIndentation:
-  Exclude:
-    - 'lib/hawk/rake/default_task.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
@@ -549,11 +495,6 @@ Style/MissingRespondToMissing:
 Style/ModuleFunction:
   Exclude:
     - 'lib/hawk/rake/utils.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/MultilineWhenThen:
-  Exclude:
-    - 'lib/hawk/http.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.

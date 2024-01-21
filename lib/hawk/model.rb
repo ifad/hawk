@@ -1,5 +1,4 @@
 module Hawk
-
   module Model
     autoload :Base,           'hawk/model/base'
     autoload :Schema,         'hawk/model/schema'
@@ -15,5 +14,4 @@ module Hawk
     autoload :Scoping,        'hawk/model/scoping'
     autoload :Active,         'hawk/model/active'
   end
-
 end

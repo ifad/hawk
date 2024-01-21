@@ -1,6 +1,5 @@
 module Hawk
   module Model
-
     ##
     # Fetches models from the remote HTTP endpoint.
     #
@@ -29,6 +28,7 @@ module Hawk
         def get(component, params = {})
           connection.get(path_for(component), params)
         end
+
         def raw_get(component, params = {})
           connection.raw_get(path_for(component), params)
         end
@@ -36,6 +36,7 @@ module Hawk
         def post(component, params = {})
           connection.post(path_for(component), params)
         end
+
         def raw_post(component, params = {})
           connection.raw_post(path_for(component), params)
         end
@@ -43,6 +44,7 @@ module Hawk
         def put(component, params = {})
           connection.put(path_for(component), params)
         end
+
         def raw_put(component, params = {})
           connection.raw_put(path_for(component), params)
         end
@@ -50,6 +52,7 @@ module Hawk
         def patch(component, params = {})
           connection.patch(path_for(component), params)
         end
+
         def raw_patch(component, params = {})
           connection.raw_patch(path_for(component), params)
         end
@@ -57,6 +60,7 @@ module Hawk
         def delete(component, params = {})
           connection.delete(path_for(component), params)
         end
+
         def raw_delete(component, params = {})
           connection.raw_delete(path_for(component), params)
         end
@@ -120,6 +124,5 @@ module Hawk
         end
       end
     end
-
   end
 end

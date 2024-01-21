@@ -1,5 +1,4 @@
 module Hawk
-
   require 'uri'
   require 'typhoeus'
   require 'multi_json'
@@ -11,7 +10,6 @@ module Hawk
   # Represent an HTTP connector, to be linked to a {Model}.
   #
   class HTTP
-
     prepend Caching
     include Instrumentation
 
@@ -46,6 +44,7 @@ module Hawk
     def get(path, params = {})
       parse raw_get(path, params)
     end
+
     def raw_get(path, params = {})
       request('GET', path, params)
     end
@@ -53,6 +52,7 @@ module Hawk
     def post(path, params = {})
       parse raw_post(path, params)
     end
+
     def raw_post(path, params = {})
       request('POST', path, params)
     end
@@ -60,6 +60,7 @@ module Hawk
     def put(path, params = {})
       parse raw_put(path, params)
     end
+
     def raw_put(path, params = {})
       request('PUT', path, params)
     end
@@ -67,6 +68,7 @@ module Hawk
     def patch(path, params = {})
       parse raw_patch(path, params)
     end
+
     def raw_patch(path, params = {})
       request('PATCH', path, params)
     end
@@ -74,6 +76,7 @@ module Hawk
     def delete(path, params = {})
       parse raw_delete(path, params)
     end
+
     def raw_delete(path, params = {})
       request('DELETE', path, params)
     end
@@ -84,7 +87,8 @@ module Hawk
       Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request))).url.length
     end
 
-    protected
+      protected
+
       def parse(body)
         MultiJson.load(body)
       end
@@ -105,7 +109,8 @@ module Hawk
         end
       end
 
-    private
+      private
+
       def build_url path
         base.merge(path.sub(/^\//, '')).to_s
       end
@@ -210,7 +215,7 @@ module Hawk
           when :connect_timeout
             ret[:connecttimeout] = val.to_i
 
-          when :username        then
+          when :username
             unless hawk_options.key?(:password)
               raise Error::Configuration,
                 "The 'username' option requires a corresponding 'password' option"
@@ -228,5 +233,4 @@ module Hawk
         end
       end
     end
-
 end
