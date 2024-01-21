@@ -237,7 +237,7 @@ module Hawk
                            "'#{key}' => self.id"
                          end
 
-            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{entities}
                 return @_#{entities} if instance_variable_defined?('@_#{entities}')
                 params = clean_inherited_params(self.params, #{conditions})
@@ -258,7 +258,7 @@ module Hawk
                            "'#{key}' => self.id"
                          end
 
-            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{entity}!
                 return @_#{entity} if instance_variable_defined?('@_#{entity}')
 
@@ -306,7 +306,7 @@ module Hawk
           polymorphic_belongs_to: lambda { |entity, options|
             key = options.fetch(:as)
 
-            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            class_eval <<~RUBY, __FILE__, __LINE__ + 1
               def #{entity}
                 return @_#{entity} if instance_variable_defined?('@_#{entity}')
                 @_#{entity} = begin
