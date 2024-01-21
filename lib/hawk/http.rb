@@ -25,7 +25,7 @@ module Hawk
       @defaults = DEFAULTS.deep_merge(options)
 
       @base = URI.parse(base).tap do |url|
-        unless %w( http https ).include? url.scheme
+        unless %w(http https).include? url.scheme
           raise Error::Configuration,
             "URL '#{url}' is not valid: only http and https schemes are supported"
         end
@@ -81,7 +81,7 @@ module Hawk
       request('DELETE', path, params)
     end
 
-    def url_length(path, method=:get, options={})
+    def url_length(path, method = :get, options = {})
       url        = build_url(path)
       request    = build_request_options_from(method.to_s.upcase, options)
       Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request))).url.length
@@ -126,9 +126,9 @@ module Hawk
       if response.timed_out?
         what, secs = if response.connect_time && response.connect_time.zero?
                        # Connect failed
-                       [ :connect, req.options[:connecttimeout] ]
+                       [:connect, req.options[:connecttimeout]]
         else
-          [ :request, req.options[:timeout] ]
+          [:request, req.options[:timeout]]
         end
 
         raise Error::Timeout, "#{it}: #{what} timed out after #{secs} seconds"
@@ -144,7 +144,7 @@ module Hawk
       when 404
         raise Error::NotFound, "#{it} was not found"
       when 500
-        raise Error::InternalServerError, "#{it}: Server error (#{response.body[0 .. 120]})"
+        raise Error::InternalServerError, "#{it}: Server error (#{response.body[0..120]})"
       else
         app_error = parse_app_error_from(response.body)
 

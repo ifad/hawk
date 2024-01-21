@@ -162,13 +162,13 @@ module Hawk
 
       bools = Set.new(['1', 'true', 1, true])
       CASTERS = [
-        Caster.new(:integer,  -> (value) { Integer(value) }),
-        Caster.new(:float,    -> (value) { Float(value) }),
-        Caster.new(:datetime, -> (value) { Time.parse(value) }),
-        Caster.new(:date,     -> (value) { Date.parse(value) }),
-        Caster.new(:bignum,   -> (value) { BigDecimal(value) }),
-        Caster.new(:boolean,  -> (value) { bools.include?(value) }),
-      ].inject({}) {|h, c| h.update(c.type => c) }
+        Caster.new(:integer,  ->(value) { Integer(value) }),
+        Caster.new(:float,    ->(value) { Float(value) }),
+        Caster.new(:datetime, ->(value) { Time.parse(value) }),
+        Caster.new(:date,     ->(value) { Date.parse(value) }),
+        Caster.new(:bignum,   ->(value) { BigDecimal(value) }),
+        Caster.new(:boolean,  ->(value) { bools.include?(value) }),
+      ].inject({}) { |h, c| h.update(c.type => c) }
 
       ATTRIBUTE_CASTS = {
         /_(?:at|from|until|on)$/ => :datetime,

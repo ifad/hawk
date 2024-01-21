@@ -7,7 +7,7 @@ module Hawk
         end
 
         def initialize(code)
-          @types = Hash.new {|h,k| h[k] = []}
+          @types = Hash.new { |h, k| h[k] = [] }
 
           instance_eval(&code)
         end

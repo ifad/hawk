@@ -45,7 +45,7 @@ module Hawk
       end
 
       def is_collection? type
-        [ :polymorphic_belongs_to, :has_many ].include? type
+        [:polymorphic_belongs_to, :has_many].include? type
       end
 
       def add_to_association_collection name, target
@@ -59,7 +59,7 @@ module Hawk
         instance_variable_set("@_#{name}", target)
       end
 
-      def clean_inherited_params inherited, opts={}
+      def clean_inherited_params inherited, opts = {}
         rv = {}.deep_merge opts
         rv[:options] = inherited[:options] if inherited && inherited[:options]
         rv
@@ -228,7 +228,7 @@ module Hawk
         # The raw associations code
         #
         CODE = {
-          has_many: -> (entities, options) {
+          has_many: ->(entities, options) {
             klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
 
             conditions = if as.present?
@@ -249,7 +249,7 @@ module Hawk
             RUBY
           },
 
-          has_one: -> (entity, options) {
+          has_one: ->(entity, options) {
             klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
 
             conditions = if as.present?
@@ -285,7 +285,7 @@ module Hawk
             RUBY
           },
 
-          monomorphic_belongs_to: -> (entity, options) {
+          monomorphic_belongs_to: ->(entity, options) {
             klass, key, params = options.values_at(*[:class_name, :primary_key, :params])
             params ||= {}
             ivar = "@_#{entity}".intern
@@ -296,14 +296,14 @@ module Hawk
                 return unless (id = self.attributes.fetch(key.to_s, nil))
 
                 instance = self.class.model_class_for(klass).
-                  find(id, clean_inherited_params( self.params, params ))
+                  find(id, clean_inherited_params(self.params, params))
 
                 instance_variable_set(ivar, instance)
               end
             end
           },
 
-          polymorphic_belongs_to: -> (entity, options) {
+          polymorphic_belongs_to: ->(entity, options) {
             key = options.fetch(:as)
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1

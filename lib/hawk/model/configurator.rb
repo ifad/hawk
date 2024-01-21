@@ -7,7 +7,7 @@ module Hawk
 
       module ClassMethods
         def configure(&block)
-          ([ self ] + configurable).each do |model|
+          ([self] + configurable).each do |model|
             model.instance_eval &block
           end
         end
@@ -15,13 +15,13 @@ module Hawk
         def inherited(subclass)
           super
 
-          (@_configurable||=[]) << subclass
+          (@_configurable ||= []) << subclass
         end
 
         protected
 
         def configurable
-          (@_configurable||=[]).inject(Set.new) {|s, klass|
+          (@_configurable ||= []).inject(Set.new) { |s, klass|
             s.add klass
             s.merge klass.configurable
           }.to_a

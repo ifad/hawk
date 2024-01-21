@@ -29,7 +29,7 @@ module Hawk
 
             url = payload[:url].to_s
             if payload[:params] && payload[:params].size > 0
-              url << '?' << payload[:params].inject('') {|s, (k,v)| s << [k, '=', v, '&'].join }.chomp('&')
+              url << '?' << payload[:params].inject('') { |s, (k, v)| s << [k, '=', v, '&'].join }.chomp('&')
             end
 
             $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} %s (%.2fms), cache %s\033[0m\n" % [

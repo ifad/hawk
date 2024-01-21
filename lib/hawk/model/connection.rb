@@ -87,7 +87,7 @@ module Hawk
         def url(url = nil)
           @_url = url.dup.freeze if url
 
-          configurable.each {|model| model.url = @_url }
+          configurable.each { |model| model.url = @_url }
 
           return @_url
         end
@@ -100,7 +100,7 @@ module Hawk
             @_http_options = @_http_options.deep_merge(options.dup).freeze
           end
 
-          configurable.each {|model| model.http_options = @_http_options }
+          configurable.each { |model| model.http_options = @_http_options }
 
           return @_http_options
         end
@@ -109,7 +109,7 @@ module Hawk
         def client_name(name = nil)
           @_client_name = name.dup.freeze if name
 
-          configurable.each {|model| model.client_name = @_client_name }
+          configurable.each { |model| model.client_name = @_client_name }
 
           return @_client_name
         end

@@ -65,7 +65,7 @@ module Hawk
       end
 
       def persist!
-        connection.put(path_for(nil), self.attributes.merge(cache: {invalidate: path_for(nil)}))
+        connection.put(path_for(nil), self.attributes.merge(cache: { invalidate: path_for(nil) }))
       end
     end
   end

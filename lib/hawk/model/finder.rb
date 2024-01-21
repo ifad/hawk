@@ -29,18 +29,18 @@ module Hawk
 
         def all(params = {})
           path = path_for(nil, params)
-          if connection.url_length(path,:get,params) > 2000
+          if connection.url_length(path, :get, params) > 2000
             path = path_for(batch_path, params)
             method = :post
           end
-          repr = connection.send(method||:get, path, params)
+          repr = connection.send(method || :get, path, params)
           instantiate_many(repr, params)
         end
 
         def count(params = {})
           params = {} unless params.is_a?(Hash)
           path = path_for(count_path, params)
-          method = connection.url_length(path,:get,params) > 2000 ? :post : :get
+          method = connection.url_length(path, :get, params) > 2000 ? :post : :get
           repr = connection.send(method, path, params)
           repr.fetch(count_key).to_i
         end
@@ -72,7 +72,7 @@ module Hawk
             total_count: total_count
           }
 
-          Collection.new(collection.map! {|repr| instantiate_one(repr, params) }, collection_options)
+          Collection.new(collection.map! { |repr| instantiate_one(repr, params) }, collection_options)
         end
 
         def instantiate_one(repr, params)
