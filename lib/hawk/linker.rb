@@ -1,7 +1,7 @@
 module Hawk
   # Allows adding to any Ruby object an accessor referencing an {Hawk::Model}.
   #
-  # Example, assuming Bar is defined and Foo responds_to `bar_id`:
+  # Example, assuming Bar is defined and Foo responds_to +bar_id+:
   #
   #     class Foo
   #       include Hawk::Linker

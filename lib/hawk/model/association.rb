@@ -94,7 +94,6 @@ module Hawk
         # Example (for Joe :-)
         #
         #     class Foo < Hawk::Model::Base
-        #
         #       has_many :bars
         #
         #       preload_association do |attributes, name, type, options|
@@ -105,11 +104,10 @@ module Hawk
         #           end
         #         end
         #       end
-        #
         #     end
         #
-        # The block would get called once, with :bars as `name`, :has_many as
-        # `type` and `{class_name:'Bar', primary_key:'foo_id'}` as `options`.
+        # The block would get called once, with :bars as +name+, :has_many as
+        # +type+ and +{ class_name: "Bar", primary_key : "foo_id" }+ as +options+.
         #
         # By default it looks up in the representation a property named after
         # the association's name and returns it, deleting it from the repr.

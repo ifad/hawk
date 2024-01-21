@@ -38,13 +38,13 @@ module Hawk
         #
         #   App::Post.model_class_for('Comment')
         #
-        # will return `App::Comment`
+        # will return +App::Comment+
         #
         # while
         #
         #   Client::Post.model_class_for('Comment')
         #
-        # will return `Client::Comment`
+        # will return +Client::Comment+
         #
         # In a nutshell, first the model namespace is checked,
         # then the containing namespace, and then the inheritance

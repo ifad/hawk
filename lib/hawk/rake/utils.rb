@@ -9,7 +9,6 @@ module Hawk
       ##
       # Captures the stdout emitted by the given +block+
       #
-      # @param block [Proc]
       # @return [String] the captured output
       #
       def capture_stdout

@@ -33,13 +33,13 @@ module Hawk
           @_default_params ||= {}
         end
 
-        # Adds `limit` with the given number of records
+        # Adds +limit+ with the given number of records
         #
         def limit(n)
           where(limit_param => n)
         end
 
-        # Adds an `offset` with the given number of records
+        # Adds an +offset+ with the given number of records
         #
         def offset(n)
           where(offset_param => n)
