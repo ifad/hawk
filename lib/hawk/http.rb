@@ -87,7 +87,7 @@ module Hawk
       Typhoeus::Request.new(url, typhoeus_defaults.merge(options_for_typhoeus(request))).url.length
     end
 
-      protected
+    protected
 
     def parse(body)
       MultiJson.load(body)
@@ -109,7 +109,7 @@ module Hawk
       end
     end
 
-      private
+    private
 
     def build_url path
       base.merge(path.sub(/^\//, '')).to_s
@@ -127,9 +127,9 @@ module Hawk
         what, secs = if response.connect_time && response.connect_time.zero?
                        # Connect failed
                        [:connect, req.options[:connecttimeout]]
-        else
-          [:request, req.options[:timeout]]
-        end
+                     else
+                       [:request, req.options[:timeout]]
+                     end
 
         raise Error::Timeout, "#{it}: #{what} timed out after #{secs} seconds"
       end
@@ -232,5 +232,5 @@ module Hawk
         ret
       end
     end
-    end
+  end
 end

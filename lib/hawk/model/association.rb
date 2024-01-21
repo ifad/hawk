@@ -233,9 +233,9 @@ module Hawk
 
             conditions = if as.present?
                            "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
-            else
-              "'#{key}' => self.id"
-            end
+                         else
+                           "'#{key}' => self.id"
+                         end
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entities}
@@ -254,9 +254,9 @@ module Hawk
 
             conditions = if as.present?
                            "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
-            else
-              "'#{key}' => self.id"
-            end
+                         else
+                           "'#{key}' => self.id"
+                         end
 
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{entity}!

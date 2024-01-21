@@ -14,22 +14,6 @@ Layout/DotPosition:
     - 'lib/hawk/model/association.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-Layout/ElseAlignment:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/model/association.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleAlignWith, Severity.
-# SupportedStylesAlignWith: keyword, variable, start_of_line
-Layout/EndAlignment:
-  Exclude:
-    - 'lib/hawk/http.rb'
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/model/association.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
 # SupportedHashRocketStyles: key, separator, table
 # SupportedColonStyles: key, separator, table

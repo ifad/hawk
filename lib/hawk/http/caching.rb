@@ -21,9 +21,9 @@ module Hawk
       def inspect
         description = if cache_configured?
                         "cache: ON #{@_cache_server} v#{@_cache_version}"
-        else
-          "cache: OFF"
-        end
+                      else
+                        "cache: OFF"
+                      end
 
         super.sub(/>$/, ", #{description}>")
       end
