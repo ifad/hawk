@@ -33,13 +33,6 @@ Layout/MultilineMethodCallBraceLayout:
     - 'lib/hawk/model/collection.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented, indented_relative_to_receiver
-Layout/MultilineMethodCallIndentation:
-  Exclude:
-    - 'lib/hawk/model/association.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
 Lint/AmbiguousOperator:
   Exclude:
     - 'lib/hawk/model/configurator.rb'

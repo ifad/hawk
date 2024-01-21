@@ -296,7 +296,7 @@ module Hawk
                 return unless (id = self.attributes.fetch(key.to_s, nil))
 
                 instance = self.class.model_class_for(klass).
-                  find(id, clean_inherited_params(self.params, params))
+                           find(id, clean_inherited_params(self.params, params))
 
                 instance_variable_set(ivar, instance)
               end
