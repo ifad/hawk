@@ -1,3 +1,5 @@
+require 'cgi'
+
 module Hawk
   class HTTP
     module Instrumentation
