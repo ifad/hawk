@@ -119,7 +119,7 @@ module Hawk
       # @raise [RuntimeError]
       #
       def bail(msg)
-        raise RuntimeError, fancy(msg)
+        raise fancy(msg).to_s
       end
 
       ##
@@ -133,7 +133,7 @@ module Hawk
           msg = "%s \033[1;31m[%s]" % [msg, gemfile]
         end
 
-        return msg
+        msg
       end
 
       ##

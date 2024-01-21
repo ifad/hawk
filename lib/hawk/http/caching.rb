@@ -39,7 +39,7 @@ module Hawk
       protected
 
       def caching(descriptor, &block)
-        return block.call unless cache_configured?
+        return yield unless cache_configured?
 
         result = try_cache(descriptor, &block)
 
@@ -47,7 +47,7 @@ module Hawk
           invalidate(descriptor)
         end
 
-        return result
+        result
       end
 
       private
@@ -57,7 +57,7 @@ module Hawk
       end
 
       def try_cache(descriptor, &block)
-        return block.call unless descriptor[:method] == 'GET'
+        return yield unless descriptor[:method] == 'GET'
 
         key = cache_key(descriptor)
 
@@ -69,7 +69,7 @@ module Hawk
           ttl = descriptor[:expires_in] ||
                 @_cache_options[:expires_in]
 
-          block.call.tap do |cacheable|
+          yield.tap do |cacheable|
             # $stderr.puts "CACHE: store #{key} with ttl #{ttl}"
             @_cache.set(key, cacheable, ttl)
           end

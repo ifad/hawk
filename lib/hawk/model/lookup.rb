@@ -89,8 +89,8 @@ module Hawk
           nil
         end
 
-        def cached_model_class_for(name, scope, &block)
-          @_class_cache[[name, scope.name]] ||= block.call
+        def cached_model_class_for(name, scope)
+          @_class_cache[[name, scope.name]] ||= yield
         end
       end
     end

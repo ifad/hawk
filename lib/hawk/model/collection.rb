@@ -2,7 +2,7 @@ module Hawk
   module Model
     class Collection < Array
       def initialize(elements = [], options = {})
-        self.replace(elements)
+        replace(elements)
 
         @total_count  = options[:total_count]
         @limit_value  = options[:limit]

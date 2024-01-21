@@ -21,7 +21,7 @@ module Hawk
       private
 
       def preload_associations(attributes, params, scope)
-        self.instance_exec(scope, attributes, &scope.preload_association)
+        instance_exec(scope, attributes, &scope.preload_association)
       end
 
       def add_association_object(scope, name, repr)
@@ -153,7 +153,7 @@ module Hawk
         def has_many(entities, options = {})
           entity = entities.to_s.singularize
           klass  = options[:class_name] || entity.camelize
-          key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
+          key    = options[:primary_key] || [name.demodulize.underscore, :id].join('_')
           from   = options[:from]
           as     = options[:as]
           # TODO params
@@ -171,7 +171,7 @@ module Hawk
         def has_one(entity, options = {})
           entity = entity.to_s
           klass  = options[:class_name] || entity.camelize
-          key    = options[:primary_key] || [self.name.demodulize.underscore, :id].join('_')
+          key    = options[:primary_key] || [name.demodulize.underscore, :id].join('_')
           from   = options[:from]
           nested = options[:nested]
           as     = options[:as]
@@ -229,10 +229,10 @@ module Hawk
         #
         CODE = {
           has_many: ->(entities, options) {
-            klass, key, from, as = options.values_at(*[:class_name, :primary_key, :from, :as])
+            klass, key, from, as = options.values_at(:class_name, :primary_key, :from, :as)
 
             conditions = if as.present?
-                           "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+                           "'#{as}_id' => self.id, '#{as}_type' => '#{name}'"
                          else
                            "'#{key}' => self.id"
                          end
@@ -250,10 +250,10 @@ module Hawk
           },
 
           has_one: ->(entity, options) {
-            klass, key, from, nested, as = options.values_at(*[:class_name, :primary_key, :from, :nested, :as])
+            klass, key, from, nested, as = options.values_at(:class_name, :primary_key, :from, :nested, :as)
 
             conditions = if as.present?
-                           "'#{as}_id' => self.id, '#{as}_type' => '#{self.name}'"
+                           "'#{as}_id' => self.id, '#{as}_type' => '#{name}'"
                          else
                            "'#{key}' => self.id"
                          end
@@ -286,14 +286,14 @@ module Hawk
           },
 
           monomorphic_belongs_to: ->(entity, options) {
-            klass, key, params = options.values_at(*[:class_name, :primary_key, :params])
+            klass, key, params = options.values_at(:class_name, :primary_key, :params)
             params ||= {}
             ivar = "@_#{entity}".intern
 
             class_eval do
               define_method(entity) do
                 return instance_variable_get(ivar) if instance_variable_defined?(ivar)
-                return unless (id = self.attributes.fetch(key.to_s, nil))
+                return unless (id = attributes.fetch(key.to_s, nil))
 
                 instance = self.class.model_class_for(klass).
                            find(id, clean_inherited_params(self.params, params))

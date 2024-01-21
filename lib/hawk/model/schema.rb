@@ -62,8 +62,8 @@ module Hawk
       module ClassMethods
         def inherited(subclass)
           super
-          subclass.instance_variable_set :@_schema,       self.schema       if self.schema
-          subclass.instance_variable_set :@_after_schema, self.after_schema if self.after_schema
+          subclass.instance_variable_set :@_schema,       schema       if schema
+          subclass.instance_variable_set :@_after_schema, after_schema if after_schema
         end
 
         def schema(&block)

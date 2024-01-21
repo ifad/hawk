@@ -19,12 +19,12 @@ module Hawk
       end
 
       module Basic
-        def instrument(type, payload, &block)
+        def instrument(type, payload)
           if Hawk::HTTP::Instrumentation.suppress_verbose_output
-            block.call payload
+            yield payload
           else
             start = Time.now.to_f
-            ret = block.call payload
+            ret = yield payload
             elapsed = (Time.now.to_f - start) * 1000
 
             url = payload[:url].to_s

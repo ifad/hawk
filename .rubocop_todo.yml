@@ -60,12 +60,6 @@ Lint/MissingSuper:
   Exclude:
     - 'lib/hawk/model/collection.rb'
 
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowPercentLiteralArrayArgument.
-Lint/RedundantSplatExpansion:
-  Exclude:
-    - 'lib/hawk/model/association.rb'
-
 Lint/ShadowingOuterLocalVariable:
   Exclude:
     - 'lib/hawk/http.rb'
@@ -100,7 +94,7 @@ Metrics/AbcSize:
 
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
-  Max: 171
+  Max: 170
 
 # Configuration parameters: AllowedMethods, AllowedPatterns.
 Metrics/CyclomaticComplexity:
@@ -154,13 +148,6 @@ Naming/PredicateName:
 Performance/MethodObjectAsBlock:
   Exclude:
     - 'lib/hawk/http.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Performance/RedundantBlockCall:
-  Exclude:
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/http/instrumentation.rb'
-    - 'lib/hawk/model/lookup.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
 Performance/RegexpMatch:
@@ -397,35 +384,6 @@ Style/PercentLiteralDelimiters:
 Style/RaiseArgs:
   Exclude:
     - 'lib/hawk/model/querying.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantException:
-  Exclude:
-    - 'lib/hawk/rake/default_task.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantParentheses:
-  Exclude:
-    - 'lib/hawk/model/finder.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'lib/hawk/http/caching.rb'
-    - 'lib/hawk/model/connection.rb'
-    - 'lib/hawk/rake/default_task.rb'
-
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/hawk/model/active.rb'
-    - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/collection.rb'
-    - 'lib/hawk/model/connection.rb'
-    - 'lib/hawk/model/finder.rb'
-    - 'lib/hawk/model/schema.rb'
-    - 'lib/hawk/model/scoping.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantSelfAssignment:
