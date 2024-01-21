@@ -207,7 +207,7 @@ module Hawk
     end
 
     def options_for_typhoeus(hawk_options)
-      hawk_options.inject({}) do |ret, (opt, val)|
+      hawk_options.each_with_object({}) do |(opt, val), ret|
         case opt
         when :request_timeout, :timeout
           ret[:timeout] = val.to_i
@@ -228,8 +228,6 @@ module Hawk
           #
           ret[opt] = val
         end
-
-        ret
       end
     end
   end

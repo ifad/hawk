@@ -31,7 +31,7 @@ module Hawk
         klass = options[:class_name] || entity.to_s.camelize
         key   = options[:primary_key] || [entity, :id].join('_')
 
-        class_eval <<-RUBY, __FILE__, __LINE__ - 1 # Getter
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1 # Getter
             def #{entity}
               return nil unless self.#{key}.present?
 
@@ -39,7 +39,7 @@ module Hawk
             end
         RUBY
 
-        class_eval <<-RUBY, __FILE__, __LINE__ - 1 # Setter
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1 # Setter
             def #{entity}=(object)
               return if object.blank?
 
@@ -53,7 +53,7 @@ module Hawk
             end
         RUBY
 
-        class_eval <<-RUBY, __FILE__, __LINE__ - 1 # Reloader
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1 # Reloader
             def reload(*)
               super.tap { @_#{entity} = nil }
             end
@@ -63,7 +63,7 @@ module Hawk
       def _polymorphic_resource_accessor(entity, options)
         key = options[:as] || entity
 
-        class_eval <<-RUBY, __FILE__, __LINE__ - 1 # Getter
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1 # Getter
             def #{entity}
               return nil unless self.#{key}_id.present? && self.#{key}_type.present?
 
@@ -71,7 +71,7 @@ module Hawk
             end
         RUBY
 
-        class_eval <<-RUBY, __FILE__, __LINE__ - 1 # Setter
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1 # Setter
             def #{entity}=(object)
               return if object.blank?
 
@@ -86,7 +86,7 @@ module Hawk
             end
         RUBY
 
-        class_eval <<-RUBY, __FILE__, __LINE__ - 1 # Reloader
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1 # Reloader
             def reload(*)
               super.tap { @_#{entity} = nil }
             end
