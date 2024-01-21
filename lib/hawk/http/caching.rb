@@ -22,7 +22,7 @@ module Hawk
         description = if cache_configured?
                         "cache: ON #{@_cache_server} v#{@_cache_version}"
                       else
-                        "cache: OFF"
+                        'cache: OFF'
                       end
 
         super.sub(/>$/, ", #{description}>")
@@ -97,7 +97,7 @@ module Hawk
         return if options[:disabled]
 
         unless options.key?(:server)
-          raise Error::Configuration, "Cache server option is mandatory"
+          raise Error::Configuration, 'Cache server option is mandatory'
         end
 
         client, server, version = connect_cache(options)
@@ -121,7 +121,7 @@ module Hawk
           if version = client.version.fetch(server, nil)
             [client, server, version]
           else
-            $stderr.puts "Hawk: can't connect to memcached server #{server}"
+            warn "Hawk: can't connect to memcached server #{server}"
             nil
           end
         end

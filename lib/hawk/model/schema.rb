@@ -148,7 +148,7 @@ module Hawk
 
         def call(value)
           @code.call(value) unless value.nil?
-        rescue => e
+        rescue StandardError => e
           "## Error while casting #{value} to #{type}: #{e.message} ##"
         end
 
@@ -167,14 +167,14 @@ module Hawk
         Caster.new(:datetime, ->(value) { Time.parse(value) }),
         Caster.new(:date,     ->(value) { Date.parse(value) }),
         Caster.new(:bignum,   ->(value) { BigDecimal(value) }),
-        Caster.new(:boolean,  ->(value) { bools.include?(value) }),
+        Caster.new(:boolean,  ->(value) { bools.include?(value) })
       ].inject({}) { |h, c| h.update(c.type => c) }
 
       ATTRIBUTE_CASTS = {
         /_(?:at|from|until|on)$/ => :datetime,
         /_date$/ => :date,
         /_num$/ => :bignum,
-        /^is_/ => :boolean,
+        /^is_/ => :boolean
       }
     end
   end

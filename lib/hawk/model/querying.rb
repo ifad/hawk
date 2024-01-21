@@ -76,7 +76,7 @@ module Hawk
         # {Hawk::Error::NotFound} if not found
         #
         def first!(params = {})
-          first(params) or raise Hawk::Error::NotFound.new("Can't find first #{self}")
+          first(params) or raise(Hawk::Error::NotFound, "Can't find first #{self}")
         end
         alias find_by! first!
       end

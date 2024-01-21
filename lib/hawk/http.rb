@@ -16,7 +16,7 @@ module Hawk
     DEFAULTS = {
       timeout: 2,
       connect_timeout: 1,
-      params_encoding: :rack,
+      params_encoding: :rack
       # username:      nil,
       # password:      nil,
     }
@@ -25,12 +25,12 @@ module Hawk
       @defaults = DEFAULTS.deep_merge(options)
 
       @base = URI.parse(base).tap do |url|
-        unless %w(http https).include? url.scheme
+        unless %w[http https].include? url.scheme
           raise Error::Configuration,
                 "URL '#{url}' is not valid: only http and https schemes are supported"
         end
 
-        url.path += '/' unless /\/$/.match?(url.path)
+        url.path += '/' unless %r{/$}.match?(url.path)
         url.freeze
       end
     end
@@ -112,7 +112,7 @@ module Hawk
     private
 
     def build_url(path)
-      base.merge(path.sub(/^\//, '')).to_s
+      base.merge(path.sub(%r{^/}, '')).to_s
     end
 
     def response_handler(response)
@@ -154,7 +154,11 @@ module Hawk
 
     def parse_app_error_from(body)
       if body[0] == '{' && body[-1] == '}'
-        resp = MultiJson.load(body) rescue nil
+        resp = begin
+          MultiJson.load(body)
+        rescue StandardError
+          nil
+        end
         if resp.respond_to?(:key?) && resp.key?('error')
           resp = resp.fetch('error')
         end

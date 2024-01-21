@@ -109,7 +109,7 @@ module Hawk
       # @return [nil]
       #
       def croak(msg)
-        $stderr.puts fancy(with_appraisal(msg))
+        warn fancy(with_appraisal(msg))
       end
 
       ##
@@ -164,14 +164,14 @@ module Hawk
       # @return [Boolean] Are we running appraisals?
       #
       def running_appraisals?
-        ENV["APPRAISAL_INITIALIZED"]
+        ENV['APPRAISAL_INITIALIZED']
       end
 
       ##
       # @return [Boolean] Are we running on CI?
       #
       def running_in_ci?
-        ENV["CI"]
+        ENV['CI']
       end
     end
   end

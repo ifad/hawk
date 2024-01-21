@@ -13,14 +13,10 @@ module Hawk
         "#<#{self.class.name} count:#{total_count} contents:#{super}>"
       end
 
-      attr_reader :total_count
+      attr_reader :total_count, :offset_value
 
       def limit_value
-        @limit_value or raise Hawk::Error, "This collection is not paginated"
-      end
-
-      def offset_value
-        @offset_value
+        @limit_value or raise Hawk::Error, 'This collection is not paginated'
       end
 
       def count

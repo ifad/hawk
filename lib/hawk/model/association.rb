@@ -45,7 +45,7 @@ module Hawk
       end
 
       def is_collection?(type)
-        [:polymorphic_belongs_to, :has_many].include? type
+        %i[polymorphic_belongs_to has_many].include? type
       end
 
       def add_to_association_collection(name, target)
