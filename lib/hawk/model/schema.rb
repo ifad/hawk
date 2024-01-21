@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hawk
   module Model
     module Schema
@@ -176,7 +178,7 @@ module Hawk
         /_date$/ => :date,
         /_num$/ => :bignum,
         /^is_/ => :boolean
-      }
+      }.freeze
     end
   end
 end

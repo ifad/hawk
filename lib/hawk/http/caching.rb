@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dalli'
 
 module Hawk
@@ -9,7 +11,7 @@ module Hawk
         compress: true,
         expires_in: 60,
         serializer: MultiJson
-      }
+      }.freeze
 
       def initialize(*)
         super

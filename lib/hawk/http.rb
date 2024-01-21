@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hawk
   require 'uri'
   require 'typhoeus'
@@ -19,7 +21,7 @@ module Hawk
       params_encoding: :rack
       # username:      nil,
       # password:      nil,
-    }
+    }.freeze
 
     def initialize(base, options = {})
       @defaults = DEFAULTS.deep_merge(options)
