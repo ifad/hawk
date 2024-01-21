@@ -27,7 +27,7 @@ module Hawk
       @base = URI.parse(base).tap do |url|
         unless %w(http https).include? url.scheme
           raise Error::Configuration,
-            "URL '#{url}' is not valid: only http and https schemes are supported"
+                "URL '#{url}' is not valid: only http and https schemes are supported"
         end
 
         url.path += '/' unless url.path =~ /\/$/
@@ -218,7 +218,7 @@ module Hawk
         when :username
           unless hawk_options.key?(:password)
             raise Error::Configuration,
-              "The 'username' option requires a corresponding 'password' option"
+                  "The 'username' option requires a corresponding 'password' option"
           end
 
           ret[:userpwd] = [val, hawk_options.fetch(:password)].join(':')
