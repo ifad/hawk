@@ -74,7 +74,7 @@ module Hawk
         include SharedMethods
 
         def connection
-          @_connection ||= begin
+          @connection ||= begin
             raise Error::Configuration, "URL for #{name} is not yet set" unless url
             raise Error::Configuration, 'Please set the client_name'     unless client_name
 

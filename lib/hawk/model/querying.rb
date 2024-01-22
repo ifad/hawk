@@ -31,8 +31,8 @@ module Hawk
         end
 
         def default_params(params = nil)
-          @_default_params = params if params
-          @_default_params ||= {}
+          @default_params = params if params
+          @default_params ||= {}
         end
 
         # Adds +limit+ with the given number of records

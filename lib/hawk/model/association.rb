@@ -115,8 +115,8 @@ module Hawk
         # the association's name and returns it, deleting it from the repr.
         #
         def preload_association(&block)
-          @_preload_association = block if block
-          @_preload_association ||= lambda do |scope, attributes|
+          @preload_association = block if block
+          @preload_association ||= lambda do |scope, attributes|
             if scope.associations?
               scope.associations.each_key do |name|
                 attr = name.to_s

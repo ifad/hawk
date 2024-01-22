@@ -86,19 +86,19 @@ module Hawk
         end
 
         def instance_key
-          @_instance_key ||= name.demodulize.underscore
+          @instance_key ||= name.demodulize.underscore
         end
 
         def collection_key
-          @_collection_key = instance_key.pluralize
+          @collection_key = instance_key.pluralize
         end
 
         def total_count_key
-          @_total_count_key = 'total_count'
+          @total_count_key = 'total_count'
         end
 
         def count_key
-          @_count_key = 'count'
+          @count_key = 'count'
         end
 
         def limit_param
@@ -123,8 +123,8 @@ module Hawk
             raise Error::Configuration, "Hawk's Base class doesn't have any path"
           end
 
-          @_model_path = path if path
-          @_model_path ||= default_model_path
+          @model_path = path if path
+          @model_path ||= default_model_path
         end
 
         def default_model_path
@@ -132,13 +132,13 @@ module Hawk
         end
 
         def batch_path(path = nil)
-          @_batch_path = path if path
-          @_batch_path ||= 'batch'
+          @batch_path = path if path
+          @batch_path ||= 'batch'
         end
 
         def count_path(path = nil)
-          @_count_path = path if path
-          @_count_path ||= 'count'
+          @count_path = path if path
+          @count_path ||= 'count'
         end
       end
     end
