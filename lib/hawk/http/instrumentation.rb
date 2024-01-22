@@ -23,6 +23,8 @@ module Hawk
       end
 
       module Basic
+        LOG_FORMAT = ">> \033[1mHawk %<type>s: %<method>s %<url>s (%<elapsed>.2fms), cache %<cached>s\033[0m\n"
+
         def instrument(type, payload)
           if Hawk::HTTP::Instrumentation.suppress_verbose_output
             yield payload
@@ -31,16 +33,19 @@ module Hawk
             ret = yield payload
             elapsed = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - start) * 1000
 
-            url = payload[:url].to_s
+            url = payload[:url].to_s.dup
             if payload[:params].present?
-              url << '?' << payload[:params].inject('') { |s, (k, v)| s << [k, '=', v, '&'].join }.chomp('&')
+              url << '?' << payload[:params].map { |k, v| "#{k}=#{v}" }.join('&')
             end
 
-            $stderr.printf ">> \033[1mHawk #{type}: #{payload[:method]} %s (%.2fms), cache %s\033[0m\n" % [
-              CGI.unescape(url),
-              elapsed,
-              payload[:cached] ? 'HIT' : 'MISS'
-            ]
+            $stderr.printf format(
+              LOG_FORMAT,
+              type: type,
+              method: payload[:method],
+              url: CGI.unescape(url),
+              elapsed: elapsed,
+              cached: payload[:cached] ? 'HIT' : 'MISS'
+            )
 
             ret
           end
