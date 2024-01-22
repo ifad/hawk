@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hawk
   ##
   # Namespace to all rake-related functionality.
