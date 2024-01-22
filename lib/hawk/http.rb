@@ -23,13 +23,15 @@ module Hawk
       # password:      nil,
     }.freeze
 
+    VALID_SCHEMES = %w[http https].freeze
+
     def initialize(base, options = {})
       @defaults = DEFAULTS.deep_merge(options)
 
       @base = URI.parse(base).tap do |url|
-        unless %w[http https].include? url.scheme
+        unless VALID_SCHEMES.include? url.scheme
           raise Error::Configuration,
-                "URL '#{url}' is not valid: only http and https schemes are supported"
+                "URL '#{url}' is not valid. Supported schemes: #{VALID_SCHEMES.join(', ')}"
         end
 
         url.path += '/' unless %r{/$}.match?(url.path)
