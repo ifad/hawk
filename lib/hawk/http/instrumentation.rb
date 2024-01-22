@@ -27,9 +27,9 @@ module Hawk
           if Hawk::HTTP::Instrumentation.suppress_verbose_output
             yield payload
           else
-            start = Time.now.to_f
+            start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             ret = yield payload
-            elapsed = (Time.now.to_f - start) * 1000
+            elapsed = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - start) * 1000
 
             url = payload[:url].to_s
             if payload[:params].present?
