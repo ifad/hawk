@@ -13,7 +13,7 @@ module Hawk
       #
       def initialize(attributes = {}, params = {})
         super
-        if attributes.size > 0 && self.class.associations?
+        if attributes.present? && self.class.associations?
           preload_associations(attributes, params, self.class)
         end
       end
@@ -136,7 +136,7 @@ module Hawk
         # Check whether associations are defined
         #
         def associations?
-          @_associations && @_associations.size > 0
+          @_associations.present?
         end
 
         # Check whether the given attribute is an association
