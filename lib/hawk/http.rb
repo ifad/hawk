@@ -34,7 +34,7 @@ module Hawk
                 "URL '#{url}' is not valid. Supported schemes: #{VALID_SCHEMES.join(', ')}"
         end
 
-        url.path += '/' unless %r{/$}.match?(url.path)
+        url.path += '/' unless url.path&.end_with?('/')
         url.freeze
       end
     end
