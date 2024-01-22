@@ -137,15 +137,15 @@ Style/FetchEnvVar:
 # SupportedStyles: format, sprintf, percent
 Style/FormatString:
   Exclude:
-    - 'lib/hawk/http/instrumentation.rb'
     - 'lib/hawk/rake/default_task.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MaxUnannotatedPlaceholdersAllowed, AllowedMethods, AllowedPatterns.
+# Configuration parameters: EnforcedStyle, MaxUnannotatedPlaceholdersAllowed, AllowedMethods, AllowedPatterns.
 # SupportedStyles: annotated, template, unannotated
 # AllowedMethods: redirect
 Style/FormatStringToken:
-  EnforcedStyle: unannotated
+  Exclude:
+    - 'lib/hawk/rake/default_task.rb'
 
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
