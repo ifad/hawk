@@ -71,12 +71,6 @@ Naming/MemoizedInstanceVariableName:
   Exclude:
     - 'lib/hawk/model/proxy.rb'
 
-# Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
-# AllowedNames: as, at, by, cc, db, id, if, in, io, ip, of, on, os, pp, to
-Naming/MethodParameterName:
-  Exclude:
-    - 'lib/hawk/model/querying.rb'
-
 # Configuration parameters: NamePrefix, ForbiddenPrefixes, AllowedMethods, MethodDefinitionMacros.
 # NamePrefix: is_, has_, have_
 # ForbiddenPrefixes: is_, has_, have_
