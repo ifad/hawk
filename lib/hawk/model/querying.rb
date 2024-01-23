@@ -37,14 +37,14 @@ module Hawk
 
         # Adds +limit+ with the given number of records
         #
-        def limit(n)
-          where(limit_param => n)
+        def limit(value)
+          where(limit_param => value)
         end
 
         # Adds an +offset+ with the given number of records
         #
-        def offset(n)
-          where(offset_param => n)
+        def offset(value)
+          where(offset_param => value)
         end
 
         def order(by)
