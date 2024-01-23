@@ -101,10 +101,6 @@ Rails/TimeZone:
   Exclude:
     - 'lib/hawk/model/schema.rb'
 
-Security/Eval:
-  Exclude:
-    - 'lib/hawk/model/pagination.rb'
-
 Style/ClassVars:
   Exclude:
     - 'lib/hawk/http/caching.rb'
@@ -119,7 +115,6 @@ Style/DocumentDynamicEvalDefinition:
   Exclude:
     - 'lib/hawk/linker.rb'
     - 'lib/hawk/model/association.rb'
-    - 'lib/hawk/model/pagination.rb'
 
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
