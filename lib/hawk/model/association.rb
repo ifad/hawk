@@ -42,7 +42,7 @@ module Hawk
             set_association_value name, result
           end
         else
-          raise Hawk::Error, "Unhandled assocation: #{name}"
+          raise Hawk::Error, "Unhandled association: #{name}"
         end
       end
 
