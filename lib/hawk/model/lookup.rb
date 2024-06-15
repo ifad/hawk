@@ -66,7 +66,7 @@ module Hawk
             return self_constant
           end
 
-          scope_parent = scope.respond_to?(:module_parent) ? scope.module_parent : scope.parent
+          scope_parent = scope.module_parent
 
           if (parent_constant = look_up_constant_in(name, scope_parent))
             return parent_constant
@@ -82,11 +82,7 @@ module Hawk
         end
 
         def look_up_constant_in(name, scope)
-          if scope.respond_to?(:module_parent)
-            scope.module_parent.const_get(name)
-          else
-            scope.parent.const_get(name)
-          end
+          scope.module_parent.const_get(name)
         rescue NameError
           nil
         end
