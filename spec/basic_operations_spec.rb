@@ -22,6 +22,16 @@ RSpec.describe 'basic operations with a class that inherits from Hawk::Model::Ba
     }
   end
 
+  describe '.get' do
+    it 'squeezes multiple slashes' do
+      stub_request(:GET, 'https://example.org/people/batch/id')
+        .with(headers: { 'User-Agent' => 'Foobar' })
+        .to_return(status: 200, body: [2].to_json, headers: {})
+
+      expect(Person.get('/batch///id')).to contain_exactly(2)
+    end
+  end
+
   describe '.find(id)' do
     specify do
       stub_request(:GET, 'https://example.org/people/2')
