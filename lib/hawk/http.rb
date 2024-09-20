@@ -5,8 +5,8 @@ module Hawk
   require 'typhoeus'
   require 'multi_json'
 
-  require 'hawk/http/caching'
-  require 'hawk/http/instrumentation'
+  require_relative 'http/caching'
+  require_relative 'http/instrumentation'
 
   ##
   # Represent an HTTP connector, to be linked to a {Model}.
