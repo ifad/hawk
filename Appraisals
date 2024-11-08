@@ -9,7 +9,11 @@ appraise 'am-7.1' do
 end
 
 appraise 'am-7.2' do
-  gem 'activemodel', '~> 7.2.0.beta2'
+  gem 'activemodel', '~> 7.2.0'
+end
+
+appraise 'am-8.0' do
+  gem 'activemodel', '~> 8.0.0'
 end
 
 appraise 'am-edge' do
