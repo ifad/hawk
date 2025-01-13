@@ -1,6 +1,6 @@
 # Hawk
 
-[![Build Status](https://github.com/ifad/hawk/actions/workflows/ruby.yml/badge.svg)](https://github.com/ifad/hawk/actions)
+[![Build Status](https://github.com/ifad/hawk/actions/workflows/ruby.yml/badge.svg)](https://github.com/ifad/hawk/actions/workflows/ruby.yml)
 [![RuboCop](https://github.com/ifad/hawk/actions/workflows/rubocop.yml/badge.svg)](https://github.com/ifad/hawk/actions/workflows/rubocop.yml)
 
 Hawk is an API Client framework. It is used as a base to then build your API
