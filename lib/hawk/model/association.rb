@@ -319,6 +319,7 @@ module Hawk
           }
 
         }.freeze
+        private_constant :CODE
       end
     end
   end

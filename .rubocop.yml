@@ -2,6 +2,8 @@ inherit_from: .rubocop_todo.yml
 
 require:
   - rubocop-packaging
+
+plugins:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rake
@@ -21,6 +23,9 @@ AllCops:
     - vendor/**/*
 
 Layout/LineLength:
+  Enabled: false
+
+Rails/Delegate:
   Enabled: false
 
 RSpec/ExampleLength:
