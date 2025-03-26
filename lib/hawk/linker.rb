@@ -19,7 +19,16 @@ module Hawk
     end
 
     module ClassMethods
-      def resource_accessor(entity, options = {}) # Let's start simple.
+      # Defines a method to access a resource for a given entity, with support
+      # for both polymorphic and monomorphic resource accessors.
+      #
+      # @param entity [Object] The entity for which the resource accessor is being defined.
+      # @param options [Hash] A hash of options to customize the behavior of the accessor.
+      # @option options [Boolean] :polymorphic If true, a polymorphic resource accessor
+      #   will be used; otherwise, a monomorphic resource accessor will be used.
+      #
+      # @return [void]
+      def resource_accessor(entity, options = {})
         if options[:polymorphic]
           _polymorphic_resource_accessor(entity, options)
         else

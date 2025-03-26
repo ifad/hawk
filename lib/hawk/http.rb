@@ -8,13 +8,19 @@ module Hawk
   require_relative 'http/caching'
   require_relative 'http/instrumentation'
 
-  ##
   # Represent an HTTP connector, to be linked to a {Model}.
-  #
   class HTTP
     prepend Caching
     include Instrumentation
 
+    # Defines the default configuration options for HTTP requests.
+    #
+    # Keys:
+    # - :timeout (Integer) - The maximum time, in seconds, to wait for a response. Default is 2 seconds.
+    # - :connect_timeout (Integer) - The maximum time, in seconds, to wait for a connection to be established. Default is 1 second.
+    # - :params_encoding (Symbol) - The encoding format for request parameters. Default is :rack.
+    #
+    # Note: Additional keys like :username and :password are commented out and not currently in use.
     DEFAULTS = {
       timeout: 2,
       connect_timeout: 1,
@@ -23,8 +29,21 @@ module Hawk
       # password:      nil,
     }.freeze
 
+    # Defines the list of valid URI schemes
+    # that are supported by the application. It includes "http" and "https",
+    # which are the standard protocols for web communication.
     VALID_SCHEMES = %w[http https].freeze
 
+    # Initializes a new HTTP client instance with the given base URL and options.
+    #
+    # @param base [String] The base URL for the HTTP client. Must include a valid scheme.
+    # @param options [Hash] Optional configuration settings to override the default values.
+    # @option options [Any] Additional options that can be merged with the default settings.
+    #
+    # @raise [Error::Configuration] If the provided base URL has an invalid scheme.
+    #
+    # @example
+    #   client = Hawk::HTTP.new("https://api.example.org", timeout: 30)
     def initialize(base, options = {})
       @defaults = DEFAULTS.deep_merge(options)
 

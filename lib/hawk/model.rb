@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Hawk
+  # Namespace to all Model-related functionalities.
   module Model
     autoload :Base,           'hawk/model/base'
     autoload :Schema,         'hawk/model/schema'
