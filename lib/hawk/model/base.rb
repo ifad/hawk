@@ -24,10 +24,15 @@ module Hawk
       end
 
       def inspect
-        attributes = schema.inject('') do |s, (k, _v)|
-          s << " #{k}=#{read_attribute(k).inspect}"
+        result = "#<#{self.class.name}"
+
+        schema.each_key do |k|
+          result << " #{k}=#{read_attribute(k).inspect}"
         end
-        "#<#{self.class.name}#{attributes}>"
+
+        result << '>'
+
+        result
       end
     end
   end
