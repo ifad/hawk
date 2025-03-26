@@ -124,4 +124,16 @@ RSpec.describe 'basic operations with a class that inherits from Hawk::Model::Ba
       expect(person).to be_a(Person)
     end
   end
+
+  describe '#inspect' do
+    it 'returns a string representation of the model' do
+      stub_request(:GET, 'https://example.org/people/2')
+        .with(headers: { 'User-Agent' => 'Foobar' })
+        .to_return(status: 200, body: person_attributes.to_json, headers: {})
+
+      person = Person.find(2)
+
+      expect(person.inspect).to eq('#<Person id=2 name="Woody Allen">')
+    end
+  end
 end
