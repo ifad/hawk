@@ -91,6 +91,17 @@ RSpec.describe 'basic operations with a class that inherits from Hawk::Model::Ba
       collection = Person.all
       expect(collection.size).to eq(2)
     end
+
+    context 'with a custom endpoint' do
+      specify do
+        stub_request(:GET, 'https://example.org/people/active')
+          .with(headers: { 'User-Agent' => 'Foobar' })
+          .to_return(status: 200, body: [person_attributes, person_attributes].to_json, headers: {})
+
+        collection = Person.all(options: { endpoint: 'active' })
+        expect(collection.size).to eq(2)
+      end
+    end
   end
 
   describe '.where' do
