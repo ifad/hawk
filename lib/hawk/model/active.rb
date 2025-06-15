@@ -46,18 +46,10 @@ module Hawk
         super
       end
 
-      if ActiveModel::Dirty.instance_methods.include?(:changes_applied)
-        def save!
-          persist!
-          changes_applied
-          true
-        end
-      else
-        def save!
-          persist!
-          @changed_attributes&.clear
-          true
-        end
+      def save!
+        persist!
+        changes_applied
+        true
       end
 
       def save
