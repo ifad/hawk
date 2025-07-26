@@ -125,7 +125,7 @@ module Hawk
       req  = response.request
       url  = req.url
       meth = req.options.fetch(:method).to_s.upcase
-      it   = [meth, url].join(' ')
+      req_info = "#{meth} #{url}"
 
       if response.timed_out?
         what, secs = if response.connect_time&.zero?
@@ -135,24 +135,24 @@ module Hawk
                        [:request, req.options[:timeout]]
                      end
 
-        raise Error::Timeout, "#{it}: #{what} timed out after #{secs} seconds"
+        raise Error::Timeout, "#{req_info}: #{what} timed out after #{secs} seconds"
       end
 
       case (code = response.response_code)
       when 0
-        raise Error::Empty, "#{it}: Empty response from server (#{response.status_message})"
+        raise Error::Empty, "#{req_info}: Empty response from server (#{response.status_message})"
       when 400
-        raise Error::BadRequest, "#{it} was a bad request"
+        raise Error::BadRequest, "#{req_info} was a bad request"
       when 403
-        raise Error::Forbidden, "#{it} denied access"
+        raise Error::Forbidden, "#{req_info} denied access"
       when 404
-        raise Error::NotFound, "#{it} was not found"
+        raise Error::NotFound, "#{req_info} was not found"
       when 500
-        raise Error::InternalServerError, "#{it}: Server error (#{response.body[0..120]})"
+        raise Error::InternalServerError, "#{req_info}: Server error (#{response.body[0..120]})"
       else
         app_error = parse_app_error_from(response.body)
 
-        raise Error::HTTP.new(code, "#{it} failed with error #{code} (#{response.status_message}): #{app_error}")
+        raise Error::HTTP.new(code, "#{req_info} failed with error #{code} (#{response.status_message}): #{app_error}")
       end
     end
 
