@@ -244,7 +244,7 @@ module Hawk
 
                 @_#{entities} = self.class.model_class_for('#{klass}').where(params)
                 #{"@_#{entities} = @_#{entities}.from(#{from.inspect})" if from}
-                return @_#{entities}
+                @_#{entities}
               end
             RUBY
           },
@@ -278,7 +278,7 @@ module Hawk
                   end
                 }
 
-                return @_#{entity}
+                @_#{entity}
               end
 
               def #{entity}
