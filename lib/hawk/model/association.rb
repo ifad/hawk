@@ -249,7 +249,7 @@ module Hawk
             RUBY
           },
 
-          has_one: lambda { |entity, options|
+          has_one: lambda { |entity, options| # rubocop:disable Metrics/BlockLength
             klass, key, from, nested, as = options.values_at(:class_name, :primary_key, :from, :nested, :as)
 
             conditions = if as.present?
@@ -265,13 +265,17 @@ module Hawk
                 model = self.class.model_class_for('#{klass}')
 
                 #{
-                  if nested; %[
-                    params = model.from('/' << path_for('#{entity}')).params
-                    @_#{entity} = model.find_one(nil, params)
-                  ] else %[
-                    params = clean_inherited_params(self.params, #{conditions})
-                    @_#{entity} = model.from(#{from.inspect}).where(params).first!
-                  ] end
+                  if nested
+                    %[
+                      params = model.from('/' << path_for('#{entity}')).params
+                      @_#{entity} = model.find_one(nil, params)
+                    ]
+                  else
+                    %[
+                      params = clean_inherited_params(self.params, #{conditions})
+                      @_#{entity} = model.from(#{from.inspect}).where(params).first!
+                    ]
+                  end
                 }
 
                 return @_#{entity}
