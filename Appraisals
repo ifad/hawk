@@ -16,6 +16,10 @@ appraise 'am-8.0' do
   gem 'activemodel', '~> 8.0.0'
 end
 
+appraise 'am-8.1' do
+  gem 'activemodel', '~> 8.1.0'
+end
+
 appraise 'am-edge' do
   gem 'activemodel', git: 'https://github.com/rails/rails.git'
   gem 'activesupport', git: 'https://github.com/rails/rails.git'
