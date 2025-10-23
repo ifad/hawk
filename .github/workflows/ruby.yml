@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         ruby-version: ['3.0', '3.1', '3.2', '3.3', '3.4']
-        gemfile: [am_7.0, am_7.1, am_7.2, am_8.0]
+        gemfile: [am_7.0, am_7.1, am_7.2, am_8.0, am_8.1]
         channel: [stable]
 
         include:
@@ -43,6 +43,9 @@ jobs:
             gemfile: am_8.0
             channel: experimental
           - ruby-version: 'head'
+            gemfile: am_8.1
+            channel: experimental
+          - ruby-version: 'head'
             gemfile: am_edge
             channel: experimental
 
@@ -51,9 +54,13 @@ jobs:
             gemfile: am_7.2
           - ruby-version: '3.0'
             gemfile: am_8.0
+          - ruby-version: '3.0'
+            gemfile: am_8.1
 
           - ruby-version: '3.1'
             gemfile: am_8.0
+          - ruby-version: '3.1'
+            gemfile: am_8.1
 
           - ruby-version: '3.4'
             gemfile: am_7.0
