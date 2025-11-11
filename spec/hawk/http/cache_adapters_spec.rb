@@ -52,7 +52,7 @@ RSpec.describe Hawk::HTTP::CacheAdapters do
     let(:server) { 'redis://localhost:6379' }
     let(:adapter) { described_class.new(server, options) }
     let(:options) { { namespace: 'hawk' } }
-    let(:redis_client) { instance_double('Redis') }
+    let(:redis_client) { instance_double(Redis) }
 
     before do
       # Stub the Redis gem loading
