@@ -37,3 +37,7 @@ RSpec/MultipleExpectations:
 
 Style/ArgumentsForwarding:
   Enabled: false
+
+Style/OneClassPerFile:
+  Exclude:
+    - 'spec/**/*'
