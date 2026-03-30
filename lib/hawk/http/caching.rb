@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 require 'dalli'
+require 'multi_json'
+require 'hawk/http/cache_adapters'
 
 module Hawk
   class HTTP
     module Caching
       DEFAULTS = {
-        server: 'localhost:11211',
+        driver: :dalli,                 # :dalli (default) or :redis
+        server: 'localhost:11211',      # memcached default; for redis use 'redis://host:port' or 'host:port'
         namespace: 'hawk',
         compress: true,
         expires_in: 60,
@@ -112,18 +115,35 @@ module Hawk
         end
       end
 
+      def detect_driver(server, explicit = nil)
+        return explicit.to_sym if explicit
+
+        s = server.to_s
+        return :redis if s.start_with?('redis://', 'rediss://')
+
+        :dalli
+      end
+
       def connect_cache(options)
         static_options = options.dup
         static_options.delete(:expires_in)
+        driver = detect_driver(options[:server], options[:driver])
 
-        cache_servers[static_options] ||= begin
+        cache_servers[{ driver: driver, **static_options }] ||= begin
           server = options[:server]
-          client = Dalli::Client.new(server, static_options)
 
-          if version = client.version.fetch(server, nil)
+          client =
+            case driver
+            when :redis
+              Hawk::HTTP::CacheAdapters::RedisAdapter.new(server, static_options)
+            else
+              Hawk::HTTP::CacheAdapters::DalliAdapter.new(server, static_options)
+            end
+
+          if (version = client.version)
             [client, server, version]
           else
-            warn "Hawk: can't connect to memcached server #{server}"
+            warn "Hawk: can't connect to #{driver} cache server #{server}"
             nil
           end
         end
