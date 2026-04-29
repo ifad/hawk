@@ -8,16 +8,10 @@ require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new
 
-# Appraisal
-require 'appraisal/task'
-Appraisal::Task.new
-
 # Yard
 require 'yard'
 YARD::Rake::YardocTask.new
 
-# Our default rake task
-require 'hawk/rake'
-Hawk::Rake::DefaultTask.new
+task default: :spec
 
 # Thanks for reading.
