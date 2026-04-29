@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in hawk.gemspec
 gemspec
 
-gem 'appraisal'
+gem 'appraisal2'
 gem 'bundler'
 gem 'byebug'
 gem 'pry'
