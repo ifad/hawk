@@ -4,7 +4,29 @@ require 'dalli'
 
 module Hawk
   class HTTP
+    ##
+    # Provides Memcached-based caching for HTTP requests. Caches GET request
+    # responses and supports cache invalidation for mutations.
+    #
+    # @example Configuring caching
+    #   client = Hawk::HTTP.new("https://api.example.com/",
+    #     cache: {
+    #       server: 'localhost:11211',
+    #       namespace: 'myapp',
+    #       expires_in: 300
+    #     }
+    #   )
+    #
+    # @example Disabling caching
+    #   client = Hawk::HTTP.new("https://api.example.com/",
+    #     cache: { disabled: true }
+    #   )
+    #
     module Caching
+      ##
+      # Default cache configuration options.
+      #
+      # @return [Hash] default cache options
       DEFAULTS = {
         server: 'localhost:11211',
         namespace: 'hawk',
@@ -13,6 +35,8 @@ module Hawk
         serializer: MultiJson
       }.freeze
 
+      ##
+      # Initializes the caching module with the given options.
       def initialize(*)
         super
 
@@ -20,6 +44,10 @@ module Hawk
         initialize_cache(DEFAULTS.deep_merge(options))
       end
 
+      ##
+      # Returns a string representation including cache status.
+      #
+      # @return [String] human-readable representation
       def inspect
         description = if cache_configured?
                         "cache: ON #{@_cache_server} v#{@_cache_version}"
@@ -30,16 +58,31 @@ module Hawk
         super.sub(/>$/, ", #{description}>")
       end
 
+      ##
+      # Returns whether caching is configured and enabled.
+      #
+      # @return [Boolean] true if caching is enabled
       def cache_configured?
         !@_cache.nil?
       end
 
+      ##
+      # Returns the cache configuration options.
+      #
+      # @return [Hash] the cache options
       def cache_options
         @_cache_options
       end
 
       protected
 
+      ##
+      # Executes a block with caching support. Returns cached results for
+      # GET requests and stores new results in the cache.
+      #
+      # @param descriptor [Hash] request descriptor with url, method, params
+      # @yield block to execute if not cached
+      # @return [Object] cached or fresh response
       def caching(descriptor, &block)
         return yield unless cache_configured?
 
@@ -54,10 +97,21 @@ module Hawk
 
       private
 
+      ##
+      # Generates a cache key from the request descriptor.
+      #
+      # @param descriptor [Hash] request descriptor
+      # @return [String] the cache key
       def cache_key(descriptor)
         MultiJson.dump(descriptor)
       end
 
+      ##
+      # Tries to fetch from cache or execute the block and cache the result.
+      #
+      # @param descriptor [Hash] request descriptor
+      # @yield block to execute if not cached
+      # @return [Object] cached or fresh response
       def try_cache(descriptor)
         return yield unless descriptor[:method] == 'GET'
 
@@ -78,6 +132,10 @@ module Hawk
         end
       end
 
+      ##
+      # Invalidates cache entries for the given descriptor.
+      #
+      # @param descriptor [Hash] request descriptor with :invalidate paths
       def invalidate(descriptor)
         descriptor = descriptor.dup
         descriptor[:method] = 'GET'
@@ -95,6 +153,10 @@ module Hawk
         end
       end
 
+      ##
+      # Initializes the Memcached client connection.
+      #
+      # @param options [Hash] cache configuration options
       def initialize_cache(options)
         return if options[:disabled]
 
@@ -112,6 +174,11 @@ module Hawk
         end
       end
 
+      ##
+      # Establishes a connection to the Memcached server.
+      #
+      # @param options [Hash] cache configuration options
+      # @return [Array(Dalli::Client, String, String), nil] client, server, version or nil
       def connect_cache(options)
         static_options = options.dup
         static_options.delete(:expires_in)
@@ -129,6 +196,10 @@ module Hawk
         end
       end
 
+      ##
+      # Returns the cache servers registry.
+      #
+      # @return [Hash] cache server connections
       def cache_servers
         @@cache_servers ||= {}
       end

@@ -2,17 +2,36 @@
 
 module Hawk
   module Model
+    ##
+    # Provides ActiveRecord-like association methods for Hawk models.
+    # Supports `has_many`, `has_one`, `belongs_to`, and polymorphic associations.
+    #
+    # @example Defining associations
+    #   class Post < Hawk::Model::Base
+    #     has_many :comments
+    #     belongs_to :author
+    #     has_one :image, as: :imageable
+    #   end
+    #
+    #   class Comment < Hawk::Model::Base
+    #     belongs_to :post
+    #   end
+    #
     module Association
-      # Initialize the associations registry
+      ##
+      # Initializes the associations registry.
       #
+      # @param base [Class] the model class
       def self.included(base)
         base.extend ClassMethods
         base.instance_eval { @_associations ||= {} }
       end
 
-      # Load associations early, to memoize them and avoid having
-      # Hashes when a Model is more appropriate.
+      ##
+      # Preloads associations when a new entity is instantiated.
       #
+      # @param attributes [Hash] model attributes
+      # @param params [Hash] additional parameters
       def initialize(attributes = {}, params = {})
         super
         if attributes.present? && self.class.associations?
@@ -22,10 +41,22 @@ module Hawk
 
       private
 
+      ##
+      # Preloads associations from the given attributes.
+      #
+      # @param attributes [Hash] model attributes
+      # @param _params [Hash] additional parameters (unused)
+      # @param scope [Class] the model class
       def preload_associations(attributes, _params, scope)
         instance_exec(scope, attributes, &scope.preload_association)
       end
 
+      ##
+      # Adds an association object to the model instance.
+      #
+      # @param scope [Class] the model class
+      # @param name [String, Symbol] the association name
+      # @param repr [Hash, Array] the association representation
       def add_association_object(scope, name, repr)
         associations = scope.associations
 
@@ -46,10 +77,20 @@ module Hawk
         end
       end
 
+      ##
+      # Checks if the association type is a collection.
+      #
+      # @param type [Symbol] the association type
+      # @return [Boolean] true if the association is a collection
       def is_collection?(type)
         %i[polymorphic_belongs_to has_many].include? type
       end
 
+      ##
+      # Adds records to an association collection.
+      #
+      # @param name [String, Symbol] the association name
+      # @param target [Array, Base] the records to add
       def add_to_association_collection(name, target)
         variable = "@_#{name}"
         instance_variable_set(variable, Collection.new) unless instance_variable_defined?(variable)
@@ -57,19 +98,34 @@ module Hawk
         target.respond_to?(:each) ? collection.concat(target) : collection.push(target)
       end
 
+      ##
+      # Sets the value of a single association.
+      #
+      # @param name [String, Symbol] the association name
+      # @param target [Base] the associated record
       def set_association_value(name, target)
         instance_variable_set(:"@_#{name}", target)
       end
 
+      ##
+      # Cleans inherited params for associations.
+      #
+      # @param inherited [Hash] inherited parameters
+      # @param opts [Hash] additional options
+      # @return [Hash] cleaned parameters
       def clean_inherited_params(inherited, opts = {})
         rv = {}.deep_merge opts
         rv[:options] = inherited[:options] if inherited && inherited[:options]
         rv
       end
 
+      ##
+      # Class-level association definition and inheritance helpers.
       module ClassMethods
-        # Propagate associations to the subclasses on inheritance
+        ##
+        # Propagates associations to subclasses on inheritance.
         #
+        # @param subclass [Class] the subclass
         def inherited(subclass)
           super
 
@@ -87,33 +143,29 @@ module Hawk
           end
         end
 
+        ##
         # Defines how associations should be preloaded.
         #
         # The given block gets called when a new entity is instantiated, and
         # it gets passed the object attributes, the association's name, type
         # and options.
         #
-        # Example (for Joe :-)
+        # @yield [scope, attributes, name, type, options] block to preload associations
+        # @return [Proc] the preloading block
         #
-        #     class Foo < Hawk::Model::Base
-        #       has_many :bars
+        # @example Custom preloading
+        #   class Foo < Hawk::Model::Base
+        #     has_many :bars
         #
-        #       preload_association do |attributes, name, type, options|
-        #         if attributes.key?('links')
-        #           links = attributes['links']
-        #           if links.key?(name)
-        #             return attributes.delete(links[name])
-        #           end
+        #     preload_association do |attributes, name, type, options|
+        #       if attributes.key?('links')
+        #         links = attributes['links']
+        #         if links.key?(name)
+        #           return attributes.delete(links[name])
         #         end
         #       end
         #     end
-        #
-        # The block would get called once, with :bars as +name+, :has_many as
-        # +type+ and +{ class_name: "Bar", primary_key : "foo_id" }+ as +options+.
-        #
-        # By default it looks up in the representation a property named after
-        # the association's name and returns it, deleting it from the repr.
-        #
+        #   end
         def preload_association(&block)
           @preload_association = block if block
           @preload_association ||= lambda do |scope, attributes|
@@ -129,27 +181,48 @@ module Hawk
           end
         end
 
-        # Return a copy of the associations registry
+        ##
+        # Returns a copy of the associations registry.
         #
+        # @return [Hash] the associations hash
         def associations
           @_associations.dup
         end
 
-        # Check whether associations are defined
+        ##
+        # Checks whether associations are defined.
         #
+        # @return [Boolean] true if associations are defined
         def associations?
           @_associations.present?
         end
 
-        # Check whether the given attribute is an association
+        ##
+        # Checks whether the given attribute is an association.
         #
+        # @param attribute [String, Symbol] the attribute name
+        # @return [Boolean] true if the attribute is an association
         def association?(attribute)
           @_associations.key?(attribute.to_sym)
         end
 
-        # Adds an has_many association, mimicking ActiveRecord's interface
-        # TODO better documentation
+        ##
+        # Defines a has_many association.
         #
+        # @param entities [Symbol] the plural entity name
+        # @param options [Hash] association options
+        # @option options [String] :class_name the class name (defaults to entity name camelize)
+        # @option options [String] :primary_key the foreign key (defaults to the current model name followed by <tt>_id</tt>)
+        # @option options [String] :from the endpoint path to query
+        # @option options [String] :as the polymorphic base name
+        #
+        # @example
+        #   class Post < Hawk::Model::Base
+        #     has_many :comments
+        #   end
+        #
+        #   post = Post.find(1)
+        #   post.comments.all # => [...]
         def has_many(entities, options = {})
           entity = entities.to_s.singularize
           klass  = options[:class_name] || entity.camelize
@@ -161,13 +234,24 @@ module Hawk
           _define_association(entities, :has_many, class_name: klass, primary_key: key, from: from, as: as)
         end
 
-        # Adds an has_one association, mimicking ActiveRecord's interface
+        ##
+        # Defines a has_one association.
         #
-        # Specifies a one-to-one association with another class. This method
-        # should only be used if the other class contains the foreign key. If
-        # the current class contains the foreign key, then you should use
-        # belongs_to instead.
+        # @param entity [Symbol] the singular entity name
+        # @param options [Hash] association options
+        # @option options [String] :class_name the class name (defaults to entity name camelize)
+        # @option options [String] :primary_key the foreign key (defaults to the current model name followed by <tt>_id</tt>)
+        # @option options [String] :from the endpoint path to query
+        # @option options [Boolean] :nested whether to use nested routing
+        # @option options [String] :as the polymorphic base name
         #
+        # @example
+        #   class Animal < Hawk::Model::Base
+        #     has_one :favourite_food, class_name: 'Food'
+        #   end
+        #
+        #   animal = Animal.find(1)
+        #   animal.favourite_food # => #<Food ...>
         def has_one(entity, options = {})
           entity = entity.to_s
           klass  = options[:class_name] || entity.camelize
@@ -180,19 +264,22 @@ module Hawk
           _define_association(entity, :has_one, class_name: klass, primary_key: key, from: from, nested: nested, as: as)
         end
 
-        # Adds a belongs_to association, mimicking ActiveRecord's interface.
+        ##
+        # Defines a belongs_to association.
         #
-        # Specifies a one-to-one association with another class. This method
-        # should only be used if this class contains the foreign key. If the
-        # other class contains the foreign key, then you should use has_one
-        # instead.
+        # @param entity [Symbol] the singular entity name
+        # @param options [Hash] association options
+        # @option options [String] :class_name the class name (defaults to entity name camelize)
+        # @option options [String] :primary_key the foreign key (defaults to <tt>"#{entity}_id"</tt>)
+        # @option options [Boolean] :polymorphic whether this is a polymorphic association
         #
-        # Options:
+        # @example
+        #   class Comment < Hawk::Model::Base
+        #     belongs_to :post
+        #   end
         #
-        # - class_name
-        # - primary_key
-        # - polymorphic
-        #
+        #   comment = Comment.find(1)
+        #   comment.post # => #<Post ...>
         def belongs_to(entity, options = {})
           if options[:polymorphic]
             polymorphic_belongs_to(entity, options)
@@ -203,6 +290,11 @@ module Hawk
 
         protected
 
+        ##
+        # Defines a monomorphic belongs_to association.
+        #
+        # @param entity [Symbol] the entity name
+        # @param options [Hash] association options
         def monomorphic_belongs_to(entity, options)
           klass  = options[:class_name] || entity.to_s.camelize
           key    = options[:primary_key] || [entity, :id].join('_')
@@ -211,6 +303,11 @@ module Hawk
           _define_association(entity, :monomorphic_belongs_to, class_name: klass, primary_key: key, params: params)
         end
 
+        ##
+        # Defines a polymorphic belongs_to association.
+        #
+        # @param entity [Symbol] the entity name
+        # @param options [Hash] association options
         def polymorphic_belongs_to(entity, options)
           key = [options[:as] || entity, :id].join('_')
           # TODO: params
@@ -220,13 +317,19 @@ module Hawk
 
         private
 
+        ##
+        # Defines an association with the given name, type, and options.
+        #
+        # @param name [Symbol] the association name
+        # @param type [Symbol] the association type
+        # @param options [Hash] association options
         def _define_association(name, type, options)
           @_associations[name.to_sym] = [type, options]
           instance_exec(name.to_s, options, &CODE.fetch(type))
         end
 
-        # The raw associations code
-        #
+        ##
+        # The raw association code implementations.
         CODE = {
           has_many: lambda { |entities, options|
             klass, key, from, as = options.values_at(:class_name, :primary_key, :from, :as)
