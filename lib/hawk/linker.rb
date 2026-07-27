@@ -1,24 +1,52 @@
 # frozen_string_literal: true
 
 module Hawk
+  ##
   # Allows adding to any Ruby object an accessor referencing an {Hawk::Model}.
   #
-  # Example, assuming Bar is defined and Foo responds_to +bar_id+:
+  # This module provides a convenient way to define resource accessors that
+  # lazily load and memoize associated Hawk models based on ID attributes.
   #
-  #     class Foo
-  #       include Hawk::Linker
+  # @example Defining a monomorphic resource accessor
+  #   class Foo
+  #     include Hawk::Linker
   #
-  #       resource_accessor :bar
-  #     end
+  #     resource_accessor :bar
+  #   end
   #
-  # Now, Foo#bar will call Bar.find(bar_id) and memoize it
+  #   # Now, Foo#bar will call Bar.find(bar_id) and memoize it
+  #
+  # @example Defining a polymorphic resource accessor
+  #   class Image
+  #     include Hawk::Linker
+  #
+  #     resource_accessor :imageable, polymorphic: true
+  #   end
   #
   module Linker
+    ##
+    # Extends the including class with class-level resource accessor macros.
+    #
+    # @param base [Class] the class including the linker helpers
     def self.included(base)
       base.extend(ClassMethods)
     end
 
+    ##
+    # Class-level macros for defining resource accessors.
     module ClassMethods
+      ##
+      # Defines a method to access a resource for a given entity, with support
+      # for both polymorphic and monomorphic resource accessors.
+      #
+      # @param entity [Symbol] the entity name for which the accessor is defined
+      # @param options [Hash] options to customize the accessor behavior
+      # @option options [Boolean] :polymorphic (false) if true, uses polymorphic accessor
+      # @option options [String] :class_name the class name to use (defaults to entity name camelize)
+      # @option options [String] :primary_key the primary key (defaults to <tt>"#{entity}_id"</tt>)
+      # @option options [String] :as the base name for polymorphic type/id columns
+      #
+      # @return [void]
       def resource_accessor(entity, options = {}) # Let's start simple.
         if options[:polymorphic]
           _polymorphic_resource_accessor(entity, options)
@@ -29,6 +57,12 @@ module Hawk
 
       private
 
+      ##
+      # Defines a monomorphic resource accessor with getter, setter, and reloader methods.
+      #
+      # @param entity [Symbol] the entity name
+      # @param options [Hash] accessor options
+      # @return [void]
       def _monomorphic_resource_accessor(entity, options)
         klass = options[:class_name] || entity.to_s.camelize
         key   = options[:primary_key] || [entity, :id].join('_')
@@ -62,6 +96,12 @@ module Hawk
         RUBY
       end
 
+      ##
+      # Defines a polymorphic resource accessor with getter, setter, and reloader methods.
+      #
+      # @param entity [Symbol] the entity name
+      # @param options [Hash] accessor options
+      # @return [void]
       def _polymorphic_resource_accessor(entity, options)
         key = options[:as] || entity
 

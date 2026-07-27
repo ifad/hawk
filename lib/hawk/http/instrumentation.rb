@@ -4,7 +4,22 @@ require 'cgi/escape'
 
 module Hawk
   class HTTP
+    ##
+    # Provides request instrumentation and logging for Hawk HTTP requests.
+    # Logs request details including method, URL, elapsed time, and cache status.
+    #
+    # @example Suppressing verbose output
+    #   Hawk::HTTP::Instrumentation.suppress_verbose_output true
+    #
+    # @example Using with Instrumenter gem
+    #   # If the Instrumenter gem is available, it will be used automatically
+    #   # for more advanced instrumentation
+    #
     module Instrumentation
+      ##
+      # Includes the appropriate instrumentation module based on available gems.
+      #
+      # @param base [Class] the HTTP class to instrument
       def self.included(base)
         # https://github.com/ifad/instrumenter
         if defined?(::Instrumenter)
@@ -14,6 +29,11 @@ module Hawk
         end
       end
 
+      ##
+      # Controls whether verbose output is suppressed.
+      #
+      # @param value [Boolean, nil] true to suppress, false to enable, nil to query
+      # @return [Boolean] current suppression state
       def self.suppress_verbose_output(value = nil)
         if value.nil?
           @suppress_verbose_output
@@ -22,9 +42,25 @@ module Hawk
         end
       end
 
+      ##
+      # Basic instrumentation that logs request details to stderr.
+      #
+      # @example
+      #   # Output format:
+      #   # >> Hawk request: GET https://api.example.com/posts (123.45ms), cache MISS
+      #
       module Basic
+        ##
+        # Log format for request output.
         LOG_FORMAT = ">> \033[1mHawk %<type>s: %<method>s %<url>s (%<elapsed>.2fms), cache %<cached>s\033[0m\n"
 
+        ##
+        # Instruments a request by logging its details.
+        #
+        # @param type [Symbol] the instrumentation type (e.g., :request)
+        # @param payload [Hash] request details (url, method, params)
+        # @yield block to execute and measure
+        # @return [Object] the block's return value
         def instrument(type, payload)
           if Hawk::HTTP::Instrumentation.suppress_verbose_output
             yield payload

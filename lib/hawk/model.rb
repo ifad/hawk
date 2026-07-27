@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module Hawk
+  ##
+  # Namespace for all Model-related functionalities. This module contains
+  # the core components for defining API client models, including schema
+  # definitions, associations, querying, and connection management.
+  #
+  # @see Hawk::Model::Base
   module Model
     autoload :Base,           'hawk/model/base'
     autoload :Schema,         'hawk/model/schema'
