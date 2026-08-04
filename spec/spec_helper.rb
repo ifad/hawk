@@ -26,7 +26,7 @@ Hawk::HTTP::Instrumentation.suppress_verbose_output true
 # CLIENT_ERROR.
 RSpec::Matchers.define :a_memcached_safe_key do
   match do |key|
-    key.is_a?(String) && key.ascii_only? && !key.match?(/\s/) && key.bytesize <= 250
+    key.is_a?(String) && key.ascii_only? && !key.match?(/[[:cntrl:]\s]/) && key.bytesize <= 250
   end
 
   failure_message do |key|
