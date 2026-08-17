@@ -19,11 +19,13 @@ WebMock.disable_net_connect!
 
 Hawk::HTTP::Instrumentation.suppress_verbose_output true
 
-# Matches keys memcached accepts verbatim. The meta protocol used by Dalli 5
+# Matches keys memcached accepts verbatim: ASCII, no whitespace, no control
+# characters and at most 250 bytes long. The meta protocol used by Dalli 5
 # rejects whitespace and non-ASCII keys, and Dalli works around it by
 # base64-encoding the key, which inflates it by a third and can push it past the
 # 250 byte limit memcached enforces on keys, making the server reply
-# CLIENT_ERROR.
+# CLIENT_ERROR. Control characters are not base64-encoded by Dalli, so they
+# reach memcached verbatim and are rejected there.
 RSpec::Matchers.define :a_memcached_safe_key do
   match do |key|
     key.is_a?(String) && key.ascii_only? && !key.match?(/[[:cntrl:]\s]/) && key.bytesize <= 250
@@ -33,7 +35,7 @@ RSpec::Matchers.define :a_memcached_safe_key do
     return "expected a memcached-safe key, got #{key.inspect}" unless key.is_a?(String)
 
     "expected a memcached-safe key, got #{key.inspect} (ascii_only: #{key.ascii_only?}, " \
-      "whitespace: #{key.match?(/\s/)}, bytesize: #{key.bytesize})"
+      "unsafe characters: #{key.match?(/[[:cntrl:]\s]/)}, bytesize: #{key.bytesize})"
   end
 end
 
