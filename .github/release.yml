@@ -1,0 +1,11 @@
+changelog:
+  categories:
+    - title: User Changelog
+      labels:
+        - changelog
+    - title: Other Changes
+      labels:
+        - "*"
+  exclude:
+    authors:
+      - dependabot
