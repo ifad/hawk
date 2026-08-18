@@ -8,5 +8,5 @@ module Hawk
   # Defines the current version of the Hawk library.
   # It follows semantic versioning (MAJOR.MINOR.PATCH) to indicate
   # the release version of the library.
-  VERSION = '4.0.0'
+  VERSION = '5.0.0'
 end
