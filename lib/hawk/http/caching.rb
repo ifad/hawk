@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'dalli'
 
 module Hawk
@@ -100,10 +101,16 @@ module Hawk
       ##
       # Generates a cache key from the request descriptor.
       #
+      # Memcached keys must be ASCII, free of whitespace and at most 250 bytes
+      # long. Dalli's meta protocol works around the first two constraints by
+      # base64-encoding the key, which inflates it by a third and can push it
+      # past the length limit, at which point the server replies CLIENT_ERROR.
+      # Digesting keeps the key valid whatever the url and params contain.
+      #
       # @param descriptor [Hash] request descriptor
       # @return [String] the cache key
       def cache_key(descriptor)
-        MultiJson.dump(descriptor)
+        Digest::SHA256.hexdigest(MultiJson.dump(descriptor))
       end
 
       ##
