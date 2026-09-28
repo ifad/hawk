@@ -19,4 +19,8 @@ gem "rubocop-rake", require: false
 gem "rubocop-rspec", require: false
 gem "activemodel", "~> 7.2.0"
 
+install_if -> { Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2') } do
+  gem "json", "< 3"
+end
+
 gemspec path: "../"

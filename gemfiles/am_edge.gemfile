@@ -20,4 +20,8 @@ gem "rubocop-rspec", require: false
 gem "activemodel", git: "https://github.com/rails/rails.git"
 gem "activesupport", git: "https://github.com/rails/rails.git"
 
+install_if -> { Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2') } do
+  gem "json", "< 3"
+end
+
 gemspec path: "../"

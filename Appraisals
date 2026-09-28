@@ -24,3 +24,10 @@ appraise 'am-edge' do
   gem 'activemodel', git: 'https://github.com/rails/rails.git'
   gem 'activesupport', git: 'https://github.com/rails/rails.git'
 end
+
+# Remove this pin when Ruby 3.0 and 3.1 support is dropped.
+appraisals.each do |appraisal|
+  appraisal.install_if "-> { Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2') }" do
+    gem 'json', '< 3'
+  end
+end
