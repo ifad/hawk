@@ -2,14 +2,17 @@
 
 appraise 'am-7.0' do
   gem 'activemodel', '~> 7.0.0'
+  gem 'json', '< 3' # FIXME: relax when Ruby 3.0 and 3.1 support is dropped
 end
 
 appraise 'am-7.1' do
   gem 'activemodel', '~> 7.1.0'
+  gem 'json', '< 3' # FIXME: relax when Ruby 3.0 and 3.1 support is dropped
 end
 
 appraise 'am-7.2' do
   gem 'activemodel', '~> 7.2.0'
+  gem 'json', '< 3' # FIXME: relax when Ruby 3.1 support is dropped
 end
 
 appraise 'am-8.0' do
@@ -23,11 +26,4 @@ end
 appraise 'am-edge' do
   gem 'activemodel', git: 'https://github.com/rails/rails.git'
   gem 'activesupport', git: 'https://github.com/rails/rails.git'
-end
-
-# Remove this pin when Ruby 3.0 and 3.1 support is dropped.
-appraisals.each do |appraisal|
-  appraisal.install_if "-> { Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.2') }" do
-    gem 'json', '< 3'
-  end
 end
