@@ -18,5 +18,6 @@ gem "rubocop-rails", require: false
 gem "rubocop-rake", require: false
 gem "rubocop-rspec", require: false
 gem "activemodel", "~> 7.1.0"
+gem "json", "< 3"
 
 gemspec path: "../"

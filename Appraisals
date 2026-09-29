@@ -2,14 +2,17 @@
 
 appraise 'am-7.0' do
   gem 'activemodel', '~> 7.0.0'
+  gem 'json', '< 3' # FIXME: relax when Ruby 3.0 and 3.1 support is dropped
 end
 
 appraise 'am-7.1' do
   gem 'activemodel', '~> 7.1.0'
+  gem 'json', '< 3' # FIXME: relax when Ruby 3.0 and 3.1 support is dropped
 end
 
 appraise 'am-7.2' do
   gem 'activemodel', '~> 7.2.0'
+  gem 'json', '< 3' # FIXME: relax when Ruby 3.1 support is dropped
 end
 
 appraise 'am-8.0' do
