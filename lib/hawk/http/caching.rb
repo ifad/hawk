@@ -1,3 +1,4 @@
+require 'digest'
 require 'dalli'
 
 module Hawk
@@ -53,7 +54,7 @@ module Hawk
 
       private
         def cache_key(descriptor)
-          MultiJson.dump(descriptor)
+          Digest::SHA256.hexdigest(MultiJson.dump(descriptor))
         end
 
         def try_cache(descriptor, &block)
