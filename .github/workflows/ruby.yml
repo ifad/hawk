@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Ruby specs
@@ -13,47 +16,62 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: ['2.6.10', '2.7.6', '3.0.4', '3.1.2']
-        gemfile: [am_6.0, am_6.1, am_7.0]
-        experimental: [false]
+        ruby-version: ['2.6', '2.7', '3.0', '3.1', '3.2', '3.3']
+        gemfile: [am_6.0, am_6.1, am_7.0, am_7.1]
+        channel: [stable]
 
         include:
-          - ruby-version: '2.7.6'
+          - ruby-version: '3.1'
             gemfile: am_edge
-            experimental: true
+            channel: experimental
 
-          - ruby-version: '3.0.4'
+          - ruby-version: '3.2'
             gemfile: am_edge
-            experimental: true
+            channel: experimental
 
-          - ruby-version: '3.1.2'
+          - ruby-version: '3.3'
             gemfile: am_edge
-            experimental: true
+            channel: experimental
 
           - ruby-version: 'head'
             gemfile: am_7.0
-            experimental: true
+            channel: experimental
+          - ruby-version: 'head'
+            gemfile: am_7.1
+            channel: experimental
           - ruby-version: 'head'
             gemfile: am_edge
-            experimental: true
+            channel: experimental
 
         exclude:
-          - ruby-version: '2.6.10'
+          - ruby-version: '2.6'
             gemfile: am_7.0
+          - ruby-version: '2.6'
+            gemfile: am_7.1
 
-          - ruby-version: '3.1.2'
+          - ruby-version: '3.1'
             gemfile: am_6.0
-          - ruby-version: '3.1.2'
+          - ruby-version: '3.1'
+            gemfile: am_6.1
+
+          - ruby-version: '3.2'
+            gemfile: am_6.0
+          - ruby-version: '3.2'
+            gemfile: am_6.1
+
+          - ruby-version: '3.3'
+            gemfile: am_6.0
+          - ruby-version: '3.3'
             gemfile: am_6.1
 
     env:
       BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
       TEST_CONFIG: ./spec/config.github.yml
 
-    continue-on-error: ${{ matrix.experimental }}
+    continue-on-error: ${{ matrix.channel != 'stable' }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:

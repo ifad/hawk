@@ -1,6 +1,11 @@
-if ENV['RCOV']
+if ENV['RCOV'] || ENV['COVERAGE']
   require 'simplecov'
-  SimpleCov.start
+
+  SimpleCov.start do
+    add_filter '/spec/'
+
+    track_files 'lib/**/*.rb'
+  end
 end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)

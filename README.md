@@ -6,8 +6,6 @@
 Hawk is an API Client framework. It is used as a base to then build your API
 clients. It consumes JSON and produces Ruby objects without any Hash magic.
 
-![Hawk Eyes](http://rampages.us/belebelerc/wp-content/uploads/sites/278/2014/07/wpid-Bird-Wallpaper-851.jpg)
-
 ## Installation
 
 Add this line to your application's Gemfile:
