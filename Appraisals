@@ -20,6 +20,7 @@ appraise 'am-4.2' do
   gem 'activemodel', "~> 4.2.0"
   gem 'activesupport', "~> 4.2.0"
   gem 'dalli', '< 3'
+  gem 'bigdecimal', '< 2'
 end
 
 appraise 'am-5.0' do
