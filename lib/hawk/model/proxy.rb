@@ -59,6 +59,14 @@ module Hawk
         def count(*)
           0
         end
+
+        ##
+        # Always returns an empty array for void proxies.
+        #
+        # @return [Array] always empty
+        def all(*)
+          @result
+        end
       end
 
       ##
@@ -86,7 +94,7 @@ module Hawk
       # @param params [Hash] additional query parameters
       # @return [Base, Collection, nil] the found record(s)
       def find(id_or_ids, params = {})
-        @result = klass.find(id_or_ids, @params.deep_merge(params))
+        klass.find(id_or_ids, @params.deep_merge(params))
       end
 
       ##
@@ -95,7 +103,9 @@ module Hawk
       # @param params [Hash] additional query parameters
       # @return [Collection] all matching records
       def all(params = {})
-        @result ||= klass.all(@params.deep_merge(params))
+        return klass.all(@params.deep_merge(params)) unless params.empty?
+
+        @result ||= klass.all(@params)
       end
       alias result all
 
@@ -139,12 +149,14 @@ module Hawk
       ##
       # Returns the count of matching records.
       #
+      # @param params [Hash] additional query parameters
       # @return [Integer] the record count
-      def count(*)
-        if @result
+      def count(params = {})
+        extra = params.is_a?(Hash) ? params : {}
+        if @result && extra.empty?
           @result.count
         else
-          klass.count(params)
+          klass.count(@params.deep_merge(extra))
         end
       end
 
